@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chizmachi — arxitektorlar uchun hisoblash vositalari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#132A42;
+    --ink-2:#1B3A5C;
+    --paper:#F3EEE1;
+    --paper-dim:#E4DCC6;
+    --grid:#2F5478;
+    --amber:#DE9A3C;
+    --amber-dark:#9C6A1E;
+    --line: rgba(243,238,225,0.18);
+    --card-line: rgba(19,42,66,0.16);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:36px 36px;
+  }
+  .wrap{max-width:980px;margin:0 auto;padding:0 24px;}
+
+  /* corner crop marks */
+  .crop{position:fixed;width:22px;height:22px;pointer-events:none;z-index:50;}
+  .crop::before,.crop::after{content:"";position:absolute;background:var(--amber);}
+  .crop::before{width:100%;height:1px;top:0;left:0;}
+  .crop::after{width:1px;height:100%;top:0;left:0;}
+  .crop.tl{top:16px;left:16px;}
+  .crop.tr{top:16px;right:16px;transform:scaleX(-1);}
+  .crop.bl{bottom:16px;left:16px;transform:scaleY(-1);}
+  .crop.br{bottom:16px;right:16px;transform:scale(-1,-1);}
+
+  header{padding:88px 0 56px;position:relative;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--amber);display:flex;align-items:center;gap:10px;margin-bottom:20px;
+  }
+  .eyebrow::before{content:"";width:28px;height:1px;background:var(--amber);}
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:clamp(34px,5.4vw,58px);
+    line-height:1.05;
+    max-width:760px;
+    letter-spacing:-0.01em;
+  }
+  header p{
+    margin-top:22px;max-width:520px;font-size:16px;line-height:1.65;
+    color:rgba(243,238,225,0.72);
+  }
+
+  nav.tabs{
+    display:flex;gap:2px;margin:44px 0 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  nav.tabs button{
+    flex:1;background:none;border:none;color:rgba(243,238,225,0.55);
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;
+    padding:16px 8px;cursor:pointer;position:relative;transition:color .2s;
+  }
+  nav.tabs button span.num{color:var(--amber);margin-right:8px;}
+  nav.tabs button.active{color:var(--paper);}
+  nav.tabs button.active::after{
+    content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--amber);
+  }
+  nav.tabs button:not(.active):hover{color:rgba(243,238,225,0.8);}
+
+  main{padding:48px 0 100px;}
+  .panel{display:none;}
+  .panel.active{display:block;animation:fade .35s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .panel-title{
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:24px;margin-bottom:8px;
+  }
+  .panel-desc{color:rgba(243,238,225,0.65);font-size:14.5px;margin-bottom:36px;max-width:560px;line-height:1.6;}
+
+  .card{
+    background:var(--paper);color:var(--ink);border-radius:2px;
+    padding:32px;position:relative;
+  }
+  .card::before{
+    content:"";position:absolute;inset:8px;border:1px solid var(--card-line);pointer-events:none;
+  }
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
+
+  .field{margin-bottom:20px;}
+  .field label{
+    display:block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--ink-2);margin-bottom:8px;
+  }
+  .field .inputrow{display:flex;align-items:center;gap:8px;}
+  .field input, .field select{
+    width:100%;background:transparent;border:none;border-bottom:1.5px solid var(--card-line);
+    padding:8px 2px;font-size:20px;font-family:'Space Grotesk',sans-serif;color:var(--ink);
+    outline:none;transition:border-color .2s;
+  }
+  .field input:focus, .field select:focus{border-color:var(--amber-dark);}
+  .field .unit{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-2);white-space:nowrap;}
+
+  .divider{height:1px;background:var(--card-line);margin:28px 0;}
+
+  .result{
+    background:var(--ink);color:var(--paper);border-radius:2px;padding:24px 28px;margin-top:8px;
+  }
+  .result .rlabel{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--amber);margin-bottom:6px;
+  }
+  .result .rvalue{
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:32px;
+    display:flex;align-items:baseline;gap:8px;
+  }
+  .result .rvalue span.u{font-size:15px;font-weight:400;color:rgba(243,238,225,0.6);}
+  .result-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:640px){.result-row{grid-template-columns:1fr;}}
+
+  /* dimension-line style annotation used for the signature moment */
+  .dim{position:relative;padding:0 0 0 0;margin-top:26px;}
+  .dim .dline{display:flex;align-items:center;gap:6px;color:var(--amber-dark);}
+  .dim .dline .tick{width:1px;height:8px;background:var(--amber-dark);}
+  .dim .dline .bar{flex:1;height:1px;background:var(--amber-dark);}
+  .dim .dcaption{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-2);margin-top:6px;}
+
+  select{appearance:none;-webkit-appearance:none;background-image:none;cursor:pointer;}
+
+  .radiogroup{display:flex;gap:0;border:1.5px solid var(--card-line);border-radius:2px;overflow:hidden;margin-bottom:24px;width:fit-content;}
+  .radiogroup button{
+    background:transparent;border:none;padding:10px 18px;font-family:'IBM Plex Mono',monospace;
+    font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);cursor:pointer;
+    border-right:1.5px solid var(--card-line);
+  }
+  .radiogroup button:last-child{border-right:none;}
+  .radiogroup button.active{background:var(--ink);color:var(--paper);}
+
+  footer{
+    border-top:1px solid var(--line);padding:28px 0 60px;
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:rgba(243,238,225,0.4);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="crop tl"></div>
+<div class="crop tr"></div>
+<div class="crop bl"></div>
+<div class="crop br"></div>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Chizmachi · 01 / v1.0</div>
+    <h1>Kundalik hisob-kitoblarni chizma aniqligida bajaring</h1>
+    <p>Maydon, material va masshtab hisob-kitoblari uchun uchta vosita — loyihalash jarayonida qo'l ostida.</p>
+
+    <nav class="tabs">
+      <button class="active" data-panel="p1" onclick="showPanel('p1',this)"><span class="num">01</span>Maydon / hajm</button>
+      <button data-panel="p2" onclick="showPanel('p2',this)"><span class="num">02</span>Materiallar</button>
+      <button data-panel="p3" onclick="showPanel('p3',this)"><span class="num">03</span>Masshtab</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- PANEL 1: Maydon / hajm -->
+    <section class="panel active" id="p1">
+      <div class="panel-title">Maydon va hajm hisoblagichi</div>
+      <div class="panel-desc">Xona yoki maydon o'lchamlarini kiriting — maydon avtomatik hisoblanadi. Balandlikni qo'shsangiz, hajm ham chiqadi.</div>
+
+      <div class="card">
+        <div class="grid2">
+          <div class="field">
+            <label>Uzunlik</label>
+            <div class="inputrow"><input type="number" id="a-l" placeholder="0" step="0.01" oninput="calcArea()"><span class="unit">m</span></div>
+          </div>
+          <div class="field">
+            <label>Kenglik</label>
+            <div class="inputrow"><input type="number" id="a-w" placeholder="0" step="0.01" oninput="calcArea()"><span class="unit">m</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Balandlik (ixtiyoriy)</label>
+          <div class="inputrow"><input type="number" id="a-h" placeholder="0" step="0.01" oninput="calcArea()"><span class="unit">m</span></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="result-row">
+          <div class="result">
+            <div class="rlabel">Maydon</div>
+            <div class="rvalue"><span id="a-area">0</span><span class="u">m²</span></div>
+          </div>
+          <div class="result">
+            <div class="rlabel">Hajm</div>
+            <div class="rvalue"><span id="a-vol">—</span><span class="u">m³</span></div>
+          </div>
+        </div>
+
+        <div class="dim">
+          <div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div>
+          <div class="dcaption" id="a-dim">Uzunlik × kenglik = maydon</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 2: Materiallar -->
+    <section class="panel" id="p2">
+      <div class="panel-title">Qurilish materiallari kalkulyatori</div>
+      <div class="panel-desc">G'isht devor yoki beton hajmi uchun kerakli material miqdorini hisoblang.</div>
+
+      <div class="radiogroup">
+        <button class="active" data-mode="brick" onclick="setMatMode('brick',this)">G'isht devor</button>
+        <button data-mode="concrete" onclick="setMatMode('concrete',this)">Beton</button>
+      </div>
+
+      <div class="card" id="mat-brick">
+        <div class="grid2">
+          <div class="field">
+            <label>Devor uzunligi</label>
+            <div class="inputrow"><input type="number" id="b-l" placeholder="0" step="0.01" oninput="calcBrick()"><span class="unit">m</span></div>
+          </div>
+          <div class="field">
+            <label>Devor balandligi</label>
+            <div class="inputrow"><input type="number" id="b-h" placeholder="0" step="0.01" oninput="calcBrick()"><span class="unit">m</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Devor qalinligi (g'isht soni bo'yicha)</label>
+          <select id="b-thick" onchange="calcBrick()">
+            <option value="1">Yarim g'isht (12 sm)</option>
+            <option value="2" selected>1 g'isht (25 sm)</option>
+            <option value="3">1.5 g'isht (38 sm)</option>
+            <option value="4">2 g'isht (51 sm)</option>
+          </select>
+        </div>
+
+        <div class="divider"></div>
+        <div class="result">
+          <div class="rlabel">Kerakli g'isht (zaxira bilan +5%)</div>
+          <div class="rvalue"><span id="b-bricks">0</span><span class="u">dona</span></div>
+        </div>
+        <div class="dim">
+          <div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div>
+          <div class="dcaption">Standart g'isht: 25×12×6.5 sm, devor maydoniga qarab hisoblanadi</div>
+        </div>
+      </div>
+
+      <div class="card" id="mat-concrete" style="display:none;">
+        <div class="grid2">
+          <div class="field">
+            <label>Uzunlik</label>
+            <div class="inputrow"><input type="number" id="c-l" placeholder="0" step="0.01" oninput="calcConcrete()"><span class="unit">m</span></div>
+          </div>
+          <div class="field">
+            <label>Kenglik</label>
+            <div class="inputrow"><input type="number" id="c-w" placeholder="0" step="0.01" oninput="calcConcrete()"><span class="unit">m</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Qalinlik</label>
+          <div class="inputrow"><input type="number" id="c-t" placeholder="0" step="0.01" oninput="calcConcrete()"><span class="unit">m</span></div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="panel-desc" style="margin-bottom:14px;">Aralashma nisbati (sement : qum : shag'al) — 1 : 2 : 4</div>
+        <div class="result-row" style="grid-template-columns:1fr 1fr 1fr;">
+          <div class="result">
+            <div class="rlabel">Sement</div>
+            <div class="rvalue"><span id="c-cement">0</span><span class="u">qop</span></div>
+          </div>
+          <div class="result">
+            <div class="rlabel">Qum</div>
+            <div class="rvalue"><span id="c-sand">0</span><span class="u">m³</span></div>
+          </div>
+          <div class="result">
+            <div class="rlabel">Shag'al</div>
+            <div class="rvalue"><span id="c-gravel">0</span><span class="u">m³</span></div>
+          </div>
+        </div>
+        <div class="dim">
+          <div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div>
+          <div class="dcaption">Beton hajmi: <span id="c-vol">0</span> m³ · sement 50 kg/qop hisobida</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 3: Masshtab -->
+    <section class="panel" id="p3">
+      <div class="panel-title">Masshtab / o'lchov konvertori</div>
+      <div class="panel-desc">Chizmadagi o'lchamni haqiqiy o'lchamga yoki aksincha o'giring.</div>
+
+      <div class="radiogroup">
+        <button class="active" data-mode="toreal" onclick="setScaleMode('toreal',this)">Chizma → haqiqiy</button>
+        <button data-mode="todrawing" onclick="setScaleMode('todrawing',this)">Haqiqiy → chizma</button>
+      </div>
+
+      <div class="card">
+        <div class="grid2">
+          <div class="field">
+            <label id="s-inlabel">Chizmadagi o'lcham</label>
+            <div class="inputrow"><input type="number" id="s-val" placeholder="0" step="0.01" oninput="calcScale()"><span class="unit" id="s-inunit">sm</span></div>
+          </div>
+          <div class="field">
+            <label>Masshtab (1 : N)</label>
+            <div class="inputrow"><span class="unit">1 :</span><input type="number" id="s-ratio" placeholder="100" value="100" step="1" oninput="calcScale()"></div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="result">
+          <div class="rlabel" id="s-outlabel">Haqiqiy o'lcham</div>
+          <div class="rvalue"><span id="s-out">0</span><span class="u" id="s-outunit">m</span></div>
+        </div>
+        <div class="dim">
+          <div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div>
+          <div class="dcaption" id="s-dim">1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o'lchamga teng</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Chizmachi — mahalliy hisob-kitob vositalari</span>
+    <span>Barcha hisob-kitoblar taxminiy, loyiha uchun muhandis tasdig'i talab qilinadi</span>
+  </footer>
+</div>
+
+<script>
+function showPanel(id, btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function fmt(n){
+  if(!isFinite(n)) return '0';
+  return (Math.round(n*100)/100).toLocaleString('uz-UZ');
+}
+
+// Panel 1: Area / volume
+function calcArea(){
+  const l = parseFloat(document.getElementById('a-l').value) || 0;
+  const w = parseFloat(document.getElementById('a-w').value) || 0;
+  const h = parseFloat(document.getElementById('a-h').value) || 0;
+  const area = l * w;
+  document.getElementById('a-area').textContent = fmt(area);
+  document.getElementById('a-vol').textContent = h > 0 ? fmt(area*h) : '—';
+  document.getElementById('a-dim').textContent = h > 0
+    ? `${fmt(l)} × ${fmt(w)} × ${fmt(h)} = ${fmt(area*h)} m³`
+    : `${fmt(l)} × ${fmt(w)} = ${fmt(area)} m²`;
+}
+
+// Panel 2: Materials
+function setMatMode(mode, btn){
+  document.querySelectorAll('#p2 .radiogroup button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('mat-brick').style.display = mode==='brick' ? 'block' : 'none';
+  document.getElementById('mat-concrete').style.display = mode==='concrete' ? 'block' : 'none';
+}
+
+function calcBrick(){
+  const l = parseFloat(document.getElementById('b-l').value) || 0;
+  const h = parseFloat(document.getElementById('b-h').value) || 0;
+  const thickMult = parseFloat(document.getElementById('b-thick').value) || 1;
+  const area = l * h;
+  // ~ 60 bricks per m2 for half-brick wall (0.12m), scaled by thickness multiplier
+  const bricksPerM2 = 60 * thickMult;
+  const bricks = area * bricksPerM2 * 1.05;
+  document.getElementById('b-bricks').textContent = fmt(Math.ceil(bricks));
+}
+
+function calcConcrete(){
+  const l = parseFloat(document.getElementById('c-l').value) || 0;
+  const w = parseFloat(document.getElementById('c-w').value) || 0;
+  const t = parseFloat(document.getElementById('c-t').value) || 0;
+  const vol = l * w * t;
+  // ratio 1:2:4 -> total parts 7
+  const cementVol = vol * (1/7);
+  const sandVol = vol * (2/7);
+  const gravelVol = vol * (4/7);
+  // cement density ~1440 kg/m3, bag = 50kg
+  const cementBags = (cementVol * 1440) / 50;
+  document.getElementById('c-cement').textContent = fmt(Math.ceil(cementBags));
+  document.getElementById('c-sand').textContent = fmt(sandVol);
+  document.getElementById('c-gravel').textContent = fmt(gravelVol);
+  document.getElementById('c-vol').textContent = fmt(vol);
+}
+
+// Panel 3: Scale
+function setScaleMode(mode, btn){
+  document.querySelectorAll('#p3 .radiogroup button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('s-inlabel').textContent = mode==='toreal' ? 'Chizmadagi o\'lcham' : 'Haqiqiy o\'lcham';
+  document.getElementById('s-inunit').textContent = mode==='toreal' ? 'sm' : 'm';
+  document.getElementById('s-outlabel').textContent = mode==='toreal' ? 'Haqiqiy o\'lcham' : 'Chizmadagi o\'lcham';
+  document.getElementById('s-outunit').textContent = mode==='toreal' ? 'm' : 'sm';
+  scaleMode = mode;
+  calcScale();
+}
+
+let scaleMode = 'toreal';
+function calcScale(){
+  const val = parseFloat(document.getElementById('s-val').value) || 0;
+  const ratio = parseFloat(document.getElementById('s-ratio').value) || 1;
+  let out;
+  if(scaleMode === 'toreal'){
+    out = (val * ratio) / 100; // cm -> m
+  } else {
+    out = (val * 100) / ratio; // m -> cm
+  }
+  document.getElementById('s-out').textContent = fmt(out);
+  document.getElementById('s-dim').textContent = `1:${fmt(ratio)} masshtabda 1 sm chizmada = ${fmt(ratio/100)} m haqiqiy o'lchamga teng`;
+}
+
+calcArea();
+calcBrick();
+calcConcrete();
+calcScale();
+</script>
+
+</body>
+</html>
