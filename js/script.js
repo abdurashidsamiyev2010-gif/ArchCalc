@@ -28,25 +28,72 @@ function calcArea(){
 const brickData = {
   fired: {
     name: "Oddiy pishiq g'isht",
-    perM3: 394
+    perM3: 394,
+    thickness: [
+      { name: "Yarim g'isht (12 sm)", value: 0.12 },
+      { name: "1 g'isht (25 sm)", value: 0.25 },
+      { name: "1.5 g'isht (38 sm)", value: 0.38 },
+      { name: "2 g'isht (51 sm)", value: 0.51 }
+    ]
   },
+
   hollow: {
     name: "Teshikli g'isht",
-    perM3: 296
+    perM3: 296,
+    thickness: [
+      { name: "Yarim g'isht (12 sm)", value: 0.12 },
+      { name: "1 g'isht (25 sm)", value: 0.25 },
+      { name: "1.5 g'isht (38 sm)", value: 0.38 },
+      { name: "2 g'isht (51 sm)", value: 0.51 }
+    ]
   },
+
   aac: {
     name: "Gazoblok",
-    perM3: 28
+    perM3: 28,
+    thickness: [
+      { name: "100 mm", value: 0.10 },
+      { name: "200 mm", value: 0.20 },
+      { name: "300 mm", value: 0.30 },
+      { name: "400 mm", value: 0.40 }
+    ]
   },
+
   foam: {
     name: "Penoblok",
-    perM3: 28
+    perM3: 28,
+    thickness: [
+      { name: "100 mm", value: 0.10 },
+      { name: "200 mm", value: 0.20 },
+      { name: "300 mm", value: 0.30 },
+      { name: "400 mm", value: 0.40 }
+    ]
   },
+
   block: {
     name: "Beton blok",
-    perM3: 71
+    perM3: 71,
+    thickness: [
+      { name: "190 mm", value: 0.19 },
+      { name: "390 mm", value: 0.39 }
+    ]
   }
 };
+function updateBrickThickness() {
+  const type = document.getElementById("b-type").value;
+  const select = document.getElementById("b-thick");
+
+  select.innerHTML = "";
+
+  brickData[type].thickness.forEach(item => {
+    const option = document.createElement("option");
+    option.value = item.value;
+    option.textContent = item.name;
+    select.appendChild(option);
+  });
+
+  calcBrick();
+}
 function setMatMode(mode, btn){
   document.querySelectorAll('#p2 .radiogroup button').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
@@ -114,6 +161,6 @@ function calcScale(){
 }
 
 calcArea();
-calcBrick();
+updateBrickThickness();
 calcConcrete();
 calcScale();
