@@ -92,7 +92,6 @@
           </div>
         </div>
         <div class="field">
-          <div class="field">
   <label>G'isht turi</label>
   <select id="b-type" onchange="updateBrickThickness()">
     <option value="fired">Oddiy pishiq g'isht (25×12×6.5 sm)</option>
@@ -102,12 +101,14 @@
     <option value="block">Beton blok (39×19×19 sm)</option>
   </select>
 </div>
-          <label>Devor qalinligi</label>
 
-<select id="b-thick" onchange="calcBrick()">
-    <option value="">Qalinlikni tanlang</option>
+<div class="field">
+    <label>Devor qalinligi</label>
+
+    <select id="b-thick" onchange="calcBrick()">
+    <option value="0.25">1 g'isht (25 sm)</option>
 </select>
-        </div>
+</div>
 
         <div class="divider"></div>
         <div class="result">
