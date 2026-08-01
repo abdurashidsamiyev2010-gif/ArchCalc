@@ -164,3 +164,5 @@ calcArea();
 updateBrickThickness();
 calcConcrete();
 calcScale();
+
+console.log("SCRIPT ISHLADI");
