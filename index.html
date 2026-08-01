@@ -296,3 +296,55 @@ with open('/mnt/agents/output/chizmachi_part1.txt', 'w', encoding='utf-8') as f:
 
 print("Part 1 saved: HTML head + CSS + Panel 1")
 print(f"Size: {len(part1):,} chars")
+
+part2 = '''<!-- PANEL 2 -->
+<section class="panel" id="p2">
+<div class="panel-title">Qurilish materiallari kalkulyatori</div>
+<div class="panel-desc">G\'isht devor yoki beton hajmi uchun kerakli material miqdorini va narxini hisoblang.</div>
+<div class="radiogroup">
+<button class="active" onclick="setMatMode(\'brick\',this)">G\'isht devor</button>
+<button onclick="setMatMode(\'concrete\',this)">Beton</button>
+</div>
+<div class="card" id="mat-brick">
+<div class="grid2">
+<div class="field"><label for="b-l">Devor uzunligi</label><div class="inputrow"><input type="number" id="b-l" placeholder="0.00" step="0.01" min="0" oninput="calcBrick()"><span class="unit">m</span></div><span class="error-msg">Musbat son kiriting</span></div>
+<div class="field"><label for="b-h">Devor balandligi</label><div class="inputrow"><input type="number" id="b-h" placeholder="0.00" step="0.01" min="0" oninput="calcBrick()"><span class="unit">m</span></div><span class="error-msg">Musbat son kiriting</span></div>
+</div>
+<div class="field"><label for="b-type">Material turi</label><select id="b-type" onchange="updateBrickThickness()"><option value="fired">Oddiy pishiq g\'isht (25×12×6.5 sm)</option><option value="hollow">Teshikli g\'isht (25×12×8.8 sm)</option><option value="aac">Gazoblok (60×30×20 sm)</option><option value="foam">Penoblok (60×30×20 sm)</option><option value="block">Beton blok (39×19×19 sm)</option></select></div>
+<div class="field"><label for="b-thick">Devor qalinligi</label><select id="b-thick" onchange="calcBrick()"></select></div>
+<div class="field"><label for="b-price">1 dona narxi (so\'m)</label><div class="inputrow"><input type="number" id="b-price" placeholder="0" step="100" min="0" oninput="calcBrick()"><span class="unit">so\'m</span></div><span class="error-msg">Musbat son kiriting</span></div>
+<div class="divider"></div>
+<div class="result"><button type="button" class="copy-btn" onclick="copyResult(\'b-bricks\',\'dona\')">Nusxa</button><div class="rlabel" id="b-label">Kerakli g\'isht (zaxira bilan +5%)</div><div class="rvalue"><span id="b-bricks">0</span><span class="u">dona</span></div></div>
+<div class="total-cost"><span class="total-cost-label">Umumiy narx</span><span class="total-cost-value" id="b-total">0 so\'m</span></div>
+<div class="dim"><div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div><div class="dcaption" id="b-dim">Standart g\'isht: 25×12×6.5 sm, devor hajmiga qarab hisoblanadi</div></div>
+</div>
+<div class="card" id="mat-concrete" style="display:none;">
+<div class="grid2">
+<div class="field"><label for="c-l">Uzunlik</label><div class="inputrow"><input type="number" id="c-l" placeholder="0.00" step="0.01" min="0" oninput="calcConcrete()"><span class="unit">m</span></div><span class="error-msg">Musbat son kiriting</span></div>
+<div class="field"><label for="c-w">Kenglik</label><div class="inputrow"><input type="number" id="c-w" placeholder="0.00" step="0.01" min="0" oninput="calcConcrete()"><span class="unit">m</span></div><span class="error-msg">Musbat son kiriting</span></div>
+</div>
+<div class="field"><label for="c-t">Qalinlik</label><div class="inputrow"><input type="number" id="c-t" placeholder="0.00" step="0.01" min="0" oninput="calcConcrete()"><span class="unit">m</span></div><span class="error-msg">Musbat son kiriting</span></div>
+<div class="divider"></div>
+<div class="panel-desc" style="margin-bottom:18px; color: var(--text-muted);">Aralashma nisbati (sement : qum : shag\'al) — 1 : 2 : 4</div>
+<div class="grid3">
+<div class="field"><label for="c-price-cement">1 qop sement narxi</label><div class="inputrow"><input type="number" id="c-price-cement" placeholder="0" step="1000" min="0" oninput="calcConcrete()"><span class="unit">so\'m</span></div></div>
+<div class="field"><label for="c-price-sand">1 m³ qum narxi</label><div class="inputrow"><input type="number" id="c-price-sand" placeholder="0" step="10000" min="0" oninput="calcConcrete()"><span class="unit">so\'m</span></div></div>
+<div class="field"><label for="c-price-gravel">1 m³ shag\'al narxi</label><div class="inputrow"><input type="number" id="c-price-gravel" placeholder="0" step="10000" min="0" oninput="calcConcrete()"><span class="unit">so\'m</span></div></div>
+</div>
+<div class="divider"></div>
+<div class="result-row three-col">
+<div class="result"><button type="button" class="copy-btn" onclick="copyResult(\'c-cement\',\'qop\')">Nusxa</button><div class="rlabel">Sement</div><div class="rvalue"><span id="c-cement">0</span><span class="u">qop</span></div><div class="price-tag">Narx: <strong id="c-total-cement">—</strong></div></div>
+<div class="result"><button type="button" class="copy-btn" onclick="copyResult(\'c-sand\',\'m³\')">Nusxa</button><div class="rlabel">Qum</div><div class="rvalue"><span id="c-sand">0</span><span class="u">m³</span></div><div class="price-tag">Narx: <strong id="c-total-sand">—</strong></div></div>
+<div class="result"><button type="button" class="copy-btn" onclick="copyResult(\'c-gravel\',\'m³\')">Nusxa</button><div class="rlabel">Shag\'al</div><div class="rvalue"><span id="c-gravel">0</span><span class="u">m³</span></div><div class="price-tag">Narx: <strong id="c-total-gravel">—</strong></div></div>
+</div>
+<div class="total-cost"><span class="total-cost-label">Umumiy narx</span><span class="total-cost-value" id="c-total-all">0 so\'m</span></div>
+<div class="dim"><div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div><div class="dcaption">Beton hajmi: <span id="c-vol">0</span> m³ · sement 50 kg/qop hisobida</div></div>
+</div>
+</section>
+'''
+
+with open('/mnt/agents/output/chizmachi_part2.txt', 'w', encoding='utf-8') as f:
+    f.write(part2)
+
+print("Part 2 saved: Panel 2 (Materials)")
+print(f"Size: {len(part2):,} chars")
