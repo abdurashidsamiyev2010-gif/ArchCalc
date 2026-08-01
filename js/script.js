@@ -25,6 +25,28 @@ function calcArea(){
 }
 
 // Panel 2: Materials
+const brickData = {
+  fired: {
+    name: "Oddiy pishiq g'isht",
+    perM3: 394
+  },
+  hollow: {
+    name: "Teshikli g'isht",
+    perM3: 296
+  },
+  aac: {
+    name: "Gazoblok",
+    perM3: 28
+  },
+  foam: {
+    name: "Penoblok",
+    perM3: 28
+  },
+  block: {
+    name: "Beton blok",
+    perM3: 71
+  }
+};
 function setMatMode(mode, btn){
   document.querySelectorAll('#p2 .radiogroup button').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
@@ -33,14 +55,18 @@ function setMatMode(mode, btn){
 }
 
 function calcBrick(){
+
+  const type = document.getElementById('b-type').value;
+const brick = brickData[type];
+
   const l = parseFloat(document.getElementById('b-l').value) || 0;
   const h = parseFloat(document.getElementById('b-h').value) || 0;
   const thickMult = parseFloat(document.getElementById('b-thick').value) || 1;
 
-  const area = l * h;
-  // ~ 60 bricks per m2 for half-brick wall (0.12m), scaled by thickness multiplier
-  const bricksPerM2 = 60 * thickMult;
-  const bricks = area * bricksPerM2 * 1.05;
+const area = l * h;
+const wallVolume = area * (0.12 * thickMult);
+const bricks = wallVolume * brick.perM3 * 1.05;
+
   document.getElementById('b-bricks').textContent = fmt(Math.ceil(bricks));
 }
 
