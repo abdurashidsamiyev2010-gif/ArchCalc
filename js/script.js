@@ -111,7 +111,7 @@ const brick = brickData[type];
   const thickMult = parseFloat(document.getElementById('b-thick').value) || 1;
 
 const area = l * h;
-const wallVolume = area * (0.12 * thickMult);
+const wallVolume = area * thickMult;
 const bricks = wallVolume * brick.perM3 * 1.05;
 
   document.getElementById('b-bricks').textContent = fmt(Math.ceil(bricks));
@@ -164,5 +164,3 @@ calcArea();
 updateBrickThickness();
 calcConcrete();
 calcScale();
-
-console.log("SCRIPT ISHLADI");
