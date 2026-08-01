@@ -36,6 +36,7 @@ function calcBrick(){
   const l = parseFloat(document.getElementById('b-l').value) || 0;
   const h = parseFloat(document.getElementById('b-h').value) || 0;
   const thickMult = parseFloat(document.getElementById('b-thick').value) || 1;
+
   const area = l * h;
   // ~ 60 bricks per m2 for half-brick wall (0.12m), scaled by thickness multiplier
   const bricksPerM2 = 60 * thickMult;
