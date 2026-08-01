@@ -6,483 +6,9 @@
 <title>Chizmachi — arxitektorlar uchun hisoblash vositalari</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #0a0a0c;
-  --bg-elevated: #121216;
-  --bg-card: rgba(255,255,255,0.03);
-  --border: rgba(255,255,255,0.08);
-  --border-focus: rgba(201,169,110,0.5);
-  --text: #e8e6e1;
-  --text-muted: #8a8780;
-  --accent: #c9a96e;
-  --accent-dim: rgba(201,169,110,0.15);
-  --error: #e74c3c;
-  --success: #27ae60;
-  --font-heading: 'Space Grotesk', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: var(--font-body);
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  min-height: 100vh;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* Crop corners */
-.crop {
-  position: fixed;
-  width: 40px;
-  height: 40px;
-  border-color: var(--accent);
-  border-style: solid;
-  opacity: 0.25;
-  pointer-events: none;
-  z-index: 100;
-}
-.crop.tl { top: 20px; left: 20px; border-width: 1px 0 0 1px; }
-.crop.tr { top: 20px; right: 20px; border-width: 1px 1px 0 0; }
-.crop.bl { bottom: 20px; left: 20px; border-width: 0 0 1px 1px; }
-.crop.br { bottom: 20px; right: 20px; border-width: 0 1px 1px 0; }
-
-.wrap {
-  max-width: 880px;
-  margin: 0 auto;
-  padding: 60px 24px 40px;
-}
-
-/* Header */
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--accent);
-  margin-bottom: 16px;
-}
-
-h1 {
-  font-family: var(--font-heading);
-  font-size: clamp(28px, 5vw, 44px);
-  font-weight: 600;
-  line-height: 1.15;
-  margin-bottom: 14px;
-  background: linear-gradient(135deg, var(--text) 0%, #a09d96 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-header p {
-  color: var(--text-muted);
-  font-size: 16px;
-  max-width: 580px;
-  margin-bottom: 36px;
-  line-height: 1.6;
-}
-
-/* Tabs */
-.tabs {
-  display: flex;
-  gap: 8px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 32px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.tabs::-webkit-scrollbar { display: none; }
-
-.tabs button {
-  font-family: var(--font-heading);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-muted);
-  background: none;
-  border: none;
-  padding: 14px 18px;
-  cursor: pointer;
-  position: relative;
-  white-space: nowrap;
-  transition: color 0.25s;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.tabs button:hover { color: var(--text); }
-.tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 4px; }
-.tabs button.active { color: var(--accent); }
-
-.tabs button.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--accent);
-  border-radius: 2px 2px 0 0;
-}
-
-.num {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  opacity: 0.5;
-}
-
-/* Panels */
-.panel {
-  display: none;
-  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.panel.active { display: block; }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.panel-title {
-  font-family: var(--font-heading);
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  letter-spacing: -0.01em;
-}
-
-.panel-desc {
-  color: var(--text-muted);
-  font-size: 15px;
-  margin-bottom: 28px;
-  max-width: 620px;
-  line-height: 1.55;
-}
-
-/* Cards */
-.card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 28px;
-  backdrop-filter: blur(12px);
-  position: relative;
-}
-
-/* Grid */
-.grid2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 4px;
-}
-@media (max-width: 640px) {
-  .grid2 { grid-template-columns: 1fr; gap: 0; }
-}
-
-/* Fields */
-.field {
-  margin-bottom: 20px;
-}
-.field:last-child { margin-bottom: 0; }
-
-label {
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-  letter-spacing: 0.02em;
-  transition: color 0.2s;
-}
-
-.inputrow {
-  display: flex;
-  align-items: center;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 0 14px;
-  height: 50px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.inputrow:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-dim);
-}
-
-.inputrow.error {
-  border-color: var(--error);
-  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.12);
-}
-
-input[type="number"], select {
-  flex: 1;
-  background: none;
-  border: none;
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 15px;
-  outline: none;
-  width: 100%;
-}
-
-input[type="number"]::placeholder { color: var(--text-muted); opacity: 0.5; }
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button { opacity: 0.4; }
-
-.unit {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-left: 10px;
-  white-space: nowrap;
-  opacity: 0.8;
-}
-
-select {
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238a8780' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 36px;
-}
-select option {
-  background-color: #121216;
-  color: #e8e6e1;
-}
-/* Radio groups */
-.radiogroup {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-}
-
-.radiogroup button {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 500;
-  padding: 10px 18px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--bg-elevated);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.radiogroup button:hover {
-  border-color: var(--accent);
-  color: var(--text);
-}
-
-.radiogroup button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.radiogroup button.active {
-  background: var(--accent-dim);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* Divider */
-.divider {
-  height: 1px;
-  background: var(--border);
-  margin: 28px 0;
-}
-
-/* Results */
-.result-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-@media (max-width: 640px) {
-  .result-row { grid-template-columns: 1fr; }
-}
-
-.result {
-  background: rgba(201,169,110,0.04);
-  border: 1px solid rgba(201,169,110,0.12);
-  border-radius: 12px;
-  padding: 22px;
-  position: relative;
-  transition: background 0.2s, transform 0.2s;
-}
-
-.result:hover {
-  background: rgba(201,169,110,0.07);
-}
-
-.result-row.three-col {
-  grid-template-columns: 1fr 1fr 1fr;
-}
-@media (max-width: 640px) {
-  .result-row.three-col { grid-template-columns: 1fr; }
-}
-
-.rlabel {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-
-.rvalue {
-  font-family: var(--font-mono);
-  font-size: 30px;
-  font-weight: 500;
-  color: var(--accent);
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  word-break: break-all;
-  line-height: 1.2;
-}
-
-.rvalue .u {
-  font-size: 14px;
-  color: var(--text-muted);
-  font-weight: 400;
-}
-
-/* Dim / caption */
-.dim {
-  margin-top: 24px;
-  text-align: center;
-}
-
-.dline {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
-  opacity: 0.35;
-}
-
-.bar {
-  flex: 1;
-  height: 1px;
-  background: var(--text-muted);
-}
-
-.tick {
-  width: 4px;
-  height: 4px;
-  background: var(--text-muted);
-  transform: rotate(45deg);
-  flex-shrink: 0;
-}
-
-.dcaption {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-  line-height: 1.5;
-}
-
-/* Footer */
-footer {
-  margin-top: 56px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-  font-size: 12px;
-  color: var(--text-muted);
-  letter-spacing: 0.02em;
-}
-
-/* Utility buttons */
-.copy-btn, .reset-btn {
-  position: absolute;
-  top: 14px;
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--text-muted);
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-size: 11px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: var(--font-body);
-  font-weight: 500;
-  letter-spacing: 0.03em;
-}
-
-.copy-btn { right: 14px; }
-.reset-btn { right: 82px; }
-
-.copy-btn:hover, .reset-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-dim);
-}
-
-.copy-btn:active, .reset-btn:active { transform: scale(0.96); }
-
-.error-msg {
-  color: var(--error);
-  font-size: 12px;
-  margin-top: 6px;
-  display: none;
-  font-weight: 500;
-}
-
-/* Toast */
-.toast {
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  background: var(--accent);
-  color: var(--bg);
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  opacity: 0;
-  transform: translateY(12px);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 1000;
-  pointer-events: none;
-  box-shadow: 0 8px 24px rgba(201,169,110,0.25);
-}
-.toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Print */
-@media print {
-  body { background: white; color: #111; }
-  .crop, .tabs, .copy-btn, .reset-btn, .radiogroup, .toast { display: none !important; }
-  .panel { display: block !important; page-break-inside: avoid; margin-bottom: 40px; }
-  .card { border: 1px solid #ddd; background: #fafafa; }
-  .result { border: 1px solid #e0e0e0; background: #f5f5f5; }
-  .panel-title { color: #111; }
-  .panel-desc { color: #555; }
-  h1 { -webkit-text-fill-color: #111; background: none; color: #111; }
-  .eyebrow { color: #886a30; }
-  .rvalue { color: #886a30; }
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
-}
-</style>
+<!-- CSS ULASH — style.css fayli css/ papkasida joylashgan -->
+<link rel="stylesheet" href="css/style.css">
+<base target="_blank">
 </head>
 <body>
 
@@ -493,20 +19,26 @@ footer {
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">Chizmachi · 2026 / v2.0</div>
+    <div class="header-top">
+      <div class="eyebrow">Chizmachi · 2026 / v2.0 Premium</div>
+      <div class="controls">
+        <button type="button" id="sound-btn" class="icon-btn" onclick="toggleSound()" title="Ovozni o'chirish">🔊</button>
+        <button type="button" id="theme-btn" class="icon-btn" onclick="toggleTheme()" title="Yorug' rejim">☀️</button>
+      </div>
+    </div>
     <h1>Kundalik hisob-kitoblarni chizma aniqligida bajaring</h1>
     <p>Maydon, material va masshtab hisob-kitoblari uchun uchta vositа — loyihalash jarayonida qo'l ostida.</p>
 
-    <nav class="tabs" role="tablist" aria-label="Hisoblagichlar">
-      <button class="active" data-panel="p1" onclick="showPanel('p1',this)" role="tab" aria-selected="true" aria-controls="p1" id="tab-p1" tabindex="0"><span class="num">01</span>Maydon / hajm</button>
-      <button data-panel="p2" onclick="showPanel('p2',this)" role="tab" aria-selected="false" aria-controls="p2" id="tab-p2" tabindex="-1"><span class="num">02</span>Materiallar</button>
-      <button data-panel="p3" onclick="showPanel('p3',this)" role="tab" aria-selected="false" aria-controls="p3" id="tab-p3" tabindex="-1"><span class="num">03</span>Masshtab</button>
+    <nav class="tabs">
+      <button class="active" data-panel="p1" onclick="showPanel('p1',this)"><span class="num">01</span>Maydon / hajm</button>
+      <button data-panel="p2" onclick="showPanel('p2',this)"><span class="num">02</span>Materiallar</button>
+      <button data-panel="p3" onclick="showPanel('p3',this)"><span class="num">03</span>Masshtab</button>
     </nav>
   </header>
 
   <main>
     <!-- PANEL 1: Maydon / hajm -->
-    <section class="panel active" id="p1" role="tabpanel" aria-labelledby="tab-p1">
+    <section class="panel active" id="p1">
       <div class="panel-title">Maydon va hajm hisoblagichi</div>
       <div class="panel-desc">Xona yoki maydon o'lchamlarini kiriting — maydon avtomatik hisoblanadi. Balandlikni qo'shsangiz, hajm ham chiqadi.</div>
 
@@ -515,41 +47,41 @@ footer {
           <div class="field">
             <label for="a-l">Uzunlik</label>
             <div class="inputrow">
-              <input type="number" id="a-l" placeholder="0.00" step="0.01" min="0" oninput="calcArea()" aria-describedby="a-l-error">
+              <input type="number" id="a-l" placeholder="0.00" step="0.01" min="0" oninput="calcArea()">
               <span class="unit">m</span>
             </div>
-            <span class="error-msg" id="a-l-error">Musbat son kiriting</span>
+            <span class="error-msg">Musbat son kiriting</span>
           </div>
           <div class="field">
             <label for="a-w">Kenglik</label>
             <div class="inputrow">
-              <input type="number" id="a-w" placeholder="0.00" step="0.01" min="0" oninput="calcArea()" aria-describedby="a-w-error">
+              <input type="number" id="a-w" placeholder="0.00" step="0.01" min="0" oninput="calcArea()">
               <span class="unit">m</span>
             </div>
-            <span class="error-msg" id="a-w-error">Musbat son kiriting</span>
+            <span class="error-msg">Musbat son kiriting</span>
           </div>
         </div>
         <div class="field">
           <label for="a-h">Balandlik (ixtiyoriy)</label>
           <div class="inputrow">
-            <input type="number" id="a-h" placeholder="0.00" step="0.01" min="0" oninput="calcArea()" aria-describedby="a-h-error">
+            <input type="number" id="a-h" placeholder="0.00" step="0.01" min="0" oninput="calcArea()">
             <span class="unit">m</span>
           </div>
-          <span class="error-msg" id="a-h-error">Musbat son kiriting</span>
+          <span class="error-msg">Musbat son kiriting</span>
         </div>
 
         <div class="divider"></div>
 
         <div class="result-row">
           <div class="result">
-            <button type="button" class="copy-btn" onclick="copyResult('a-area','a-area-u')" aria-label="Maydonni nusxalash">Nusxa</button>
+            <button type="button" class="copy-btn" onclick="copyResult('a-area','m²')">Nusxa</button>
             <div class="rlabel">Maydon</div>
-            <div class="rvalue"><span id="a-area">0</span><span class="u" id="a-area-u">m²</span></div>
+            <div class="rvalue"><span id="a-area">0</span><span class="u">m²</span></div>
           </div>
           <div class="result">
-            <button type="button" class="copy-btn" onclick="copyResult('a-vol','a-vol-u')" aria-label="Hajmni nusxalash">Nusxa</button>
+            <button type="button" class="copy-btn" onclick="copyResult('a-vol','m³')">Nusxa</button>
             <div class="rlabel">Hajm</div>
-            <div class="rvalue"><span id="a-vol">—</span><span class="u" id="a-vol-u">m³</span></div>
+            <div class="rvalue"><span id="a-vol">—</span><span class="u">m³</span></div>
           </div>
         </div>
 
@@ -561,32 +93,33 @@ footer {
     </section>
 
     <!-- PANEL 2: Materiallar -->
-    <section class="panel" id="p2" role="tabpanel" aria-labelledby="tab-p2" hidden>
+    <section class="panel" id="p2">
       <div class="panel-title">Qurilish materiallari kalkulyatori</div>
-      <div class="panel-desc">G'isht devor yoki beton hajmi uchun kerakli material miqdorini hisoblang.</div>
+      <div class="panel-desc">G'isht devor yoki beton hajmi uchun kerakli material miqdorini va narxini hisoblang.</div>
 
-      <div class="radiogroup" role="radiogroup" aria-label="Material turi">
-        <button class="active" data-mode="brick" onclick="setMatMode('brick',this)" role="radio" aria-checked="true" tabindex="0">G'isht devor</button>
-        <button data-mode="concrete" onclick="setMatMode('concrete',this)" role="radio" aria-checked="false" tabindex="-1">Beton</button>
+      <div class="radiogroup">
+        <button class="active" onclick="setMatMode('brick',this)">G'isht devor</button>
+        <button onclick="setMatMode('concrete',this)">Beton</button>
       </div>
 
+      <!-- BRICK MODE -->
       <div class="card" id="mat-brick">
         <div class="grid2">
           <div class="field">
             <label for="b-l">Devor uzunligi</label>
             <div class="inputrow">
-              <input type="number" id="b-l" placeholder="0.00" step="0.01" min="0" oninput="calcBrick()" aria-describedby="b-l-error">
+              <input type="number" id="b-l" placeholder="0.00" step="0.01" min="0" oninput="calcBrick()">
               <span class="unit">m</span>
             </div>
-            <span class="error-msg" id="b-l-error">Musbat son kiriting</span>
+            <span class="error-msg">Musbat son kiriting</span>
           </div>
           <div class="field">
             <label for="b-h">Devor balandligi</label>
             <div class="inputrow">
-              <input type="number" id="b-h" placeholder="0.00" step="0.01" min="0" oninput="calcBrick()" aria-describedby="b-h-error">
+              <input type="number" id="b-h" placeholder="0.00" step="0.01" min="0" oninput="calcBrick()">
               <span class="unit">m</span>
             </div>
-            <span class="error-msg" id="b-h-error">Musbat son kiriting</span>
+            <span class="error-msg">Musbat son kiriting</span>
           </div>
         </div>
         <div class="field">
@@ -599,17 +132,28 @@ footer {
             <option value="block">Beton blok (39×19×19 sm)</option>
           </select>
         </div>
-
         <div class="field">
           <label for="b-thick">Devor qalinligi</label>
           <select id="b-thick" onchange="calcBrick()"></select>
         </div>
+        <div class="field">
+          <label for="b-price">1 dona narxi (so'm)</label>
+          <div class="inputrow">
+            <input type="number" id="b-price" placeholder="0" step="100" min="0" oninput="calcBrick()">
+            <span class="unit">so'm</span>
+          </div>
+          <span class="error-msg">Musbat son kiriting</span>
+        </div>
 
         <div class="divider"></div>
         <div class="result">
-          <button type="button" class="copy-btn" onclick="copyResult('b-bricks','b-unit')" aria-label="Natijani nusxalash">Nusxa</button>
+          <button type="button" class="copy-btn" onclick="copyResult('b-bricks','dona')">Nusxa</button>
           <div class="rlabel" id="b-label">Kerakli g'isht (zaxira bilan +5%)</div>
-          <div class="rvalue"><span id="b-bricks">0</span><span class="u" id="b-unit">dona</span></div>
+          <div class="rvalue"><span id="b-bricks">0</span><span class="u">dona</span></div>
+        </div>
+        <div class="total-cost">
+          <span class="total-cost-label">Umumiy narx</span>
+          <span class="total-cost-value" id="b-total">0 so'm</span>
         </div>
         <div class="dim">
           <div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div>
@@ -617,52 +161,86 @@ footer {
         </div>
       </div>
 
+      <!-- CONCRETE MODE -->
       <div class="card" id="mat-concrete" style="display:none;">
         <div class="grid2">
           <div class="field">
             <label for="c-l">Uzunlik</label>
             <div class="inputrow">
-              <input type="number" id="c-l" placeholder="0.00" step="0.01" min="0" oninput="calcConcrete()" aria-describedby="c-l-error">
+              <input type="number" id="c-l" placeholder="0.00" step="0.01" min="0" oninput="calcConcrete()">
               <span class="unit">m</span>
             </div>
-            <span class="error-msg" id="c-l-error">Musbat son kiriting</span>
+            <span class="error-msg">Musbat son kiriting</span>
           </div>
           <div class="field">
             <label for="c-w">Kenglik</label>
             <div class="inputrow">
-              <input type="number" id="c-w" placeholder="0.00" step="0.01" min="0" oninput="calcConcrete()" aria-describedby="c-w-error">
+              <input type="number" id="c-w" placeholder="0.00" step="0.01" min="0" oninput="calcConcrete()">
               <span class="unit">m</span>
             </div>
-            <span class="error-msg" id="c-w-error">Musbat son kiriting</span>
+            <span class="error-msg">Musbat son kiriting</span>
           </div>
         </div>
         <div class="field">
           <label for="c-t">Qalinlik</label>
           <div class="inputrow">
-            <input type="number" id="c-t" placeholder="0.00" step="0.01" min="0" oninput="calcConcrete()" aria-describedby="c-t-error">
+            <input type="number" id="c-t" placeholder="0.00" step="0.01" min="0" oninput="calcConcrete()">
             <span class="unit">m</span>
           </div>
-          <span class="error-msg" id="c-t-error">Musbat son kiriting</span>
+          <span class="error-msg">Musbat son kiriting</span>
         </div>
 
         <div class="divider"></div>
         <div class="panel-desc" style="margin-bottom:18px; color: var(--text-muted);">Aralashma nisbati (sement : qum : shag'al) — 1 : 2 : 4</div>
+
+        <div class="grid3">
+          <div class="field">
+            <label for="c-price-cement">1 qop sement narxi</label>
+            <div class="inputrow">
+              <input type="number" id="c-price-cement" placeholder="0" step="1000" min="0" oninput="calcConcrete()">
+              <span class="unit">so'm</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="c-price-sand">1 m³ qum narxi</label>
+            <div class="inputrow">
+              <input type="number" id="c-price-sand" placeholder="0" step="10000" min="0" oninput="calcConcrete()">
+              <span class="unit">so'm</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="c-price-gravel">1 m³ shag'al narxi</label>
+            <div class="inputrow">
+              <input type="number" id="c-price-gravel" placeholder="0" step="10000" min="0" oninput="calcConcrete()">
+              <span class="unit">so'm</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
         <div class="result-row three-col">
           <div class="result">
-            <button type="button" class="copy-btn" onclick="copyResult('c-cement','c-cement-u')" aria-label="Sementni nusxalash">Nusxa</button>
+            <button type="button" class="copy-btn" onclick="copyResult('c-cement','qop')">Nusxa</button>
             <div class="rlabel">Sement</div>
-            <div class="rvalue"><span id="c-cement">0</span><span class="u" id="c-cement-u">qop</span></div>
+            <div class="rvalue"><span id="c-cement">0</span><span class="u">qop</span></div>
+            <div class="price-tag">Narx: <strong id="c-total-cement">—</strong></div>
           </div>
           <div class="result">
-            <button type="button" class="copy-btn" onclick="copyResult('c-sand','c-sand-u')" aria-label="Qumni nusxalash">Nusxa</button>
+            <button type="button" class="copy-btn" onclick="copyResult('c-sand','m³')">Nusxa</button>
             <div class="rlabel">Qum</div>
-            <div class="rvalue"><span id="c-sand">0</span><span class="u" id="c-sand-u">m³</span></div>
+            <div class="rvalue"><span id="c-sand">0</span><span class="u">m³</span></div>
+            <div class="price-tag">Narx: <strong id="c-total-sand">—</strong></div>
           </div>
           <div class="result">
-            <button type="button" class="copy-btn" onclick="copyResult('c-gravel','c-gravel-u')" aria-label="Shag'alni nusxalash">Nusxa</button>
+            <button type="button" class="copy-btn" onclick="copyResult('c-gravel','m³')">Nusxa</button>
             <div class="rlabel">Shag'al</div>
-            <div class="rvalue"><span id="c-gravel">0</span><span class="u" id="c-gravel-u">m³</span></div>
+            <div class="rvalue"><span id="c-gravel">0</span><span class="u">m³</span></div>
+            <div class="price-tag">Narx: <strong id="c-total-gravel">—</strong></div>
           </div>
+        </div>
+        <div class="total-cost">
+          <span class="total-cost-label">Umumiy narx</span>
+          <span class="total-cost-value" id="c-total-all">0 so'm</span>
         </div>
         <div class="dim">
           <div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div>
@@ -672,13 +250,13 @@ footer {
     </section>
 
     <!-- PANEL 3: Masshtab -->
-    <section class="panel" id="p3" role="tabpanel" aria-labelledby="tab-p3" hidden>
+    <section class="panel" id="p3">
       <div class="panel-title">Masshtab / o'lchov konvertori</div>
-      <div class="panel-desc">Chizmadagi o'lchamni haqiqiy o'lchamga yoki aksincha o'giring.</div>
+      <div class="panel-desc">Chizmadagi o'lchamni haqiqiy o'lchamga yoki aksincha o'giring. Avtomatik mm/sm/m tanlaydi.</div>
 
-      <div class="radiogroup" role="radiogroup" aria-label="Konvertatsiya yo'nalishi">
-        <button class="active" data-mode="toreal" onclick="setScaleMode('toreal',this)" role="radio" aria-checked="true" tabindex="0">Chizma → haqiqiy</button>
-        <button data-mode="todrawing" onclick="setScaleMode('todrawing',this)" role="radio" aria-checked="false" tabindex="-1">Haqiqiy → chizma</button>
+      <div class="radiogroup">
+        <button class="active" onclick="setScaleMode('toreal',this)">Chizma → haqiqiy</button>
+        <button onclick="setScaleMode('todrawing',this)">Haqiqiy → chizma</button>
       </div>
 
       <div class="card">
@@ -686,24 +264,24 @@ footer {
           <div class="field">
             <label for="s-val" id="s-inlabel">Chizmadagi o'lcham</label>
             <div class="inputrow">
-              <input type="number" id="s-val" placeholder="0.00" step="0.01" min="0" oninput="calcScale()" aria-describedby="s-val-error">
+              <input type="number" id="s-val" placeholder="0.00" step="0.01" min="0" oninput="calcScale()">
               <span class="unit" id="s-inunit">sm</span>
             </div>
-            <span class="error-msg" id="s-val-error">Musbat son kiriting</span>
+            <span class="error-msg">Musbat son kiriting</span>
           </div>
           <div class="field">
             <label for="s-ratio">Masshtab (1 : N)</label>
             <div class="inputrow">
               <span class="unit">1 :</span>
-              <input type="number" id="s-ratio" placeholder="100" value="100" step="1" min="1" oninput="calcScale()" aria-describedby="s-ratio-error">
+              <input type="number" id="s-ratio" placeholder="100" value="100" step="1" min="1" oninput="calcScale()">
             </div>
-            <span class="error-msg" id="s-ratio-error">1 dan katta son kiriting</span>
+            <span class="error-msg">1 dan katta son kiriting</span>
           </div>
         </div>
 
         <div class="divider"></div>
         <div class="result">
-          <button type="button" class="copy-btn" onclick="copyResult('s-out','s-outunit')" aria-label="Natijani nusxalash">Nusxa</button>
+          <button type="button" class="copy-btn" onclick="copyResult('s-out',document.getElementById('s-outunit').textContent)">Nusxa</button>
           <div class="rlabel" id="s-outlabel">Haqiqiy o'lcham</div>
           <div class="rvalue"><span id="s-out">0</span><span class="u" id="s-outunit">m</span></div>
         </div>
@@ -721,494 +299,10 @@ footer {
   </footer>
 </div>
 
-<script>
-// ========== MA'LUMOTLAR ==========
-const materials = {
-  fired: {
-    name: "g'isht",
-    size: [0.25, 0.12, 0.065],
-    perM3: 400,
-    thicknesses: [
-      {value: 0.12, label: "0.5 g'isht (12 sm)"},
-      {value: 0.25, label: "1 g'isht (25 sm)"},
-      {value: 0.38, label: "1.5 g'isht (38 sm)"},
-      {value: 0.51, label: "2 g'isht (51 sm)"}
-    ]
-  },
-  hollow: {
-    name: "g'isht",
-    size: [0.25, 0.12, 0.088],
-    perM3: 300,
-    thicknesses: [
-      {value: 0.12, label: "0.5 g'isht (12 sm)"},
-      {value: 0.25, label: "1 g'isht (25 sm)"},
-      {value: 0.38, label: "1.5 g'isht (38 sm)"},
-      {value: 0.51, label: "2 g'isht (51 sm)"}
-    ]
-  },
-  aac: {
-    name: "blok",
-    size: [0.60, 0.30, 0.20],
-    perM3: 28,
-    thicknesses: [
-      {value: 0.10, label: "10 sm"},
-      {value: 0.15, label: "15 sm"},
-      {value: 0.20, label: "20 sm"},
-      {value: 0.25, label: "25 sm"},
-      {value: 0.30, label: "30 sm"},
-      {value: 0.35, label: "35 sm"},
-      {value: 0.40, label: "40 sm"}
-    ]
-  },
-  foam: {
-    name: "blok",
-    size: [0.60, 0.30, 0.20],
-    perM3: 28,
-    thicknesses: [
-      {value: 0.10, label: "10 sm"},
-      {value: 0.15, label: "15 sm"},
-      {value: 0.20, label: "20 sm"},
-      {value: 0.25, label: "25 sm"},
-      {value: 0.30, label: "30 sm"},
-      {value: 0.35, label: "35 sm"},
-      {value: 0.40, label: "40 sm"}
-    ]
-  },
-  block: {
-    name: "blok",
-    size: [0.39, 0.19, 0.19],
-    perM3: 65,
-    thicknesses: [
-      {value: 0.19, label: "19 sm"},
-      {value: 0.39, label: "39 sm"}
-    ]
-  }
-};
+<div id="toast" class="toast"></div>
 
-// ========== YORDAMCHI FUNKSIYALAR ==========
-function formatNumber(num, decimals = 2) {
-  if (isNaN(num) || !isFinite(num)) return '0';
-  return num.toLocaleString('uz-UZ', {
-    minimumFractionDigits: num % 1 === 0 ? 0 : decimals,
-    maximumFractionDigits: decimals
-  });
-}
-
-function formatLength(cm, mode = 'auto') {
-  if (cm === 0) return { value: '0', unit: 'sm' };
-  const m = cm / 100;
-  const km = m / 1000;
-  const mm = cm * 10;
-  
-  if (mode === 'mm' && mm < 1000) return { value: formatNumber(mm, 1), unit: 'mm' };
-  if (mode === 'cm') return { value: formatNumber(cm, 2), unit: 'sm' };
-  if (mode === 'm') return { value: formatNumber(m, 3), unit: 'm' };
-  
-  if (km >= 1) return { value: formatNumber(km, 3), unit: 'km' };
-  if (m >= 1) return { value: formatNumber(m, 2), unit: 'm' };
-  if (cm >= 1) return { value: formatNumber(cm, 2), unit: 'sm' };
-  return { value: formatNumber(mm, 1), unit: 'mm' };
-}
-
-function showToast(msg) {
-  let toast = document.getElementById('toast');
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.id = 'toast';
-    toast.className = 'toast';
-    document.body.appendChild(toast);
-  }
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2000);
-}
-
-function validateInput(input) {
-  const val = parseFloat(input.value);
-  const field = input.closest('.field');
-  const errorEl = field?.querySelector('.error-msg');
-  const row = input.closest('.inputrow');
-  
-  if (input.value && (isNaN(val) || val < 0)) {
-    row?.classList.add('error');
-    if (errorEl) errorEl.style.display = 'block';
-    return false;
-  } else {
-    row?.classList.remove('error');
-    if (errorEl) errorEl.style.display = 'none';
-    return true;
-  }
-}
-
-// ========== PANEL ALMASHISH ==========
-function showPanel(id, btn) {
-  document.querySelectorAll('.panel').forEach(p => {
-    p.classList.remove('active');
-    p.hidden = true;
-  });
-  document.querySelectorAll('.tabs button').forEach(b => {
-    b.classList.remove('active');
-    b.setAttribute('aria-selected', 'false');
-    b.setAttribute('tabindex', '-1');
-  });
-  
-  const panel = document.getElementById(id);
-  panel.classList.add('active');
-  panel.hidden = false;
-  
-  btn.classList.add('active');
-  btn.setAttribute('aria-selected', 'true');
-  btn.setAttribute('tabindex', '0');
-  btn.focus();
-  
-  saveToStorage();
-}
-
-// ========== MAYDON / HAJM ==========
-function calcArea() {
-  const l = parseFloat(document.getElementById('a-l').value) || 0;
-  const w = parseFloat(document.getElementById('a-w').value) || 0;
-  const h = parseFloat(document.getElementById('a-h').value) || 0;
-  
-  validateInput(document.getElementById('a-l'));
-  validateInput(document.getElementById('a-w'));
-  validateInput(document.getElementById('a-h'));
-  
-  const area = l * w;
-  const vol = h > 0 ? area * h : null;
-  
-  document.getElementById('a-area').textContent = formatNumber(area, 2);
-  document.getElementById('a-vol').textContent = vol !== null ? formatNumber(vol, 2) : '—';
-  document.getElementById('a-dim').textContent = 
-    h > 0 
-      ? `${formatNumber(l, 2)} m × ${formatNumber(w, 2)} m × ${formatNumber(h, 2)} m = ${formatNumber(vol, 2)} m³` 
-      : `${formatNumber(l, 2)} m × ${formatNumber(w, 2)} m = ${formatNumber(area, 2)} m²`;
-  
-  saveToStorage();
-}
-
-// ========== MATERIALLAR ==========
-function setMatMode(mode, btn) {
-  document.querySelectorAll('#p2 .radiogroup button').forEach(b => {
-    b.classList.remove('active');
-    b.setAttribute('aria-checked', 'false');
-    b.setAttribute('tabindex', '-1');
-  });
-  btn.classList.add('active');
-  btn.setAttribute('aria-checked', 'true');
-  btn.setAttribute('tabindex', '0');
-  
-  document.getElementById('mat-brick').style.display = mode === 'brick' ? 'block' : 'none';
-  document.getElementById('mat-concrete').style.display = mode === 'concrete' ? 'block' : 'none';
-  
-  saveToStorage();
-}
-
-function updateBrickThickness() {
-  const type = document.getElementById('b-type').value;
-  const select = document.getElementById('b-thick');
-  const mat = materials[type];
-  
-  select.innerHTML = '';
-  mat.thicknesses.forEach(t => {
-    const opt = document.createElement('option');
-    opt.value = t.value;
-    opt.textContent = t.label;
-    select.appendChild(opt);
-  });
-  
-  document.getElementById('b-label').textContent = `Kerakli ${mat.name} (zaxira bilan +5%)`;
-  document.getElementById('b-unit').textContent = mat.unit;
-  
-  const dimText = {
-    fired: "Standart g'isht: 25×12×6.5 sm, devor hajmiga qarab hisoblanadi",
-    hollow: "Teshikli g'isht: 25×12×8.8 sm, devor hajmiga qarab hisoblanadi",
-    aac: "Gazoblok: 60×30×20 sm, yopishgich bilan o'rnatiladi",
-    foam: "Penoblok: 60×30×20 sm, yopishgich bilan o'rnatiladi",
-    block: "Beton blok: 39×19×19 sm, aralashma bilan o'rnatiladi"
-  };
-  document.getElementById('b-dim').textContent = dimText[type] || '';
-  
-  calcBrick();
-}
-
-function calcBrick() {
-  const type = document.getElementById('b-type').value;
-  const l = parseFloat(document.getElementById('b-l').value) || 0;
-  const h = parseFloat(document.getElementById('b-h').value) || 0;
-  const t = parseFloat(document.getElementById('b-thick').value) || 0;
-  
-  validateInput(document.getElementById('b-l'));
-  validateInput(document.getElementById('b-h'));
-  
-  if (l <= 0 || h <= 0 || t <= 0) {
-    document.getElementById('b-bricks').textContent = '0';
-    return;
-  }
-  
-  const mat = materials[type];
-  const wallVolume = l * h * t;
-  const pieces = Math.ceil(wallVolume * mat.perM3 * 1.05);
-  
-  document.getElementById('b-bricks').textContent = formatNumber(pieces, 0);
-  saveToStorage();
-}
-
-function calcConcrete() {
-  const l = parseFloat(document.getElementById('c-l').value) || 0;
-  const w = parseFloat(document.getElementById('c-w').value) || 0;
-  const t = parseFloat(document.getElementById('c-t').value) || 0;
-  
-  validateInput(document.getElementById('c-l'));
-  validateInput(document.getElementById('c-w'));
-  validateInput(document.getElementById('c-t'));
-  
-  const vol = l * w * t;
-  
-  // 1:2:4 aralashma, 1 m³ ≈ 6.5 qop sement, 0.42 m³ qum, 0.84 m³ shag'al
-  const cementBags = vol > 0 ? Math.ceil(vol * 6.5) : 0;
-  const sand = vol * 0.42;
-  const gravel = vol * 0.84;
-  
-  document.getElementById('c-cement').textContent = formatNumber(cementBags, 0);
-  document.getElementById('c-sand').textContent = formatNumber(sand, 2);
-  document.getElementById('c-gravel').textContent = formatNumber(gravel, 2);
-  document.getElementById('c-vol').textContent = formatNumber(vol, 2);
-  
-  saveToStorage();
-}
-
-// ========== MASSHTAB ==========
-let scaleMode = 'toreal';
-
-function setScaleMode(mode, btn) {
-  scaleMode = mode;
-  document.querySelectorAll('#p3 .radiogroup button').forEach(b => {
-    b.classList.remove('active');
-    b.setAttribute('aria-checked', 'false');
-    b.setAttribute('tabindex', '-1');
-  });
-  btn.classList.add('active');
-  btn.setAttribute('aria-checked', 'true');
-  btn.setAttribute('tabindex', '0');
-  
-  const inLabel = document.getElementById('s-inlabel');
-  const inUnit = document.getElementById('s-inunit');
-  const outLabel = document.getElementById('s-outlabel');
-  const outUnit = document.getElementById('s-outunit');
-  const dim = document.getElementById('s-dim');
-  
-  if (mode === 'toreal') {
-    inLabel.textContent = 'Chizmadagi o\'lcham';
-    inUnit.textContent = 'sm';
-    outLabel.textContent = 'Haqiqiy o\'lcham';
-    outUnit.textContent = 'm';
-    dim.textContent = '1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o\'lchamga teng';
-  } else {
-    inLabel.textContent = 'Haqiqiy o\'lcham';
-    inUnit.textContent = 'm';
-    outLabel.textContent = 'Chizmadagi o\'lcham';
-    outUnit.textContent = 'sm';
-    dim.textContent = '1:100 masshtabda 1 m haqiqiy = 1 sm chizmada';
-  }
-  
-  calcScale();
-}
-
-function calcScale() {
-  const val = parseFloat(document.getElementById('s-val').value) || 0;
-  const ratio = parseFloat(document.getElementById('s-ratio').value) || 1;
-  
-  validateInput(document.getElementById('s-val'));
-  validateInput(document.getElementById('s-ratio'));
-  
-  if (val <= 0 || ratio <= 0) {
-    document.getElementById('s-out').textContent = '0';
-    return;
-  }
-  
-  let result, unit;
-  
-  if (scaleMode === 'toreal') {
-    const realCm = val * ratio;
-    const formatted = formatLength(realCm, 'auto');
-    result = formatted.value;
-    unit = formatted.unit;
-  } else {
-    const drawingCm = (val * 100) / ratio;
-    const formatted = formatLength(drawingCm, 'auto');
-    result = formatted.value;
-    unit = formatted.unit;
-  }
-  
-  document.getElementById('s-out').textContent = result;
-  document.getElementById('s-outunit').textContent = unit;
-  
-  const ratioVal = document.getElementById('s-ratio').value || 100;
-  const inVal = document.getElementById('s-val').value || 0;
-  const inUnitText = scaleMode === 'toreal' ? 'sm' : 'm';
-  
-  document.getElementById('s-dim').textContent = 
-    `1:${ratioVal} masshtabda ${inVal} ${inUnitText} = ${result} ${unit}`;
-  
-  saveToStorage();
-}
-
-// ========== NUSXA OLSH / TOZALASH ==========
-async function copyResult(textId, unitId) {
-  const val = document.getElementById(textId).textContent;
-  const unit = unitId ? document.getElementById(unitId).textContent : '';
-  const text = `${val} ${unit}`.trim();
-  
-  try {
-    await navigator.clipboard.writeText(text);
-    showToast('Nusxalandi: ' + text);
-  } catch (e) {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    showToast('Nusxalandi');
-  }
-}
-
-function resetPanel(panelId) {
-  const panel = document.getElementById(panelId);
-  panel.querySelectorAll('input[type="number"]').forEach(input => {
-    input.value = '';
-  });
-  
-  if (panelId === 'p1') {
-    document.getElementById('a-area').textContent = '0';
-    document.getElementById('a-vol').textContent = '—';
-    document.getElementById('a-dim').textContent = 'Uzunlik × kenglik = maydon';
-  } else if (panelId === 'p2') {
-    document.getElementById('b-bricks').textContent = '0';
-    document.getElementById('c-cement').textContent = '0';
-    document.getElementById('c-sand').textContent = '0';
-    document.getElementById('c-gravel').textContent = '0';
-    document.getElementById('c-vol').textContent = '0';
-  } else if (panelId === 'p3') {
-    document.getElementById('s-out').textContent = '0';
-    document.getElementById('s-dim').textContent = scaleMode === 'toreal' 
-      ? '1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o\'lchamga teng'
-      : '1:100 masshtabda 1 m haqiqiy = 1 sm chizmada';
-  }
-  
-  saveToStorage();
-}
-
-// ========== LOCALSTORAGE ==========
-function saveToStorage() {
-  const data = {
-    p1: {
-      l: document.getElementById('a-l').value,
-      w: document.getElementById('a-w').value,
-      h: document.getElementById('a-h').value
-    },
-    p2: {
-      mode: document.querySelector('#p2 .radiogroup button.active')?.dataset.mode || 'brick',
-      brick: {
-        l: document.getElementById('b-l').value,
-        h: document.getElementById('b-h').value,
-        type: document.getElementById('b-type').value,
-        thick: document.getElementById('b-thick').value
-      },
-      concrete: {
-        l: document.getElementById('c-l').value,
-        w: document.getElementById('c-w').value,
-        t: document.getElementById('c-t').value
-      }
-    },
-    p3: {
-      mode: scaleMode,
-      val: document.getElementById('s-val').value,
-      ratio: document.getElementById('s-ratio').value
-    },
-    activeTab: document.querySelector('.tabs button.active')?.dataset.panel || 'p1'
-  };
-  localStorage.setItem('chizmachi_data', JSON.stringify(data));
-}
-
-function loadFromStorage() {
-  try {
-    const data = JSON.parse(localStorage.getItem('chizmachi_data'));
-    if (!data) return;
-    
-    if (data.activeTab) {
-      const btn = document.querySelector(`button[data-panel="${data.activeTab}"]`);
-      if (btn) showPanel(data.activeTab, btn);
-    }
-    
-    if (data.p1) {
-      document.getElementById('a-l').value = data.p1.l || '';
-      document.getElementById('a-w').value = data.p1.w || '';
-      document.getElementById('a-h').value = data.p1.h || '';
-      calcArea();
-    }
-    
-    if (data.p2) {
-      if (data.p2.mode === 'concrete') {
-        const btn = document.querySelector('#p2 button[data-mode="concrete"]');
-        if (btn) setMatMode('concrete', btn);
-      }
-      if (data.p2.brick) {
-        document.getElementById('b-l').value = data.p2.brick.l || '';
-        document.getElementById('b-h').value = data.p2.brick.h || '';
-        if (data.p2.brick.type) {
-          document.getElementById('b-type').value = data.p2.brick.type;
-          updateBrickThickness();
-        }
-        if (data.p2.brick.thick) {
-          document.getElementById('b-thick').value = data.p2.brick.thick;
-        }
-        calcBrick();
-      }
-      if (data.p2.concrete) {
-        document.getElementById('c-l').value = data.p2.concrete.l || '';
-        document.getElementById('c-w').value = data.p2.concrete.w || '';
-        document.getElementById('c-t').value = data.p2.concrete.t || '';
-        calcConcrete();
-      }
-    }
-    
-    if (data.p3) {
-      if (data.p3.mode === 'todrawing') {
-        const btn = document.querySelector('#p3 button[data-mode="todrawing"]');
-        if (btn) setScaleMode('todrawing', btn);
-      }
-      document.getElementById('s-val').value = data.p3.val || '';
-      document.getElementById('s-ratio').value = data.p3.ratio || '100';
-      calcScale();
-    }
-  } catch (e) {
-    console.error('Storage load error:', e);
-  }
-}
-
-// ========== BOSHLASH ==========
-document.addEventListener('DOMContentLoaded', () => {
-  updateBrickThickness();
-  
-  // Tozalash tugmalarini qo'shish
-  document.querySelectorAll('.panel').forEach(panel => {
-    const card = panel.querySelector('.card');
-    if (!card) return;
-    
-    const resetBtn = document.createElement('button');
-    resetBtn.type = 'button';
-    resetBtn.className = 'reset-btn';
-    resetBtn.textContent = 'Tozalash';
-    resetBtn.setAttribute('aria-label', 'Maydonni tozalash');
-    resetBtn.onclick = () => resetPanel(panel.id);
-    card.appendChild(resetBtn);
-  });
-  
-  loadFromStorage();
-});
-</script>
+<!-- JS ULASH — script.js fayli js/ papkasida joylashgan -->
+<script src="js/script.js"></script>
 
 </body>
 </html>
