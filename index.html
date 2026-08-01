@@ -3,9 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chizmachi — arxitektorlar uchun hisoblash vositalari</title>
+<title>Chizmachi — arxitektorlar uchun maydon, beton va masshtab hisoblagichi</title>
+<meta name="description" content="Chizmachi — arxitektorlar va quruvchilar uchun bepul onlayn hisoblagich. Xona maydoni, beton hajmi, g'isht, qum, shag'al, sement hisoblash va masshtab konvertori.">
+<meta name="keywords" content="arxitektor hisoblagich, maydon hisoblash, hajm hisoblash, beton kalkulyatori, g'isht hisoblash, qum hisoblash, shag'al hisoblash, masshtab konvertori, qurilish kalkulyatori, sement hisoblash">
+<meta name="author" content="Chizmachi">
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta property="og:title" content="Chizmachi — arxitektorlar uchun hisoblash vositalari">
+<meta property="og:description" content="Maydon, hajm, qurilish materiallari va masshtab hisob-kitoblari.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="uz_UZ">
+<link rel="canonical" href="https://chizmachi.uz">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Chizmachi",
+  "description": "Arxitektorlar va quruvchilar uchun maydon, hajm, material va masshtab hisoblagichi",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "UZS"
+  }
+}
+</script>
 <style>
 :root {
   --bg: #0a0a0c;
@@ -152,7 +177,8 @@ header p { color: var(--text-muted); font-size: 16px; max-width: 580px; margin-b
 .card:hover { border-color: rgba(201,169,110,0.15); }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 4px; }
 .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 4px; }
-@media (max-width: 640px) { .grid2, .grid3 { grid-template-columns: 1fr; gap: 0; } }
+.grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 4px; }
+@media (max-width: 640px) { .grid2, .grid3, .grid4 { grid-template-columns: 1fr; gap: 0; } }
 .field { margin-bottom: 20px; position: relative; }
 .field:last-child { margin-bottom: 0; }
 label { display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 8px; }
@@ -204,8 +230,15 @@ select option { background: var(--bg-elevated); color: var(--text); font-family:
 .rlabel { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; font-weight: 500; }
 .rvalue { font-family: var(--font-mono); font-size: 28px; font-weight: 500; color: var(--accent); display: flex; align-items: baseline; gap: 8px; word-break: break-all; line-height: 1.2; }
 .rvalue .u { font-size: 14px; color: var(--text-muted); font-weight: 400; }
-.price-tag { margin-top: 8px; font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); opacity: 0.8; }
-.price-tag strong { color: var(--accent); font-size: 16px; }
+.price-tag {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  opacity: 0.9;
+  line-height: 1.8;
+}
+.price-tag strong { color: var(--accent); font-size: 14px; font-weight: 500; }
 .total-cost {
   background: linear-gradient(135deg, var(--accent-dim), rgba(201,169,110,0.05));
   border: 1px solid rgba(201,169,110,0.3); border-radius: 12px; padding: 20px 24px;
@@ -256,7 +289,7 @@ footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border
 <div class="wrap">
 <header>
 <div class="header-top">
-<div class="eyebrow">Chizmachi · 2026 / v2.0 Premium</div>
+<div class="eyebrow">Chizmachi · 2026 / v2.1 Premium</div>
 <div class="controls">
 <button type="button" id="sound-btn" class="icon-btn" onclick="toggleSound()" title="Ovozni o'chirish">🔊</button>
 <button type="button" id="theme-btn" class="icon-btn" onclick="toggleTheme()" title="Yorug' rejim">☀️</button>
@@ -318,19 +351,20 @@ footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border
 <div class="field"><label for="c-t">Qalinlik</label><div class="inputrow"><input type="number" id="c-t" placeholder="0.00" step="0.01" min="0" oninput="calcConcrete()"><span class="unit">m</span></div><span class="error-msg">Musbat son kiriting</span></div>
 <div class="divider"></div>
 <div class="panel-desc" style="margin-bottom:18px; color: var(--text-muted);">Aralashma nisbati (sement : qum : shag'al) — 1 : 2 : 4</div>
-<div class="grid3">
+<div class="grid4">
 <div class="field"><label for="c-price-cement">1 qop sement narxi</label><div class="inputrow"><input type="number" id="c-price-cement" placeholder="0" step="1000" min="0" oninput="calcConcrete()"><span class="unit">so'm</span></div></div>
 <div class="field"><label for="c-price-sand">1 m³ qum narxi</label><div class="inputrow"><input type="number" id="c-price-sand" placeholder="0" step="10000" min="0" oninput="calcConcrete()"><span class="unit">so'm</span></div></div>
 <div class="field"><label for="c-price-gravel">1 m³ shag'al narxi</label><div class="inputrow"><input type="number" id="c-price-gravel" placeholder="0" step="10000" min="0" oninput="calcConcrete()"><span class="unit">so'm</span></div></div>
+<div class="field"><label for="c-truck">1 Kamaz sig'imi</label><div class="inputrow"><input type="number" id="c-truck" placeholder="8" value="8" step="1" min="1" oninput="calcConcrete()"><span class="unit">t</span></div></div>
 </div>
 <div class="divider"></div>
 <div class="result-row three-col">
 <div class="result"><button type="button" class="copy-btn" onclick="copyResult('c-cement','qop')">Nusxa</button><div class="rlabel">Sement</div><div class="rvalue"><span id="c-cement">0</span><span class="u">qop</span></div><div class="price-tag">Narx: <strong id="c-total-cement">—</strong></div></div>
-<div class="result"><button type="button" class="copy-btn" onclick="copyResult('c-sand','m³')">Nusxa</button><div class="rlabel">Qum</div><div class="rvalue"><span id="c-sand">0</span><span class="u">m³</span></div><div class="price-tag">Narx: <strong id="c-total-sand">—</strong></div></div>
-<div class="result"><button type="button" class="copy-btn" onclick="copyResult('c-gravel','m³')">Nusxa</button><div class="rlabel">Shag'al</div><div class="rvalue"><span id="c-gravel">0</span><span class="u">m³</span></div><div class="price-tag">Narx: <strong id="c-total-gravel">—</strong></div></div>
+<div class="result"><button type="button" class="copy-btn" onclick="copyResult('c-sand','m³')">Nusxa</button><div class="rlabel">Qum</div><div class="rvalue"><span id="c-sand">0</span><span class="u">m³</span></div><div class="price-tag">Qop (25 kg): <strong id="c-sand-bags">—</strong></div><div class="price-tag">Narx: <strong id="c-total-sand">—</strong></div></div>
+<div class="result"><button type="button" class="copy-btn" onclick="copyResult('c-gravel','m³')">Nusxa</button><div class="rlabel">Shag'al</div><div class="rvalue"><span id="c-gravel">0</span><span class="u">m³</span></div><div class="price-tag">Qop (25 kg): <strong id="c-gravel-bags">—</strong></div><div class="price-tag">Kamaz: <strong id="c-gravel-truck">—</strong></div><div class="price-tag">Narx: <strong id="c-total-gravel">—</strong></div></div>
 </div>
 <div class="total-cost"><span class="total-cost-label">Umumiy narx</span><span class="total-cost-value" id="c-total-all">0 so'm</span></div>
-<div class="dim"><div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div><div class="dcaption">Beton hajmi: <span id="c-vol">0</span> m³ · sement 50 kg/qop hisobida</div></div>
+<div class="dim"><div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div><div class="dcaption">Beton hajmi: <span id="c-vol">0</span> m³ · sement 50 kg/qop, qum/shag'al 25 kg/qop</div></div>
 </div>
 </section>
 <!-- PANEL 3 -->
@@ -521,6 +555,16 @@ function calcConcrete() {
   document.getElementById('c-total-sand').textContent = priceSand > 0 ? formatMoney(totalSand) : '—';
   document.getElementById('c-total-gravel').textContent = priceGravel > 0 ? formatMoney(totalGravel) : '—';
   document.getElementById('c-total-all').textContent = (priceCement + priceSand + priceGravel) > 0 ? formatMoney(totalAll) : "0 so'm";
+  var sandKg = sand * 1600;
+  var sandBags = Math.ceil(sandKg / 25);
+  var gravelKg = gravel * 1400;
+  var gravelBags = Math.ceil(gravelKg / 25);
+  var truckTonnage = parseFloat(document.getElementById('c-truck').value) || 8;
+  var gravelTons = gravelKg / 1000;
+  var trucks = Math.ceil(gravelTons / truckTonnage);
+  document.getElementById('c-sand-bags').textContent = sand > 0 ? formatNumber(sandBags, 0) + ' dona' : '—';
+  document.getElementById('c-gravel-bags').textContent = gravel > 0 ? formatNumber(gravelBags, 0) + ' dona' : '—';
+  document.getElementById('c-gravel-truck').textContent = gravel > 0 ? formatNumber(trucks, 0) + ' dona (' + formatNumber(gravelTons, 1) + ' t)' : '—';
   if ((priceCement + priceSand + priceGravel) > 0 && vol > 0) playSuccess();
   saveToStorage();
 }
@@ -607,6 +651,10 @@ function resetPanel(panelId) {
     document.getElementById('c-total-sand').textContent = '—';
     document.getElementById('c-total-gravel').textContent = '—';
     document.getElementById('c-total-all').textContent = "0 so'm";
+    document.getElementById('c-sand-bags').textContent = '—';
+    document.getElementById('c-gravel-bags').textContent = '—';
+    document.getElementById('c-gravel-truck').textContent = '—';
+    document.getElementById('c-truck').value = '8';
     updateBrickThickness();
   } else if (panelId === 'p3') {
     document.getElementById('s-out').textContent = '0';
@@ -697,7 +745,7 @@ function saveToStorage() {
     p2: {
       mode: document.getElementById('mat-brick').style.display !== 'none' ? 'brick' : 'concrete',
       brick: { l: document.getElementById('b-l').value, h: document.getElementById('b-h').value, type: document.getElementById('b-type').value, thick: document.getElementById('b-thick').value, price: document.getElementById('b-price').value },
-      concrete: { l: document.getElementById('c-l').value, w: document.getElementById('c-w').value, t: document.getElementById('c-t').value, priceCement: document.getElementById('c-price-cement').value, priceSand: document.getElementById('c-price-sand').value, priceGravel: document.getElementById('c-price-gravel').value }
+      concrete: { l: document.getElementById('c-l').value, w: document.getElementById('c-w').value, t: document.getElementById('c-t').value, priceCement: document.getElementById('c-price-cement').value, priceSand: document.getElementById('c-price-sand').value, priceGravel: document.getElementById('c-price-gravel').value, truck: document.getElementById('c-truck').value }
     },
     p3: { mode: scaleMode, val: document.getElementById('s-val').value, ratio: document.getElementById('s-ratio').value },
     activeTab: currentPanel
@@ -743,6 +791,7 @@ function loadFromStorage() {
         document.getElementById('c-price-cement').value = data.p2.concrete.priceCement || '';
         document.getElementById('c-price-sand').value = data.p2.concrete.priceSand || '';
         document.getElementById('c-price-gravel').value = data.p2.concrete.priceGravel || '';
+        if (data.p2.concrete.truck) document.getElementById('c-truck').value = data.p2.concrete.truck;
         calcConcrete();
       }
     }
