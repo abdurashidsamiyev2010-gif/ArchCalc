@@ -341,25 +341,17 @@ part2 = '''<!-- PANEL 2 -->
 <div class="dim"><div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div><div class="dcaption">Beton hajmi: <span id="c-vol">0</span> m³ · sement 50 kg/qop hisobida</div></div>
 </div>
 </section>
-'''
-
-with open('/mnt/agents/output/chizmachi_part2.txt', 'w', encoding='utf-8') as f:
-    f.write(part2)
-
-print("Part 2 saved: Panel 2 (Materials)")
-print(f"Size: {len(part2):,} chars")
-
-part3 = '''<!-- PANEL 3 -->
+<!-- PANEL 3 -->
 <section class="panel" id="p3">
-<div class="panel-title">Masshtab / o\'lchov konvertori</div>
-<div class="panel-desc">Chizmadagi o\'lchamni haqiqiy o\'lchamga yoki aksincha o\'giring. Avtomatik mm/sm/m tanlaydi.</div>
+<div class="panel-title">Masshtab / o'lchov konvertori</div>
+<div class="panel-desc">Chizmadagi o'lchamni haqiqiy o'lchamga yoki aksincha o'giring. Avtomatik mm/sm/m tanlaydi.</div>
 <div class="radiogroup">
 <button class="active" onclick="setScaleMode(\'toreal\',this)">Chizma → haqiqiy</button>
 <button onclick="setScaleMode(\'todrawing\',this)">Haqiqiy → chizma</button>
 </div>
 <div class="card">
 <div class="grid2">
-<div class="field"><label for="s-val" id="s-inlabel">Chizmadagi o\'lcham</label><div class="inputrow"><input type="number" id="s-val" placeholder="0.00" step="0.01" min="0" oninput="calcScale()"><span class="unit" id="s-inunit">sm</span></div><span class="error-msg">Musbat son kiriting</span></div>
+<div class="field"><label for="s-val" id="s-inlabel">Chizmadagi o'lcham</label><div class="inputrow"><input type="number" id="s-val" placeholder="0.00" step="0.01" min="0" oninput="calcScale()"><span class="unit" id="s-inunit">sm</span></div><span class="error-msg">Musbat son kiriting</span></div>
 <div class="field"><label for="s-ratio">Masshtab (1 : N)</label><div class="inputrow"><span class="unit">1 :</span><input type="number" id="s-ratio" placeholder="100" value="100" step="1" min="1" oninput="calcScale()"></div><span class="error-msg">1 dan katta son kiriting</span></div>
 </div>
 <div class="divider"></div>
