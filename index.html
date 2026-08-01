@@ -258,23 +258,23 @@ footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border
 <div class="header-top">
 <div class="eyebrow">Chizmachi · 2026 / v2.0 Premium</div>
 <div class="controls">
-<button type="button" id="sound-btn" class="icon-btn" onclick="toggleSound()" title="Ovozni o\'chirish">🔊</button>
-<button type="button" id="theme-btn" class="icon-btn" onclick="toggleTheme()" title="Yorug\' rejim">☀️</button>
+<button type="button" id="sound-btn" class="icon-btn" onclick="toggleSound()" title="Ovozni o'chirish">🔊</button>
+<button type="button" id="theme-btn" class="icon-btn" onclick="toggleTheme()" title="Yorug' rejim">☀️</button>
 </div>
 </div>
 <h1>Kundalik hisob-kitoblarni chizma aniqligida bajaring</h1>
-<p>Maydon, material va masshtab hisob-kitoblari uchun uchta vositа — loyihalash jarayonida qo\'l ostida.</p>
+<p>Maydon, material va masshtab hisob-kitoblari uchun uchta vositа — loyihalash jarayonida qo'l ostida.</p>
 <nav class="tabs">
-<button class="active" data-panel="p1" onclick="showPanel(\'p1\',this)"><span class="num">01</span>Maydon / hajm</button>
-<button data-panel="p2" onclick="showPanel(\'p2\',this)"><span class="num">02</span>Materiallar</button>
-<button data-panel="p3" onclick="showPanel(\'p3\',this)"><span class="num">03</span>Masshtab</button>
+<button class="active" data-panel="p1" onclick="showPanel('p1',this)"><span class="num">01</span>Maydon / hajm</button>
+<button data-panel="p2" onclick="showPanel('p2',this)"><span class="num">02</span>Materiallar</button>
+<button data-panel="p3" onclick="showPanel('p3',this)"><span class="num">03</span>Masshtab</button>
 </nav>
 </header>
 <main>
 <!-- PANEL 1 -->
 <section class="panel active" id="p1">
 <div class="panel-title">Maydon va hajm hisoblagichi</div>
-<div class="panel-desc">Xona yoki maydon o\'lchamlarini kiriting — maydon avtomatik hisoblanadi. Balandlikni qo\'shsangiz, hajm ham chiqadi.</div>
+<div class="panel-desc">Xona yoki maydon o'lchamlarini kiriting — maydon avtomatik hisoblanadi. Balandlikni qo'shsangiz, hajm ham chiqadi.</div>
 <div class="card">
 <div class="grid2">
 <div class="field"><label for="a-l">Uzunlik</label><div class="inputrow"><input type="number" id="a-l" placeholder="0.00" step="0.01" min="0" oninput="calcArea()"><span class="unit">m</span></div><span class="error-msg">Musbat son kiriting</span></div>
@@ -283,8 +283,8 @@ footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border
 <div class="field"><label for="a-h">Balandlik (ixtiyoriy)</label><div class="inputrow"><input type="number" id="a-h" placeholder="0.00" step="0.01" min="0" oninput="calcArea()"><span class="unit">m</span></div><span class="error-msg">Musbat son kiriting</span></div>
 <div class="divider"></div>
 <div class="result-row">
-<div class="result"><button type="button" class="copy-btn" onclick="copyResult(\'a-area\',\'m²\')">Nusxa</button><div class="rlabel">Maydon</div><div class="rvalue"><span id="a-area">0</span><span class="u">m²</span></div></div>
-<div class="result"><button type="button" class="copy-btn" onclick="copyResult(\'a-vol\',\'m³\')">Nusxa</button><div class="rlabel">Hajm</div><div class="rvalue"><span id="a-vol">—</span><span class="u">m³</span></div></div>
+<div class="result"><button type="button" class="copy-btn" onclick="copyResult('a-area','m²')">Nusxa</button><div class="rlabel">Maydon</div><div class="rvalue"><span id="a-area">0</span><span class="u">m²</span></div></div>
+<div class="result"><button type="button" class="copy-btn" onclick="copyResult('a-vol','m³')">Nusxa</button><div class="rlabel">Hajm</div><div class="rvalue"><span id="a-vol">—</span><span class="u">m³</span></div></div>
 </div>
 <div class="dim"><div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div><div class="dcaption" id="a-dim">Uzunlik × kenglik = maydon</div></div>
 </div>
@@ -292,23 +292,23 @@ footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border
 <!-- PANEL 2 -->
 <section class="panel" id="p2">
 <div class="panel-title">Qurilish materiallari kalkulyatori</div>
-<div class="panel-desc">G\'isht devor yoki beton hajmi uchun kerakli material miqdorini va narxini hisoblang.</div>
+<div class="panel-desc">G'isht devor yoki beton hajmi uchun kerakli material miqdorini va narxini hisoblang.</div>
 <div class="radiogroup">
-<button class="active" onclick="setMatMode(\'brick\',this)">G\'isht devor</button>
-<button onclick="setMatMode(\'concrete\',this)">Beton</button>
+<button class="active" onclick="setMatMode('brick',this)">G'isht devor</button>
+<button onclick="setMatMode('concrete',this)">Beton</button>
 </div>
 <div class="card" id="mat-brick">
 <div class="grid2">
 <div class="field"><label for="b-l">Devor uzunligi</label><div class="inputrow"><input type="number" id="b-l" placeholder="0.00" step="0.01" min="0" oninput="calcBrick()"><span class="unit">m</span></div><span class="error-msg">Musbat son kiriting</span></div>
 <div class="field"><label for="b-h">Devor balandligi</label><div class="inputrow"><input type="number" id="b-h" placeholder="0.00" step="0.01" min="0" oninput="calcBrick()"><span class="unit">m</span></div><span class="error-msg">Musbat son kiriting</span></div>
 </div>
-<div class="field"><label for="b-type">Material turi</label><select id="b-type" onchange="updateBrickThickness()"><option value="fired">Oddiy pishiq g\'isht (25×12×6.5 sm)</option><option value="hollow">Teshikli g\'isht (25×12×8.8 sm)</option><option value="aac">Gazoblok (60×30×20 sm)</option><option value="foam">Penoblok (60×30×20 sm)</option><option value="block">Beton blok (39×19×19 sm)</option></select></div>
+<div class="field"><label for="b-type">Material turi</label><select id="b-type" onchange="updateBrickThickness()"><option value="fired">Oddiy pishiq g'isht (25×12×6.5 sm)</option><option value="hollow">Teshikli g'isht (25×12×8.8 sm)</option><option value="aac">Gazoblok (60×30×20 sm)</option><option value="foam">Penoblok (60×30×20 sm)</option><option value="block">Beton blok (39×19×19 sm)</option></select></div>
 <div class="field"><label for="b-thick">Devor qalinligi</label><select id="b-thick" onchange="calcBrick()"></select></div>
-<div class="field"><label for="b-price">1 dona narxi (so\'m)</label><div class="inputrow"><input type="number" id="b-price" placeholder="0" step="100" min="0" oninput="calcBrick()"><span class="unit">so\'m</span></div><span class="error-msg">Musbat son kiriting</span></div>
+<div class="field"><label for="b-price">1 dona narxi (so'm)</label><div class="inputrow"><input type="number" id="b-price" placeholder="0" step="100" min="0" oninput="calcBrick()"><span class="unit">so'm</span></div><span class="error-msg">Musbat son kiriting</span></div>
 <div class="divider"></div>
-<div class="result"><button type="button" class="copy-btn" onclick="copyResult(\'b-bricks\',\'dona\')">Nusxa</button><div class="rlabel" id="b-label">Kerakli g\'isht (zaxira bilan +5%)</div><div class="rvalue"><span id="b-bricks">0</span><span class="u">dona</span></div></div>
-<div class="total-cost"><span class="total-cost-label">Umumiy narx</span><span class="total-cost-value" id="b-total">0 so\'m</span></div>
-<div class="dim"><div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div><div class="dcaption" id="b-dim">Standart g\'isht: 25×12×6.5 sm, devor hajmiga qarab hisoblanadi</div></div>
+<div class="result"><button type="button" class="copy-btn" onclick="copyResult('b-bricks','dona')">Nusxa</button><div class="rlabel" id="b-label">Kerakli g'isht (zaxira bilan +5%)</div><div class="rvalue"><span id="b-bricks">0</span><span class="u">dona</span></div></div>
+<div class="total-cost"><span class="total-cost-label">Umumiy narx</span><span class="total-cost-value" id="b-total">0 so'm</span></div>
+<div class="dim"><div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div><div class="dcaption" id="b-dim">Standart g'isht: 25×12×6.5 sm, devor hajmiga qarab hisoblanadi</div></div>
 </div>
 <div class="card" id="mat-concrete" style="display:none;">
 <div class="grid2">
@@ -317,19 +317,19 @@ footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border
 </div>
 <div class="field"><label for="c-t">Qalinlik</label><div class="inputrow"><input type="number" id="c-t" placeholder="0.00" step="0.01" min="0" oninput="calcConcrete()"><span class="unit">m</span></div><span class="error-msg">Musbat son kiriting</span></div>
 <div class="divider"></div>
-<div class="panel-desc" style="margin-bottom:18px; color: var(--text-muted);">Aralashma nisbati (sement : qum : shag\'al) — 1 : 2 : 4</div>
+<div class="panel-desc" style="margin-bottom:18px; color: var(--text-muted);">Aralashma nisbati (sement : qum : shag'al) — 1 : 2 : 4</div>
 <div class="grid3">
-<div class="field"><label for="c-price-cement">1 qop sement narxi</label><div class="inputrow"><input type="number" id="c-price-cement" placeholder="0" step="1000" min="0" oninput="calcConcrete()"><span class="unit">so\'m</span></div></div>
-<div class="field"><label for="c-price-sand">1 m³ qum narxi</label><div class="inputrow"><input type="number" id="c-price-sand" placeholder="0" step="10000" min="0" oninput="calcConcrete()"><span class="unit">so\'m</span></div></div>
-<div class="field"><label for="c-price-gravel">1 m³ shag\'al narxi</label><div class="inputrow"><input type="number" id="c-price-gravel" placeholder="0" step="10000" min="0" oninput="calcConcrete()"><span class="unit">so\'m</span></div></div>
+<div class="field"><label for="c-price-cement">1 qop sement narxi</label><div class="inputrow"><input type="number" id="c-price-cement" placeholder="0" step="1000" min="0" oninput="calcConcrete()"><span class="unit">so'm</span></div></div>
+<div class="field"><label for="c-price-sand">1 m³ qum narxi</label><div class="inputrow"><input type="number" id="c-price-sand" placeholder="0" step="10000" min="0" oninput="calcConcrete()"><span class="unit">so'm</span></div></div>
+<div class="field"><label for="c-price-gravel">1 m³ shag'al narxi</label><div class="inputrow"><input type="number" id="c-price-gravel" placeholder="0" step="10000" min="0" oninput="calcConcrete()"><span class="unit">so'm</span></div></div>
 </div>
 <div class="divider"></div>
 <div class="result-row three-col">
-<div class="result"><button type="button" class="copy-btn" onclick="copyResult(\'c-cement\',\'qop\')">Nusxa</button><div class="rlabel">Sement</div><div class="rvalue"><span id="c-cement">0</span><span class="u">qop</span></div><div class="price-tag">Narx: <strong id="c-total-cement">—</strong></div></div>
-<div class="result"><button type="button" class="copy-btn" onclick="copyResult(\'c-sand\',\'m³\')">Nusxa</button><div class="rlabel">Qum</div><div class="rvalue"><span id="c-sand">0</span><span class="u">m³</span></div><div class="price-tag">Narx: <strong id="c-total-sand">—</strong></div></div>
-<div class="result"><button type="button" class="copy-btn" onclick="copyResult(\'c-gravel\',\'m³\')">Nusxa</button><div class="rlabel">Shag\'al</div><div class="rvalue"><span id="c-gravel">0</span><span class="u">m³</span></div><div class="price-tag">Narx: <strong id="c-total-gravel">—</strong></div></div>
+<div class="result"><button type="button" class="copy-btn" onclick="copyResult('c-cement','qop')">Nusxa</button><div class="rlabel">Sement</div><div class="rvalue"><span id="c-cement">0</span><span class="u">qop</span></div><div class="price-tag">Narx: <strong id="c-total-cement">—</strong></div></div>
+<div class="result"><button type="button" class="copy-btn" onclick="copyResult('c-sand','m³')">Nusxa</button><div class="rlabel">Qum</div><div class="rvalue"><span id="c-sand">0</span><span class="u">m³</span></div><div class="price-tag">Narx: <strong id="c-total-sand">—</strong></div></div>
+<div class="result"><button type="button" class="copy-btn" onclick="copyResult('c-gravel','m³')">Nusxa</button><div class="rlabel">Shag'al</div><div class="rvalue"><span id="c-gravel">0</span><span class="u">m³</span></div><div class="price-tag">Narx: <strong id="c-total-gravel">—</strong></div></div>
 </div>
-<div class="total-cost"><span class="total-cost-label">Umumiy narx</span><span class="total-cost-value" id="c-total-all">0 so\'m</span></div>
+<div class="total-cost"><span class="total-cost-label">Umumiy narx</span><span class="total-cost-value" id="c-total-all">0 so'm</span></div>
 <div class="dim"><div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div><div class="dcaption">Beton hajmi: <span id="c-vol">0</span> m³ · sement 50 kg/qop hisobida</div></div>
 </div>
 </section>
@@ -338,8 +338,8 @@ footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border
 <div class="panel-title">Masshtab / o'lchov konvertori</div>
 <div class="panel-desc">Chizmadagi o'lchamni haqiqiy o'lchamga yoki aksincha o'giring. Avtomatik mm/sm/m tanlaydi.</div>
 <div class="radiogroup">
-<button class="active" onclick="setScaleMode(\'toreal\',this)">Chizma → haqiqiy</button>
-<button onclick="setScaleMode(\'todrawing\',this)">Haqiqiy → chizma</button>
+<button class="active" onclick="setScaleMode('toreal',this)">Chizma → haqiqiy</button>
+<button onclick="setScaleMode('todrawing',this)">Haqiqiy → chizma</button>
 </div>
 <div class="card">
 <div class="grid2">
@@ -347,18 +347,18 @@ footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border
 <div class="field"><label for="s-ratio">Masshtab (1 : N)</label><div class="inputrow"><span class="unit">1 :</span><input type="number" id="s-ratio" placeholder="100" value="100" step="1" min="1" oninput="calcScale()"></div><span class="error-msg">1 dan katta son kiriting</span></div>
 </div>
 <div class="divider"></div>
-<div class="result"><button type="button" class="copy-btn" onclick="copyResult(\'s-out\',document.getElementById(\'s-outunit\').textContent)">Nusxa</button><div class="rlabel" id="s-outlabel">Haqiqiy o\'lcham</div><div class="rvalue"><span id="s-out">0</span><span class="u" id="s-outunit">m</span></div></div>
-<div class="dim"><div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div><div class="dcaption" id="s-dim">1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o\'lchamga teng</div></div>
+<div class="result"><button type="button" class="copy-btn" onclick="copyResult('s-out',document.getElementById('s-outunit').textContent)">Nusxa</button><div class="rlabel" id="s-outlabel">Haqiqiy o'lcham</div><div class="rvalue"><span id="s-out">0</span><span class="u" id="s-outunit">m</span></div></div>
+<div class="dim"><div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div><div class="dcaption" id="s-dim">1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o'lchamga teng</div></div>
 </div>
 </section>
 </main>
-<footer><span>Chizmachi — mahalliy hisob-kitob vositalari</span><span>Barcha hisob-kitoblar taxminiy, loyiha uchun muhandis tasdig\'i talab qilinadi</span></footer>
+<footer><span>Chizmachi — mahalliy hisob-kitob vositalari</span><span>Barcha hisob-kitoblar taxminiy, loyiha uchun muhandis tasdig'i talab qilinadi</span></footer>
 </div>
 <div id="toast" class="toast"></div>
 <script>
 var materials = {
-  fired: { name: "g\'isht", size: [0.25, 0.12, 0.065], perM3: 400, thicknesses: [{value: 0.12, label: "0.5 g\'isht (12 sm)"}, {value: 0.25, label: "1 g\'isht (25 sm)"}, {value: 0.38, label: "1.5 g\'isht (38 sm)"}, {value: 0.51, label: "2 g\'isht (51 sm)"}] },
-  hollow: { name: "g\'isht", size: [0.25, 0.12, 0.088], perM3: 300, thicknesses: [{value: 0.12, label: "0.5 g\'isht (12 sm)"}, {value: 0.25, label: "1 g\'isht (25 sm)"}, {value: 0.38, label: "1.5 g\'isht (38 sm)"}, {value: 0.51, label: "2 g\'isht (51 sm)"}] },
+  fired: { name: "g'isht", size: [0.25, 0.12, 0.065], perM3: 400, thicknesses: [{value: 0.12, label: "0.5 g'isht (12 sm)"}, {value: 0.25, label: "1 g'isht (25 sm)"}, {value: 0.38, label: "1.5 g'isht (38 sm)"}, {value: 0.51, label: "2 g'isht (51 sm)"}] },
+  hollow: { name: "g'isht", size: [0.25, 0.12, 0.088], perM3: 300, thicknesses: [{value: 0.12, label: "0.5 g'isht (12 sm)"}, {value: 0.25, label: "1 g'isht (25 sm)"}, {value: 0.38, label: "1.5 g'isht (38 sm)"}, {value: 0.51, label: "2 g'isht (51 sm)"}] },
   aac: { name: "blok", size: [0.60, 0.30, 0.20], perM3: 28, thicknesses: [{value: 0.10, label: "10 sm"}, {value: 0.15, label: "15 sm"}, {value: 0.20, label: "20 sm"}, {value: 0.25, label: "25 sm"}, {value: 0.30, label: "30 sm"}, {value: 0.35, label: "35 sm"}, {value: 0.40, label: "40 sm"}] },
   foam: { name: "blok", size: [0.60, 0.30, 0.20], perM3: 28, thicknesses: [{value: 0.10, label: "10 sm"}, {value: 0.15, label: "15 sm"}, {value: 0.20, label: "20 sm"}, {value: 0.25, label: "25 sm"}, {value: 0.30, label: "30 sm"}, {value: 0.35, label: "35 sm"}, {value: 0.40, label: "40 sm"}] },
   block: { name: "blok", size: [0.39, 0.19, 0.19], perM3: 65, thicknesses: [{value: 0.19, label: "19 sm"}, {value: 0.39, label: "39 sm"}] }
@@ -468,7 +468,7 @@ function updateBrickThickness() {
     select.appendChild(opt);
   }
   document.getElementById('b-label').textContent = "Kerakli " + mat.name + " (zaxira bilan +5%)";
-  var dimText = { fired: "Standart g\'isht: 25×12×6.5 sm, devor hajmiga qarab hisoblanadi", hollow: "Teshikli g\'isht: 25×12×8.8 sm, devor hajmiga qarab hisoblanadi", aac: "Gazoblok: 60×30×20 sm, yopishgich bilan o\'rnatiladi", foam: "Penoblok: 60×30×20 sm, yopishgich bilan o\'rnatiladi", block: "Beton blok: 39×19×19 sm, aralashma bilan o\'rnatiladi" };
+  var dimText = { fired: "Standart g'isht: 25×12×6.5 sm, devor hajmiga qarab hisoblanadi", hollow: "Teshikli g'isht: 25×12×8.8 sm, devor hajmiga qarab hisoblanadi", aac: "Gazoblok: 60×30×20 sm, yopishgich bilan o'rnatiladi", foam: "Penoblok: 60×30×20 sm, yopishgich bilan o'rnatiladi", block: "Beton blok: 39×19×19 sm, aralashma bilan o'rnatiladi" };
   document.getElementById('b-dim').textContent = dimText[type] || '';
   calcBrick();
 }
@@ -535,15 +535,15 @@ function setScaleMode(mode, btn) {
   var outUnit = document.getElementById('s-outunit');
   var dim = document.getElementById('s-dim');
   if (mode === 'toreal') {
-    inLabel.textContent = "Chizmadagi o\'lcham";
+    inLabel.textContent = "Chizmadagi o'lcham";
     inUnit.textContent = 'sm';
-    outLabel.textContent = "Haqiqiy o\'lcham";
+    outLabel.textContent = "Haqiqiy o'lcham";
     outUnit.textContent = 'm';
-    dim.textContent = "1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o\'lchamga teng";
+    dim.textContent = "1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o'lchamga teng";
   } else {
-    inLabel.textContent = "Haqiqiy o\'lcham";
+    inLabel.textContent = "Haqiqiy o'lcham";
     inUnit.textContent = 'm';
-    outLabel.textContent = "Chizmadagi o\'lcham";
+    outLabel.textContent = "Chizmadagi o'lcham";
     outUnit.textContent = 'sm';
     dim.textContent = "1:100 masshtabda 1 m haqiqiy = 1 sm chizmada";
   }
@@ -610,7 +610,7 @@ function resetPanel(panelId) {
     updateBrickThickness();
   } else if (panelId === 'p3') {
     document.getElementById('s-out').textContent = '0';
-    document.getElementById('s-dim').textContent = scaleMode === 'toreal' ? "1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o\'lchamga teng" : "1:100 masshtabda 1 m haqiqiy = 1 sm chizmada";
+    document.getElementById('s-dim').textContent = scaleMode === 'toreal' ? "1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o'lchamga teng" : "1:100 masshtabda 1 m haqiqiy = 1 sm chizmada";
   }
   playClick();
   showToast('Tozalandi');
@@ -623,11 +623,11 @@ function toggleTheme() {
   if (isDark) {
     html.setAttribute('data-theme', 'light');
     btn.textContent = '🌙';
-    btn.title = "Qorong\'u rejim";
+    btn.title = "Qorong'u rejim";
   } else {
     html.removeAttribute('data-theme');
     btn.textContent = '☀️';
-    btn.title = "Yorug\' rejim";
+    btn.title = "Yorug' rejim";
   }
   localStorage.setItem('chizmachi_theme', isDark ? 'light' : 'dark');
   playClick();
@@ -638,10 +638,10 @@ function loadTheme() {
   if (saved === 'light') {
     document.documentElement.setAttribute('data-theme', 'light');
     btn.textContent = '🌙';
-    btn.title = "Qorong\'u rejim";
+    btn.title = "Qorong'u rejim";
   } else {
     btn.textContent = '☀️';
-    btn.title = "Yorug\' rejim";
+    btn.title = "Yorug' rejim";
   }
 }
 function toggleSound() {
@@ -649,7 +649,7 @@ function toggleSound() {
   var btn = document.getElementById('sound-btn');
   btn.textContent = soundEnabled ? '🔊' : '🔇';
   btn.classList.toggle('muted', !soundEnabled);
-  btn.title = soundEnabled ? "Ovozni o\'chirish" : "Ovozni yoqish";
+  btn.title = soundEnabled ? "Ovozni o'chirish" : "Ovozni yoqish";
   localStorage.setItem('chizmachi_sound', soundEnabled ? 'on' : 'off');
 }
 function loadSound() {
@@ -780,4 +780,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 </body>
-</html>'''
+</html>
