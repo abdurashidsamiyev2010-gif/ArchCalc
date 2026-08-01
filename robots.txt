@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://arch-calc-bice.vercel.app/sitemap.xml
