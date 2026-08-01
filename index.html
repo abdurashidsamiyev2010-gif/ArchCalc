@@ -348,3 +348,458 @@ with open('/mnt/agents/output/chizmachi_part2.txt', 'w', encoding='utf-8') as f:
 
 print("Part 2 saved: Panel 2 (Materials)")
 print(f"Size: {len(part2):,} chars")
+
+part3 = '''<!-- PANEL 3 -->
+<section class="panel" id="p3">
+<div class="panel-title">Masshtab / o\'lchov konvertori</div>
+<div class="panel-desc">Chizmadagi o\'lchamni haqiqiy o\'lchamga yoki aksincha o\'giring. Avtomatik mm/sm/m tanlaydi.</div>
+<div class="radiogroup">
+<button class="active" onclick="setScaleMode(\'toreal\',this)">Chizma → haqiqiy</button>
+<button onclick="setScaleMode(\'todrawing\',this)">Haqiqiy → chizma</button>
+</div>
+<div class="card">
+<div class="grid2">
+<div class="field"><label for="s-val" id="s-inlabel">Chizmadagi o\'lcham</label><div class="inputrow"><input type="number" id="s-val" placeholder="0.00" step="0.01" min="0" oninput="calcScale()"><span class="unit" id="s-inunit">sm</span></div><span class="error-msg">Musbat son kiriting</span></div>
+<div class="field"><label for="s-ratio">Masshtab (1 : N)</label><div class="inputrow"><span class="unit">1 :</span><input type="number" id="s-ratio" placeholder="100" value="100" step="1" min="1" oninput="calcScale()"></div><span class="error-msg">1 dan katta son kiriting</span></div>
+</div>
+<div class="divider"></div>
+<div class="result"><button type="button" class="copy-btn" onclick="copyResult(\'s-out\',document.getElementById(\'s-outunit\').textContent)">Nusxa</button><div class="rlabel" id="s-outlabel">Haqiqiy o\'lcham</div><div class="rvalue"><span id="s-out">0</span><span class="u" id="s-outunit">m</span></div></div>
+<div class="dim"><div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div><div class="dcaption" id="s-dim">1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o\'lchamga teng</div></div>
+</div>
+</section>
+</main>
+<footer><span>Chizmachi — mahalliy hisob-kitob vositalari</span><span>Barcha hisob-kitoblar taxminiy, loyiha uchun muhandis tasdig\'i talab qilinadi</span></footer>
+</div>
+<div id="toast" class="toast"></div>
+<script>
+var materials = {
+  fired: { name: "g\'isht", size: [0.25, 0.12, 0.065], perM3: 400, thicknesses: [{value: 0.12, label: "0.5 g\'isht (12 sm)"}, {value: 0.25, label: "1 g\'isht (25 sm)"}, {value: 0.38, label: "1.5 g\'isht (38 sm)"}, {value: 0.51, label: "2 g\'isht (51 sm)"}] },
+  hollow: { name: "g\'isht", size: [0.25, 0.12, 0.088], perM3: 300, thicknesses: [{value: 0.12, label: "0.5 g\'isht (12 sm)"}, {value: 0.25, label: "1 g\'isht (25 sm)"}, {value: 0.38, label: "1.5 g\'isht (38 sm)"}, {value: 0.51, label: "2 g\'isht (51 sm)"}] },
+  aac: { name: "blok", size: [0.60, 0.30, 0.20], perM3: 28, thicknesses: [{value: 0.10, label: "10 sm"}, {value: 0.15, label: "15 sm"}, {value: 0.20, label: "20 sm"}, {value: 0.25, label: "25 sm"}, {value: 0.30, label: "30 sm"}, {value: 0.35, label: "35 sm"}, {value: 0.40, label: "40 sm"}] },
+  foam: { name: "blok", size: [0.60, 0.30, 0.20], perM3: 28, thicknesses: [{value: 0.10, label: "10 sm"}, {value: 0.15, label: "15 sm"}, {value: 0.20, label: "20 sm"}, {value: 0.25, label: "25 sm"}, {value: 0.30, label: "30 sm"}, {value: 0.35, label: "35 sm"}, {value: 0.40, label: "40 sm"}] },
+  block: { name: "blok", size: [0.39, 0.19, 0.19], perM3: 65, thicknesses: [{value: 0.19, label: "19 sm"}, {value: 0.39, label: "39 sm"}] }
+};
+var scaleMode = 'toreal';
+var soundEnabled = true;
+var currentPanel = 'p1';
+var AudioCtx = window.AudioContext || window.webkitAudioContext;
+var audioCtx = null;
+function initAudio() { if (!audioCtx) audioCtx = new AudioCtx(); }
+function playTone(freq, duration, type, vol) {
+  if (!soundEnabled) return;
+  try {
+    initAudio();
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(vol || 0.08, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch (e) {}
+}
+function playClick() { playTone(800, 0.08, 'sine', 0.06); }
+function playSuccess() { playTone(600, 0.1, 'sine', 0.05); setTimeout(function() { playTone(900, 0.15, 'sine', 0.05); }, 80); }
+function playError() { playTone(200, 0.25, 'triangle', 0.06); }
+function playSwitch() { playTone(450, 0.1, 'sine', 0.04); }
+function formatNumber(num, decimals) {
+  if (isNaN(num) || !isFinite(num)) return '0';
+  return num.toLocaleString('uz-UZ', { minimumFractionDigits: num % 1 === 0 ? 0 : decimals, maximumFractionDigits: decimals });
+}
+function formatMoney(num) {
+  if (isNaN(num) || !isFinite(num)) return '0';
+  return num.toLocaleString('uz-UZ') + " so'm";
+}
+function showToast(msg, type) {
+  var toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.style.background = type === 'error' ? 'var(--error)' : 'var(--accent)';
+  toast.style.color = type === 'error' ? '#fff' : 'var(--bg)';
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 2200);
+}
+function validateInput(input) {
+  var val = parseFloat(input.value);
+  var field = input.closest ? input.closest('.field') : input.parentElement.parentElement;
+  var errorEl = field ? field.querySelector('.error-msg') : null;
+  var row = input.closest ? input.closest('.inputrow') : input.parentElement;
+  if (input.value && (isNaN(val) || val < 0)) {
+    if (row && row.classList) row.classList.add('error');
+    if (errorEl) errorEl.style.display = 'block';
+    return false;
+  } else {
+    if (row && row.classList) row.classList.remove('error');
+    if (errorEl) errorEl.style.display = 'none';
+    return true;
+  }
+}
+function showPanel(id, btn) {
+  currentPanel = id;
+  var panels = document.querySelectorAll('.panel');
+  for (var i = 0; i < panels.length; i++) panels[i].classList.remove('active');
+  var tabs = document.querySelectorAll('.tabs button');
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  btn.focus();
+  playSwitch();
+  saveToStorage();
+}
+function calcArea() {
+  var l = parseFloat(document.getElementById('a-l').value) || 0;
+  var w = parseFloat(document.getElementById('a-w').value) || 0;
+  var h = parseFloat(document.getElementById('a-h').value) || 0;
+  validateInput(document.getElementById('a-l'));
+  validateInput(document.getElementById('a-w'));
+  validateInput(document.getElementById('a-h'));
+  var area = l * w;
+  var vol = h > 0 ? area * h : null;
+  document.getElementById('a-area').textContent = formatNumber(area, 2);
+  document.getElementById('a-vol').textContent = vol !== null ? formatNumber(vol, 2) : '—';
+  document.getElementById('a-dim').textContent = h > 0 ? formatNumber(l,2) + " m × " + formatNumber(w,2) + " m × " + formatNumber(h,2) + " m = " + formatNumber(vol,2) + " m³" : formatNumber(l,2) + " m × " + formatNumber(w,2) + " m = " + formatNumber(area,2) + " m²";
+  saveToStorage();
+}
+function setMatMode(mode, btn) {
+  var buttons = document.querySelectorAll('#p2 .radiogroup button');
+  for (var i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
+  btn.classList.add('active');
+  document.getElementById('mat-brick').style.display = mode === 'brick' ? 'block' : 'none';
+  document.getElementById('mat-concrete').style.display = mode === 'concrete' ? 'block' : 'none';
+  playClick();
+  saveToStorage();
+}
+function updateBrickThickness() {
+  var type = document.getElementById('b-type').value;
+  var select = document.getElementById('b-thick');
+  var mat = materials[type];
+  select.innerHTML = '';
+  for (var i = 0; i < mat.thicknesses.length; i++) {
+    var t = mat.thicknesses[i];
+    var opt = document.createElement('option');
+    opt.value = t.value;
+    opt.textContent = t.label;
+    select.appendChild(opt);
+  }
+  document.getElementById('b-label').textContent = "Kerakli " + mat.name + " (zaxira bilan +5%)";
+  var dimText = { fired: "Standart g\'isht: 25×12×6.5 sm, devor hajmiga qarab hisoblanadi", hollow: "Teshikli g\'isht: 25×12×8.8 sm, devor hajmiga qarab hisoblanadi", aac: "Gazoblok: 60×30×20 sm, yopishgich bilan o\'rnatiladi", foam: "Penoblok: 60×30×20 sm, yopishgich bilan o\'rnatiladi", block: "Beton blok: 39×19×19 sm, aralashma bilan o\'rnatiladi" };
+  document.getElementById('b-dim').textContent = dimText[type] || '';
+  calcBrick();
+}
+function calcBrick() {
+  var type = document.getElementById('b-type').value;
+  var l = parseFloat(document.getElementById('b-l').value) || 0;
+  var h = parseFloat(document.getElementById('b-h').value) || 0;
+  var t = parseFloat(document.getElementById('b-thick').value) || 0;
+  var price = parseFloat(document.getElementById('b-price').value) || 0;
+  validateInput(document.getElementById('b-l'));
+  validateInput(document.getElementById('b-h'));
+  validateInput(document.getElementById('b-price'));
+  if (l <= 0 || h <= 0 || t <= 0) {
+    document.getElementById('b-bricks').textContent = '0';
+    document.getElementById('b-total').textContent = "0 so'm";
+    return;
+  }
+  var mat = materials[type];
+  var wallVolume = l * h * t;
+  var pieces = Math.ceil(wallVolume * mat.perM3 * 1.05);
+  var total = pieces * price;
+  document.getElementById('b-bricks').textContent = formatNumber(pieces, 0);
+  document.getElementById('b-total').textContent = price > 0 ? formatMoney(total) : "0 so'm";
+  if (price > 0) playSuccess();
+  saveToStorage();
+}
+function calcConcrete() {
+  var l = parseFloat(document.getElementById('c-l').value) || 0;
+  var w = parseFloat(document.getElementById('c-w').value) || 0;
+  var t = parseFloat(document.getElementById('c-t').value) || 0;
+  var priceCement = parseFloat(document.getElementById('c-price-cement').value) || 0;
+  var priceSand = parseFloat(document.getElementById('c-price-sand').value) || 0;
+  var priceGravel = parseFloat(document.getElementById('c-price-gravel').value) || 0;
+  validateInput(document.getElementById('c-l'));
+  validateInput(document.getElementById('c-w'));
+  validateInput(document.getElementById('c-t'));
+  var vol = l * w * t;
+  var cementBags = vol > 0 ? Math.ceil(vol * 6.5) : 0;
+  var sand = vol * 0.42;
+  var gravel = vol * 0.84;
+  var totalCement = cementBags * priceCement;
+  var totalSand = sand * priceSand;
+  var totalGravel = gravel * priceGravel;
+  var totalAll = totalCement + totalSand + totalGravel;
+  document.getElementById('c-cement').textContent = formatNumber(cementBags, 0);
+  document.getElementById('c-sand').textContent = formatNumber(sand, 2);
+  document.getElementById('c-gravel').textContent = formatNumber(gravel, 2);
+  document.getElementById('c-vol').textContent = formatNumber(vol, 2);
+  document.getElementById('c-total-cement').textContent = priceCement > 0 ? formatMoney(totalCement) : '—';
+  document.getElementById('c-total-sand').textContent = priceSand > 0 ? formatMoney(totalSand) : '—';
+  document.getElementById('c-total-gravel').textContent = priceGravel > 0 ? formatMoney(totalGravel) : '—';
+  document.getElementById('c-total-all').textContent = (priceCement + priceSand + priceGravel) > 0 ? formatMoney(totalAll) : "0 so'm";
+  if ((priceCement + priceSand + priceGravel) > 0 && vol > 0) playSuccess();
+  saveToStorage();
+}
+function setScaleMode(mode, btn) {
+  scaleMode = mode;
+  var buttons = document.querySelectorAll('#p3 .radiogroup button');
+  for (var i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
+  btn.classList.add('active');
+  var inLabel = document.getElementById('s-inlabel');
+  var inUnit = document.getElementById('s-inunit');
+  var outLabel = document.getElementById('s-outlabel');
+  var outUnit = document.getElementById('s-outunit');
+  var dim = document.getElementById('s-dim');
+  if (mode === 'toreal') {
+    inLabel.textContent = "Chizmadagi o\'lcham";
+    inUnit.textContent = 'sm';
+    outLabel.textContent = "Haqiqiy o\'lcham";
+    outUnit.textContent = 'm';
+    dim.textContent = "1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o\'lchamga teng";
+  } else {
+    inLabel.textContent = "Haqiqiy o\'lcham";
+    inUnit.textContent = 'm';
+    outLabel.textContent = "Chizmadagi o\'lcham";
+    outUnit.textContent = 'sm';
+    dim.textContent = "1:100 masshtabda 1 m haqiqiy = 1 sm chizmada";
+  }
+  playClick();
+  calcScale();
+}
+function calcScale() {
+  var val = parseFloat(document.getElementById('s-val').value) || 0;
+  var ratio = parseFloat(document.getElementById('s-ratio').value) || 1;
+  validateInput(document.getElementById('s-val'));
+  validateInput(document.getElementById('s-ratio'));
+  if (val <= 0 || ratio <= 0) {
+    document.getElementById('s-out').textContent = '0';
+    return;
+  }
+  var result, unit;
+  if (scaleMode === 'toreal') {
+    var realCm = val * ratio;
+    if (realCm >= 100) { result = formatNumber(realCm/100, 2); unit = 'm'; }
+    else { result = formatNumber(realCm, 1); unit = 'sm'; }
+  } else {
+    var drawingCm = (val * 100) / ratio;
+    if (drawingCm < 1) { result = formatNumber(drawingCm*10, 2); unit = 'mm'; }
+    else { result = formatNumber(drawingCm, 2); unit = 'sm'; }
+  }
+  document.getElementById('s-out').textContent = result;
+  document.getElementById('s-outunit').textContent = unit;
+  var ratioVal = document.getElementById('s-ratio').value || 100;
+  var inVal = document.getElementById('s-val').value || 0;
+  var inUnitText = scaleMode === 'toreal' ? 'sm' : 'm';
+  document.getElementById('s-dim').textContent = "1:" + ratioVal + " masshtabda " + inVal + " " + inUnitText + " = " + result + " " + unit;
+  saveToStorage();
+}
+async function copyResult(id, unit) {
+  var val = document.getElementById(id).textContent;
+  var text = (val + " " + unit).trim();
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('Nusxalandi: ' + text);
+    playSuccess();
+  } catch (e) {
+    showToast('Nusxalandi');
+  }
+}
+function resetPanel(panelId) {
+  var panel = document.getElementById(panelId);
+  var inputs = panel.querySelectorAll('input[type="number"]');
+  for (var i = 0; i < inputs.length; i++) inputs[i].value = '';
+  if (panelId === 'p1') {
+    document.getElementById('a-area').textContent = '0';
+    document.getElementById('a-vol').textContent = '—';
+    document.getElementById('a-dim').textContent = 'Uzunlik × kenglik = maydon';
+  } else if (panelId === 'p2') {
+    document.getElementById('b-bricks').textContent = '0';
+    document.getElementById('b-total').textContent = "0 so'm";
+    document.getElementById('c-cement').textContent = '0';
+    document.getElementById('c-sand').textContent = '0';
+    document.getElementById('c-gravel').textContent = '0';
+    document.getElementById('c-vol').textContent = '0';
+    document.getElementById('c-total-cement').textContent = '—';
+    document.getElementById('c-total-sand').textContent = '—';
+    document.getElementById('c-total-gravel').textContent = '—';
+    document.getElementById('c-total-all').textContent = "0 so'm";
+    updateBrickThickness();
+  } else if (panelId === 'p3') {
+    document.getElementById('s-out').textContent = '0';
+    document.getElementById('s-dim').textContent = scaleMode === 'toreal' ? "1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o\'lchamga teng" : "1:100 masshtabda 1 m haqiqiy = 1 sm chizmada";
+  }
+  playClick();
+  showToast('Tozalandi');
+  saveToStorage();
+}
+function toggleTheme() {
+  var html = document.documentElement;
+  var btn = document.getElementById('theme-btn');
+  var isDark = html.getAttribute('data-theme') !== 'light';
+  if (isDark) {
+    html.setAttribute('data-theme', 'light');
+    btn.textContent = '🌙';
+    btn.title = "Qorong\'u rejim";
+  } else {
+    html.removeAttribute('data-theme');
+    btn.textContent = '☀️';
+    btn.title = "Yorug\' rejim";
+  }
+  localStorage.setItem('chizmachi_theme', isDark ? 'light' : 'dark');
+  playClick();
+}
+function loadTheme() {
+  var saved = localStorage.getItem('chizmachi_theme');
+  var btn = document.getElementById('theme-btn');
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    btn.textContent = '🌙';
+    btn.title = "Qorong\'u rejim";
+  } else {
+    btn.textContent = '☀️';
+    btn.title = "Yorug\' rejim";
+  }
+}
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  var btn = document.getElementById('sound-btn');
+  btn.textContent = soundEnabled ? '🔊' : '🔇';
+  btn.classList.toggle('muted', !soundEnabled);
+  btn.title = soundEnabled ? "Ovozni o\'chirish" : "Ovozni yoqish";
+  localStorage.setItem('chizmachi_sound', soundEnabled ? 'on' : 'off');
+}
+function loadSound() {
+  var saved = localStorage.getItem('chizmachi_sound');
+  if (saved === 'off') {
+    soundEnabled = false;
+    var btn = document.getElementById('sound-btn');
+    btn.textContent = '🔇';
+    btn.classList.add('muted');
+    btn.title = "Ovozni yoqish";
+  }
+}
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key >= '1' && e.key <= '3') {
+    e.preventDefault();
+    var idx = parseInt(e.key) - 1;
+    var tabs = document.querySelectorAll('.tabs button');
+    if (tabs[idx]) tabs[idx].click();
+    return;
+  }
+  if (e.key === 'Escape') {
+    resetPanel(currentPanel);
+    return;
+  }
+  if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+    e.preventDefault();
+    var allInputs = document.querySelectorAll('.panel.active input, .panel.active select');
+    var arr = Array.prototype.slice.call(allInputs);
+    var idx = arr.indexOf(e.target);
+    if (idx >= 0 && idx < arr.length - 1) {
+      arr[idx + 1].focus();
+    } else {
+      if (currentPanel === 'p1') calcArea();
+      else if (currentPanel === 'p2') {
+        if (document.getElementById('mat-brick').style.display !== 'none') calcBrick();
+        else calcConcrete();
+      }
+      else if (currentPanel === 'p3') calcScale();
+    }
+  }
+});
+function saveToStorage() {
+  var data = {
+    p1: { l: document.getElementById('a-l').value, w: document.getElementById('a-w').value, h: document.getElementById('a-h').value },
+    p2: {
+      mode: document.getElementById('mat-brick').style.display !== 'none' ? 'brick' : 'concrete',
+      brick: { l: document.getElementById('b-l').value, h: document.getElementById('b-h').value, type: document.getElementById('b-type').value, thick: document.getElementById('b-thick').value, price: document.getElementById('b-price').value },
+      concrete: { l: document.getElementById('c-l').value, w: document.getElementById('c-w').value, t: document.getElementById('c-t').value, priceCement: document.getElementById('c-price-cement').value, priceSand: document.getElementById('c-price-sand').value, priceGravel: document.getElementById('c-price-gravel').value }
+    },
+    p3: { mode: scaleMode, val: document.getElementById('s-val').value, ratio: document.getElementById('s-ratio').value },
+    activeTab: currentPanel
+  };
+  localStorage.setItem('chizmachi_data', JSON.stringify(data));
+}
+function loadFromStorage() {
+  try {
+    var data = JSON.parse(localStorage.getItem('chizmachi_data'));
+    if (!data) return;
+    if (data.activeTab) {
+      var btn = document.querySelector('button[data-panel="' + data.activeTab + '"]');
+      if (btn) showPanel(data.activeTab, btn);
+    }
+    if (data.p1) {
+      document.getElementById('a-l').value = data.p1.l || '';
+      document.getElementById('a-w').value = data.p1.w || '';
+      document.getElementById('a-h').value = data.p1.h || '';
+      calcArea();
+    }
+    if (data.p2) {
+      if (data.p2.mode === 'concrete') {
+        var btn2 = document.querySelector('#p2 .radiogroup button:nth-child(2)');
+        if (btn2) setMatMode('concrete', btn2);
+      }
+      if (data.p2.brick) {
+        document.getElementById('b-l').value = data.p2.brick.l || '';
+        document.getElementById('b-h').value = data.p2.brick.h || '';
+        document.getElementById('b-price').value = data.p2.brick.price || '';
+        if (data.p2.brick.type) {
+          document.getElementById('b-type').value = data.p2.brick.type;
+          updateBrickThickness();
+        }
+        if (data.p2.brick.thick) {
+          document.getElementById('b-thick').value = data.p2.brick.thick;
+        }
+        calcBrick();
+      }
+      if (data.p2.concrete) {
+        document.getElementById('c-l').value = data.p2.concrete.l || '';
+        document.getElementById('c-w').value = data.p2.concrete.w || '';
+        document.getElementById('c-t').value = data.p2.concrete.t || '';
+        document.getElementById('c-price-cement').value = data.p2.concrete.priceCement || '';
+        document.getElementById('c-price-sand').value = data.p2.concrete.priceSand || '';
+        document.getElementById('c-price-gravel').value = data.p2.concrete.priceGravel || '';
+        calcConcrete();
+      }
+    }
+    if (data.p3) {
+      if (data.p3.mode === 'todrawing') {
+        var btn3 = document.querySelector('#p3 .radiogroup button:nth-child(2)');
+        if (btn3) setScaleMode('todrawing', btn3);
+      }
+      document.getElementById('s-val').value = data.p3.val || '';
+      document.getElementById('s-ratio').value = data.p3.ratio || '100';
+      calcScale();
+    }
+  } catch (e) {
+    console.error('Storage load error:', e);
+  }
+}
+document.addEventListener('DOMContentLoaded', function() {
+  loadTheme();
+  loadSound();
+  updateBrickThickness();
+  var panels = document.querySelectorAll('.panel');
+  for (var i = 0; i < panels.length; i++) {
+    var card = panels[i].querySelector('.card');
+    if (!card) continue;
+    var resetBtn = document.createElement('button');
+    resetBtn.type = 'button';
+    resetBtn.className = 'reset-btn';
+    resetBtn.textContent = 'Tozalash (Esc)';
+    resetBtn.onclick = (function(pid) { return function() { resetPanel(pid); }; })(panels[i].id);
+    card.appendChild(resetBtn);
+  }
+  loadFromStorage();
+  document.body.addEventListener('click', initAudio, { once: true });
+  document.body.addEventListener('keydown', initAudio, { once: true });
+});
+</script>
+</body>
+</html>'''
+
+with open('/mnt/agents/output/chizmachi_part3.txt', 'w', encoding='utf-8') as f:
+    f.write(part3)
+
+print("Part 3 saved: Panel 3 + JavaScript + closing tags")
+print(f"Size: {len(part3):,} chars")
