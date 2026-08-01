@@ -580,4 +580,632 @@ footer {
           <div class="field">
             <label for="b-h">Devor balandligi</label>
             <div class="inputrow">
-              <input type="number" id="b-h" placeholder="0
+              <input type="number" id="b-h" placeholder="0.00" step="0.01" min="0" oninput="calcBrick()" aria-describedby="b-h-error">
+              <span class="unit">m</span>
+            </div>
+            <span class="error-msg" id="b-h-error">Musbat son kiriting</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="b-type">Material turi</label>
+          <select id="b-type" onchange="updateBrickThickness()">
+            <option value="fired">Oddiy pishiq g'isht (25×12×6.5 sm)</option>
+            <option value="hollow">Teshikli g'isht (25×12×8.8 sm)</option>
+            <option value="aac">Gazoblok (60×30×20 sm)</option>
+            <option value="foam">Penoblok (60×30×20 sm)</option>
+            <option value="block">Beton blok (39×19×19 sm)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="b-thick">Devor qalinligi</label>
+          <select id="b-thick" onchange="calcBrick()"></select>
+        </div>
+
+        <div class="divider"></div>
+        <div class="result">
+          <button type="button" class="copy-btn" onclick="copyResult('b-bricks','b-unit')" aria-label="Natijani nusxalash">Nusxa</button>
+          <div class="rlabel" id="b-label">Kerakli g'isht (zaxira bilan +5%)</div>
+          <div class="rvalue"><span id="b-bricks">0</span><span class="u" id="b-unit">dona</span></div>
+        </div>
+        <div class="dim">
+          <div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div>
+          <div class="dcaption" id="b-dim">Standart g'isht: 25×12×6.5 sm, devor hajmiga qarab hisoblanadi</div>
+        </div>
+      </div>
+
+      <div class="card" id="mat-concrete" style="display:none;">
+        <div class="grid2">
+          <div class="field">
+            <label for="c-l">Uzunlik</label>
+            <div class="inputrow">
+              <input type="number" id="c-l" placeholder="0.00" step="0.01" min="0" oninput="calcConcrete()" aria-describedby="c-l-error">
+              <span class="unit">m</span>
+            </div>
+            <span class="error-msg" id="c-l-error">Musbat son kiriting</span>
+          </div>
+          <div class="field">
+            <label for="c-w">Kenglik</label>
+            <div class="inputrow">
+              <input type="number" id="c-w" placeholder="0.00" step="0.01" min="0" oninput="calcConcrete()" aria-describedby="c-w-error">
+              <span class="unit">m</span>
+            </div>
+            <span class="error-msg" id="c-w-error">Musbat son kiriting</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="c-t">Qalinlik</label>
+          <div class="inputrow">
+            <input type="number" id="c-t" placeholder="0.00" step="0.01" min="0" oninput="calcConcrete()" aria-describedby="c-t-error">
+            <span class="unit">m</span>
+          </div>
+          <span class="error-msg" id="c-t-error">Musbat son kiriting</span>
+        </div>
+
+        <div class="divider"></div>
+        <div class="panel-desc" style="margin-bottom:18px; color: var(--text-muted);">Aralashma nisbati (sement : qum : shag'al) — 1 : 2 : 4</div>
+        <div class="result-row three-col">
+          <div class="result">
+            <button type="button" class="copy-btn" onclick="copyResult('c-cement','c-cement-u')" aria-label="Sementni nusxalash">Nusxa</button>
+            <div class="rlabel">Sement</div>
+            <div class="rvalue"><span id="c-cement">0</span><span class="u" id="c-cement-u">qop</span></div>
+          </div>
+          <div class="result">
+            <button type="button" class="copy-btn" onclick="copyResult('c-sand','c-sand-u')" aria-label="Qumni nusxalash">Nusxa</button>
+            <div class="rlabel">Qum</div>
+            <div class="rvalue"><span id="c-sand">0</span><span class="u" id="c-sand-u">m³</span></div>
+          </div>
+          <div class="result">
+            <button type="button" class="copy-btn" onclick="copyResult('c-gravel','c-gravel-u')" aria-label="Shag'alni nusxalash">Nusxa</button>
+            <div class="rlabel">Shag'al</div>
+            <div class="rvalue"><span id="c-gravel">0</span><span class="u" id="c-gravel-u">m³</span></div>
+          </div>
+        </div>
+        <div class="dim">
+          <div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div>
+          <div class="dcaption">Beton hajmi: <span id="c-vol">0</span> m³ · sement 50 kg/qop hisobida</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 3: Masshtab -->
+    <section class="panel" id="p3" role="tabpanel" aria-labelledby="tab-p3" hidden>
+      <div class="panel-title">Masshtab / o'lchov konvertori</div>
+      <div class="panel-desc">Chizmadagi o'lchamni haqiqiy o'lchamga yoki aksincha o'giring.</div>
+
+      <div class="radiogroup" role="radiogroup" aria-label="Konvertatsiya yo'nalishi">
+        <button class="active" data-mode="toreal" onclick="setScaleMode('toreal',this)" role="radio" aria-checked="true" tabindex="0">Chizma → haqiqiy</button>
+        <button data-mode="todrawing" onclick="setScaleMode('todrawing',this)" role="radio" aria-checked="false" tabindex="-1">Haqiqiy → chizma</button>
+      </div>
+
+      <div class="card">
+        <div class="grid2">
+          <div class="field">
+            <label for="s-val" id="s-inlabel">Chizmadagi o'lcham</label>
+            <div class="inputrow">
+              <input type="number" id="s-val" placeholder="0.00" step="0.01" min="0" oninput="calcScale()" aria-describedby="s-val-error">
+              <span class="unit" id="s-inunit">sm</span>
+            </div>
+            <span class="error-msg" id="s-val-error">Musbat son kiriting</span>
+          </div>
+          <div class="field">
+            <label for="s-ratio">Masshtab (1 : N)</label>
+            <div class="inputrow">
+              <span class="unit">1 :</span>
+              <input type="number" id="s-ratio" placeholder="100" value="100" step="1" min="1" oninput="calcScale()" aria-describedby="s-ratio-error">
+            </div>
+            <span class="error-msg" id="s-ratio-error">1 dan katta son kiriting</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="result">
+          <button type="button" class="copy-btn" onclick="copyResult('s-out','s-outunit')" aria-label="Natijani nusxalash">Nusxa</button>
+          <div class="rlabel" id="s-outlabel">Haqiqiy o'lcham</div>
+          <div class="rvalue"><span id="s-out">0</span><span class="u" id="s-outunit">m</span></div>
+        </div>
+        <div class="dim">
+          <div class="dline"><div class="tick"></div><div class="bar"></div><div class="tick"></div></div>
+          <div class="dcaption" id="s-dim">1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o'lchamga teng</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Chizmachi — mahalliy hisob-kitob vositalari</span>
+    <span>Barcha hisob-kitoblar taxminiy, loyiha uchun muhandis tasdig'i talab qilinadi</span>
+  </footer>
+</div>
+
+<script>
+// ========== MA'LUMOTLAR ==========
+const materials = {
+  fired: {
+    name: "g'isht",
+    size: [0.25, 0.12, 0.065],
+    perM3: 400,
+    thicknesses: [
+      {value: 0.12, label: "0.5 g'isht (12 sm)"},
+      {value: 0.25, label: "1 g'isht (25 sm)"},
+      {value: 0.38, label: "1.5 g'isht (38 sm)"},
+      {value: 0.51, label: "2 g'isht (51 sm)"}
+    ]
+  },
+  hollow: {
+    name: "g'isht",
+    size: [0.25, 0.12, 0.088],
+    perM3: 300,
+    thicknesses: [
+      {value: 0.12, label: "0.5 g'isht (12 sm)"},
+      {value: 0.25, label: "1 g'isht (25 sm)"},
+      {value: 0.38, label: "1.5 g'isht (38 sm)"},
+      {value: 0.51, label: "2 g'isht (51 sm)"}
+    ]
+  },
+  aac: {
+    name: "blok",
+    size: [0.60, 0.30, 0.20],
+    perM3: 28,
+    thicknesses: [
+      {value: 0.10, label: "10 sm"},
+      {value: 0.15, label: "15 sm"},
+      {value: 0.20, label: "20 sm"},
+      {value: 0.25, label: "25 sm"},
+      {value: 0.30, label: "30 sm"},
+      {value: 0.35, label: "35 sm"},
+      {value: 0.40, label: "40 sm"}
+    ]
+  },
+  foam: {
+    name: "blok",
+    size: [0.60, 0.30, 0.20],
+    perM3: 28,
+    thicknesses: [
+      {value: 0.10, label: "10 sm"},
+      {value: 0.15, label: "15 sm"},
+      {value: 0.20, label: "20 sm"},
+      {value: 0.25, label: "25 sm"},
+      {value: 0.30, label: "30 sm"},
+      {value: 0.35, label: "35 sm"},
+      {value: 0.40, label: "40 sm"}
+    ]
+  },
+  block: {
+    name: "blok",
+    size: [0.39, 0.19, 0.19],
+    perM3: 65,
+    thicknesses: [
+      {value: 0.19, label: "19 sm"},
+      {value: 0.39, label: "39 sm"}
+    ]
+  }
+};
+
+// ========== YORDAMCHI FUNKSIYALAR ==========
+function formatNumber(num, decimals = 2) {
+  if (isNaN(num) || !isFinite(num)) return '0';
+  return num.toLocaleString('uz-UZ', {
+    minimumFractionDigits: num % 1 === 0 ? 0 : decimals,
+    maximumFractionDigits: decimals
+  });
+}
+
+function formatLength(cm, mode = 'auto') {
+  if (cm === 0) return { value: '0', unit: 'sm' };
+  const m = cm / 100;
+  const km = m / 1000;
+  const mm = cm * 10;
+  
+  if (mode === 'mm' && mm < 1000) return { value: formatNumber(mm, 1), unit: 'mm' };
+  if (mode === 'cm') return { value: formatNumber(cm, 2), unit: 'sm' };
+  if (mode === 'm') return { value: formatNumber(m, 3), unit: 'm' };
+  
+  if (km >= 1) return { value: formatNumber(km, 3), unit: 'km' };
+  if (m >= 1) return { value: formatNumber(m, 2), unit: 'm' };
+  if (cm >= 1) return { value: formatNumber(cm, 2), unit: 'sm' };
+  return { value: formatNumber(mm, 1), unit: 'mm' };
+}
+
+function showToast(msg) {
+  let toast = document.getElementById('toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    toast.className = 'toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+function validateInput(input) {
+  const val = parseFloat(input.value);
+  const field = input.closest('.field');
+  const errorEl = field?.querySelector('.error-msg');
+  const row = input.closest('.inputrow');
+  
+  if (input.value && (isNaN(val) || val < 0)) {
+    row?.classList.add('error');
+    if (errorEl) errorEl.style.display = 'block';
+    return false;
+  } else {
+    row?.classList.remove('error');
+    if (errorEl) errorEl.style.display = 'none';
+    return true;
+  }
+}
+
+// ========== PANEL ALMASHISH ==========
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => {
+    p.classList.remove('active');
+    p.hidden = true;
+  });
+  document.querySelectorAll('.tabs button').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-selected', 'false');
+    b.setAttribute('tabindex', '-1');
+  });
+  
+  const panel = document.getElementById(id);
+  panel.classList.add('active');
+  panel.hidden = false;
+  
+  btn.classList.add('active');
+  btn.setAttribute('aria-selected', 'true');
+  btn.setAttribute('tabindex', '0');
+  btn.focus();
+  
+  saveToStorage();
+}
+
+// ========== MAYDON / HAJM ==========
+function calcArea() {
+  const l = parseFloat(document.getElementById('a-l').value) || 0;
+  const w = parseFloat(document.getElementById('a-w').value) || 0;
+  const h = parseFloat(document.getElementById('a-h').value) || 0;
+  
+  validateInput(document.getElementById('a-l'));
+  validateInput(document.getElementById('a-w'));
+  validateInput(document.getElementById('a-h'));
+  
+  const area = l * w;
+  const vol = h > 0 ? area * h : null;
+  
+  document.getElementById('a-area').textContent = formatNumber(area, 2);
+  document.getElementById('a-vol').textContent = vol !== null ? formatNumber(vol, 2) : '—';
+  document.getElementById('a-dim').textContent = 
+    h > 0 
+      ? `${formatNumber(l, 2)} m × ${formatNumber(w, 2)} m × ${formatNumber(h, 2)} m = ${formatNumber(vol, 2)} m³` 
+      : `${formatNumber(l, 2)} m × ${formatNumber(w, 2)} m = ${formatNumber(area, 2)} m²`;
+  
+  saveToStorage();
+}
+
+// ========== MATERIALLAR ==========
+function setMatMode(mode, btn) {
+  document.querySelectorAll('#p2 .radiogroup button').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-checked', 'false');
+    b.setAttribute('tabindex', '-1');
+  });
+  btn.classList.add('active');
+  btn.setAttribute('aria-checked', 'true');
+  btn.setAttribute('tabindex', '0');
+  
+  document.getElementById('mat-brick').style.display = mode === 'brick' ? 'block' : 'none';
+  document.getElementById('mat-concrete').style.display = mode === 'concrete' ? 'block' : 'none';
+  
+  saveToStorage();
+}
+
+function updateBrickThickness() {
+  const type = document.getElementById('b-type').value;
+  const select = document.getElementById('b-thick');
+  const mat = materials[type];
+  
+  select.innerHTML = '';
+  mat.thicknesses.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t.value;
+    opt.textContent = t.label;
+    select.appendChild(opt);
+  });
+  
+  document.getElementById('b-label').textContent = `Kerakli ${mat.name} (zaxira bilan +5%)`;
+  document.getElementById('b-unit').textContent = mat.unit;
+  
+  const dimText = {
+    fired: "Standart g'isht: 25×12×6.5 sm, devor hajmiga qarab hisoblanadi",
+    hollow: "Teshikli g'isht: 25×12×8.8 sm, devor hajmiga qarab hisoblanadi",
+    aac: "Gazoblok: 60×30×20 sm, yopishgich bilan o'rnatiladi",
+    foam: "Penoblok: 60×30×20 sm, yopishgich bilan o'rnatiladi",
+    block: "Beton blok: 39×19×19 sm, aralashma bilan o'rnatiladi"
+  };
+  document.getElementById('b-dim').textContent = dimText[type] || '';
+  
+  calcBrick();
+}
+
+function calcBrick() {
+  const type = document.getElementById('b-type').value;
+  const l = parseFloat(document.getElementById('b-l').value) || 0;
+  const h = parseFloat(document.getElementById('b-h').value) || 0;
+  const t = parseFloat(document.getElementById('b-thick').value) || 0;
+  
+  validateInput(document.getElementById('b-l'));
+  validateInput(document.getElementById('b-h'));
+  
+  if (l <= 0 || h <= 0 || t <= 0) {
+    document.getElementById('b-bricks').textContent = '0';
+    return;
+  }
+  
+  const mat = materials[type];
+  const wallVolume = l * h * t;
+  const pieces = Math.ceil(wallVolume * mat.perM3 * 1.05);
+  
+  document.getElementById('b-bricks').textContent = formatNumber(pieces, 0);
+  saveToStorage();
+}
+
+function calcConcrete() {
+  const l = parseFloat(document.getElementById('c-l').value) || 0;
+  const w = parseFloat(document.getElementById('c-w').value) || 0;
+  const t = parseFloat(document.getElementById('c-t').value) || 0;
+  
+  validateInput(document.getElementById('c-l'));
+  validateInput(document.getElementById('c-w'));
+  validateInput(document.getElementById('c-t'));
+  
+  const vol = l * w * t;
+  
+  // 1:2:4 aralashma, 1 m³ ≈ 6.5 qop sement, 0.42 m³ qum, 0.84 m³ shag'al
+  const cementBags = vol > 0 ? Math.ceil(vol * 6.5) : 0;
+  const sand = vol * 0.42;
+  const gravel = vol * 0.84;
+  
+  document.getElementById('c-cement').textContent = formatNumber(cementBags, 0);
+  document.getElementById('c-sand').textContent = formatNumber(sand, 2);
+  document.getElementById('c-gravel').textContent = formatNumber(gravel, 2);
+  document.getElementById('c-vol').textContent = formatNumber(vol, 2);
+  
+  saveToStorage();
+}
+
+// ========== MASSHTAB ==========
+let scaleMode = 'toreal';
+
+function setScaleMode(mode, btn) {
+  scaleMode = mode;
+  document.querySelectorAll('#p3 .radiogroup button').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-checked', 'false');
+    b.setAttribute('tabindex', '-1');
+  });
+  btn.classList.add('active');
+  btn.setAttribute('aria-checked', 'true');
+  btn.setAttribute('tabindex', '0');
+  
+  const inLabel = document.getElementById('s-inlabel');
+  const inUnit = document.getElementById('s-inunit');
+  const outLabel = document.getElementById('s-outlabel');
+  const outUnit = document.getElementById('s-outunit');
+  const dim = document.getElementById('s-dim');
+  
+  if (mode === 'toreal') {
+    inLabel.textContent = 'Chizmadagi o\'lcham';
+    inUnit.textContent = 'sm';
+    outLabel.textContent = 'Haqiqiy o\'lcham';
+    outUnit.textContent = 'm';
+    dim.textContent = '1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o\'lchamga teng';
+  } else {
+    inLabel.textContent = 'Haqiqiy o\'lcham';
+    inUnit.textContent = 'm';
+    outLabel.textContent = 'Chizmadagi o\'lcham';
+    outUnit.textContent = 'sm';
+    dim.textContent = '1:100 masshtabda 1 m haqiqiy = 1 sm chizmada';
+  }
+  
+  calcScale();
+}
+
+function calcScale() {
+  const val = parseFloat(document.getElementById('s-val').value) || 0;
+  const ratio = parseFloat(document.getElementById('s-ratio').value) || 1;
+  
+  validateInput(document.getElementById('s-val'));
+  validateInput(document.getElementById('s-ratio'));
+  
+  if (val <= 0 || ratio <= 0) {
+    document.getElementById('s-out').textContent = '0';
+    return;
+  }
+  
+  let result, unit;
+  
+  if (scaleMode === 'toreal') {
+    const realCm = val * ratio;
+    const formatted = formatLength(realCm, 'auto');
+    result = formatted.value;
+    unit = formatted.unit;
+  } else {
+    const drawingCm = (val * 100) / ratio;
+    const formatted = formatLength(drawingCm, 'auto');
+    result = formatted.value;
+    unit = formatted.unit;
+  }
+  
+  document.getElementById('s-out').textContent = result;
+  document.getElementById('s-outunit').textContent = unit;
+  
+  const ratioVal = document.getElementById('s-ratio').value || 100;
+  const inVal = document.getElementById('s-val').value || 0;
+  const inUnitText = scaleMode === 'toreal' ? 'sm' : 'm';
+  
+  document.getElementById('s-dim').textContent = 
+    `1:${ratioVal} masshtabda ${inVal} ${inUnitText} = ${result} ${unit}`;
+  
+  saveToStorage();
+}
+
+// ========== NUSXA OLSH / TOZALASH ==========
+async function copyResult(textId, unitId) {
+  const val = document.getElementById(textId).textContent;
+  const unit = unitId ? document.getElementById(unitId).textContent : '';
+  const text = `${val} ${unit}`.trim();
+  
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('Nusxalandi: ' + text);
+  } catch (e) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Nusxalandi');
+  }
+}
+
+function resetPanel(panelId) {
+  const panel = document.getElementById(panelId);
+  panel.querySelectorAll('input[type="number"]').forEach(input => {
+    input.value = '';
+  });
+  
+  if (panelId === 'p1') {
+    document.getElementById('a-area').textContent = '0';
+    document.getElementById('a-vol').textContent = '—';
+    document.getElementById('a-dim').textContent = 'Uzunlik × kenglik = maydon';
+  } else if (panelId === 'p2') {
+    document.getElementById('b-bricks').textContent = '0';
+    document.getElementById('c-cement').textContent = '0';
+    document.getElementById('c-sand').textContent = '0';
+    document.getElementById('c-gravel').textContent = '0';
+    document.getElementById('c-vol').textContent = '0';
+  } else if (panelId === 'p3') {
+    document.getElementById('s-out').textContent = '0';
+    document.getElementById('s-dim').textContent = scaleMode === 'toreal' 
+      ? '1:100 masshtabda 1 sm chizmada = 1 m haqiqiy o\'lchamga teng'
+      : '1:100 masshtabda 1 m haqiqiy = 1 sm chizmada';
+  }
+  
+  saveToStorage();
+}
+
+// ========== LOCALSTORAGE ==========
+function saveToStorage() {
+  const data = {
+    p1: {
+      l: document.getElementById('a-l').value,
+      w: document.getElementById('a-w').value,
+      h: document.getElementById('a-h').value
+    },
+    p2: {
+      mode: document.querySelector('#p2 .radiogroup button.active')?.dataset.mode || 'brick',
+      brick: {
+        l: document.getElementById('b-l').value,
+        h: document.getElementById('b-h').value,
+        type: document.getElementById('b-type').value,
+        thick: document.getElementById('b-thick').value
+      },
+      concrete: {
+        l: document.getElementById('c-l').value,
+        w: document.getElementById('c-w').value,
+        t: document.getElementById('c-t').value
+      }
+    },
+    p3: {
+      mode: scaleMode,
+      val: document.getElementById('s-val').value,
+      ratio: document.getElementById('s-ratio').value
+    },
+    activeTab: document.querySelector('.tabs button.active')?.dataset.panel || 'p1'
+  };
+  localStorage.setItem('chizmachi_data', JSON.stringify(data));
+}
+
+function loadFromStorage() {
+  try {
+    const data = JSON.parse(localStorage.getItem('chizmachi_data'));
+    if (!data) return;
+    
+    if (data.activeTab) {
+      const btn = document.querySelector(`button[data-panel="${data.activeTab}"]`);
+      if (btn) showPanel(data.activeTab, btn);
+    }
+    
+    if (data.p1) {
+      document.getElementById('a-l').value = data.p1.l || '';
+      document.getElementById('a-w').value = data.p1.w || '';
+      document.getElementById('a-h').value = data.p1.h || '';
+      calcArea();
+    }
+    
+    if (data.p2) {
+      if (data.p2.mode === 'concrete') {
+        const btn = document.querySelector('#p2 button[data-mode="concrete"]');
+        if (btn) setMatMode('concrete', btn);
+      }
+      if (data.p2.brick) {
+        document.getElementById('b-l').value = data.p2.brick.l || '';
+        document.getElementById('b-h').value = data.p2.brick.h || '';
+        if (data.p2.brick.type) {
+          document.getElementById('b-type').value = data.p2.brick.type;
+          updateBrickThickness();
+        }
+        if (data.p2.brick.thick) {
+          document.getElementById('b-thick').value = data.p2.brick.thick;
+        }
+        calcBrick();
+      }
+      if (data.p2.concrete) {
+        document.getElementById('c-l').value = data.p2.concrete.l || '';
+        document.getElementById('c-w').value = data.p2.concrete.w || '';
+        document.getElementById('c-t').value = data.p2.concrete.t || '';
+        calcConcrete();
+      }
+    }
+    
+    if (data.p3) {
+      if (data.p3.mode === 'todrawing') {
+        const btn = document.querySelector('#p3 button[data-mode="todrawing"]');
+        if (btn) setScaleMode('todrawing', btn);
+      }
+      document.getElementById('s-val').value = data.p3.val || '';
+      document.getElementById('s-ratio').value = data.p3.ratio || '100';
+      calcScale();
+    }
+  } catch (e) {
+    console.error('Storage load error:', e);
+  }
+}
+
+// ========== BOSHLASH ==========
+document.addEventListener('DOMContentLoaded', () => {
+  updateBrickThickness();
+  
+  // Tozalash tugmalarini qo'shish
+  document.querySelectorAll('.panel').forEach(panel => {
+    const card = panel.querySelector('.card');
+    if (!card) return;
+    
+    const resetBtn = document.createElement('button');
+    resetBtn.type = 'button';
+    resetBtn.className = 'reset-btn';
+    resetBtn.textContent = 'Tozalash';
+    resetBtn.setAttribute('aria-label', 'Maydonni tozalash');
+    resetBtn.onclick = () => resetPanel(panel.id);
+    card.appendChild(resetBtn);
+  });
+  
+  loadFromStorage();
+});
+</script>
+
+</body>
+</html>
