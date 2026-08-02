@@ -1797,7 +1797,7 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
-<script.
+<script.>
 /* ============================================
    POLE BOOK MODULE
    ============================================ */
@@ -2011,21 +2011,21 @@ const pData={
 function pCat(c){
   document.querySelectorAll('.pcb').forEach(b=>b.classList.toggle('on',b.dataset.c===c));
   const d=pData[c];if(!d)return;
-  document.getElementById('p-title').textContent=d.t;
-  document.getElementById('p-desc').textContent=d.d;
-  document.getElementById('p-specs').innerHTML=d.sp.map(s=>'<div class=\"pstc\"><div class=\"pstl\">'+s.l+'</div><div class=\"pstv\">'+s.v+' <span class=\"pstu\">'+s.u+'</span></div><div class=\"pstn\">'+s.n+'</div></div>').join('');
-  document.querySelector('#p-table thead tr').innerHTML=d.cl.map(c=>'<th>'+c+'</th>').join('');
-  document.getElementById('p-tbody').innerHTML=d.rw.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('');
+  document.getElementById('poleContentTitle').textContent=d.t;
+  document.getElementById('poleContentDesc').textContent=d.d;
+  document.getElementById('poleSpecs').innerHTML=d.sp.map(s=>'<div class=\"pstc\"><div class=\"pstl\">'+s.l+'</div><div class=\"pstv\">'+s.v+' <span class=\"pstu\">'+s.u+'</span></div><div class=\"pstn\">'+s.n+'</div></div>').join('');
+  document.querySelector('#poletable thead tr').innerHTML=d.cl.map(c=>'<th>'+c+'</th>').join('');
+  document.getElementById('poleTableBody').innerHTML=d.rw.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('');
 }
 function pSearch(){
-  const t=document.getElementById('ps-in').value.toLowerCase();
+  const t=document.getElementById('poleSearch').value.toLowerCase();
   document.querySelectorAll('#p-tbody tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(t)?'':'none');
 }
 function calcPole(){
   const h=res(document.getElementById('pc-h').value),w=res(document.getElementById('pc-w').value),t=res(document.getElementById('pc-t').value),s=res(document.getElementById('pc-s').value);
   if(!h||!w){toast('Fill required fields','e');return}
   const rho=1.225,Cd=1.2,dia=0.2+(h*0.01),a=h*dia,wl=0.5*rho*Math.pow(w,2)*a*Cd,wm=wl*(h/2),tm=t*h+wm,em=h*0.1+0.6;
-  document.getElementById('res-pole').innerHTML=rp('Calculation Results',[{'l':'Wind Load','v':wl.toFixed(1),'u':'N'},{'l':'Wind Moment','v':(wm/1000).toFixed(1),'u':'kN·m'},{'l':'Tension Moment','v':(tm/1000).toFixed(1),'u':'kN·m'},{'l':'Embedment','v':em.toFixed(1),'u':'m'}]);
+  document.getElementById('poleCalcResult').innerHTML=rp('Calculation Results',[{'l':'Wind Load','v':wl.toFixed(1),'u':'N'},{'l':'Wind Moment','v':(wm/1000).toFixed(1),'u':'kN·m'},{'l':'Tension Moment','v':(tm/1000).toFixed(1),'u':'kN·m'},{'l':'Embedment','v':em.toFixed(1),'u':'m'}]);
   sav('Pole Load','H:'+h+'m V:'+w+'m/s',(tm/1000).toFixed(1)+' kN·m')
 }
 
