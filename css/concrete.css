@@ -1,0 +1,541 @@
+/* ============================================
+   ARCHCALC - CONCRETE MODULE
+   Part 1 / 2
+   ============================================ */
+
+/* ===== MAIN ===== */
+
+.concrete-module{
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+}
+
+/* ===== HEADER ===== */
+
+.concrete-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+    padding-bottom:20px;
+    border-bottom:1px solid var(--border-light);
+}
+
+.concrete-title{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+
+.concrete-icon{
+    width:60px;
+    height:60px;
+    border-radius:16px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#6b7280,#374151);
+    color:#fff;
+    font-size:28px;
+    box-shadow:var(--shadow-md);
+}
+
+.concrete-title h2{
+    font-size:30px;
+    font-weight:700;
+    color:var(--text-primary);
+}
+
+.concrete-title p{
+    margin-top:4px;
+    color:var(--text-secondary);
+    font-size:14px;
+}
+
+/* ===== SEARCH ===== */
+
+.concrete-search{
+    position:relative;
+    width:320px;
+    max-width:100%;
+}
+
+.concrete-search input{
+    width:100%;
+    padding:14px 18px 14px 48px;
+    border:1px solid var(--border-light);
+    border-radius:14px;
+    background:var(--bg-card);
+    color:var(--text-primary);
+}
+
+.concrete-search i{
+    position:absolute;
+    left:18px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--text-secondary);
+}
+
+/* ===== GRADE CARDS ===== */
+
+.concrete-grade-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:20px;
+}
+
+.concrete-grade-card{
+    background:var(--bg-card);
+    border:1px solid var(--border-light);
+    border-radius:18px;
+    padding:22px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.concrete-grade-card:hover{
+    transform:translateY(-4px);
+    border-color:var(--primary-500);
+    box-shadow:var(--shadow-md);
+}
+
+.concrete-grade-card.active{
+    background:linear-gradient(135deg,var(--primary-600),var(--primary-700));
+    color:#fff;
+}
+
+.concrete-grade{
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.concrete-strength{
+    font-size:14px;
+    color:var(--text-secondary);
+}
+
+.concrete-grade-card.active .concrete-strength{
+    color:#fff;
+}
+
+/* ===== INFO CARDS ===== */
+
+.concrete-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:24px;
+}
+
+.concrete-card{
+    background:var(--bg-card);
+    border:1px solid var(--border-light);
+    border-radius:18px;
+    overflow:hidden;
+    transition:.3s;
+}
+
+.concrete-card:hover{
+    transform:translateY(-5px);
+    box-shadow:var(--shadow-lg);
+}
+
+.concrete-card-header{
+    padding:20px;
+    background:linear-gradient(135deg,#f3f4f6,#e5e7eb);
+}
+
+.concrete-card-title{
+    font-size:20px;
+    font-weight:700;
+    color:var(--text-primary);
+}
+
+.concrete-card-body{
+    padding:22px;
+}
+
+/* ===== SPECIFICATIONS ===== */
+
+.concrete-specs{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.concrete-spec{
+    background:var(--bg-secondary);
+    border-radius:12px;
+    padding:15px;
+    text-align:center;
+}
+
+.concrete-spec-label{
+    font-size:12px;
+    color:var(--text-secondary);
+    margin-bottom:8px;
+}
+
+.concrete-spec-value{
+    font-size:22px;
+    font-weight:700;
+    color:var(--primary-600);
+}
+
+/* ===== MIX RATIO ===== */
+
+.mix-ratio{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    margin-top:20px;
+}
+
+.mix-item{
+    flex:1;
+    background:var(--bg-secondary);
+    border-radius:12px;
+    padding:18px;
+    text-align:center;
+}
+
+.mix-item h4{
+    margin-bottom:10px;
+    color:var(--text-primary);
+}
+
+.mix-item span{
+    font-size:24px;
+    font-weight:700;
+    color:var(--primary-600);
+}
+
+/* ===== NOTES ===== */
+
+.concrete-note{
+    margin-top:25px;
+    padding:20px;
+    background:#eff6ff;
+    border-left:4px solid var(--primary-600);
+    border-radius:12px;
+}
+
+.concrete-note h4{
+    margin-bottom:10px;
+    color:var(--primary-700);
+}
+
+.concrete-note p{
+    color:var(--text-secondary);
+    line-height:1.7;
+}
+
+/* ===== BUTTON ===== */
+
+.concrete-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 24px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,var(--primary-600),var(--primary-700));
+    color:#fff;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.concrete-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--shadow-md);
+}
+/* ============================================
+   ARCHCALC - CONCRETE MODULE
+   Part 2 / 2
+   ============================================ */
+
+/* ===== CONCRETE TABLE ===== */
+
+.concrete-table-wrap{
+    overflow-x:auto;
+    border:1px solid var(--border-light);
+    border-radius:16px;
+    margin-top:24px;
+}
+
+.concrete-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:700px;
+}
+
+.concrete-table thead{
+    background:var(--bg-secondary);
+}
+
+.concrete-table th{
+    padding:16px;
+    text-align:left;
+    font-size:13px;
+    font-weight:700;
+    text-transform:uppercase;
+    color:var(--text-secondary);
+    border-bottom:2px solid var(--border-light);
+}
+
+.concrete-table td{
+    padding:15px;
+    border-bottom:1px solid var(--border-light);
+    color:var(--text-primary);
+}
+
+.concrete-table tbody tr{
+    transition:.25s;
+}
+
+.concrete-table tbody tr:hover{
+    background:var(--bg-secondary);
+}
+
+/* ===== CALCULATOR ===== */
+
+.concrete-calculator{
+    margin-top:30px;
+    padding:28px;
+    background:var(--bg-card);
+    border:1px solid var(--border-light);
+    border-radius:18px;
+}
+
+.concrete-form{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.concrete-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.concrete-group label{
+    margin-bottom:8px;
+    font-size:14px;
+    font-weight:600;
+    color:var(--text-primary);
+}
+
+.concrete-group input,
+.concrete-group select{
+    padding:13px 15px;
+    border:1px solid var(--border-light);
+    border-radius:12px;
+    background:var(--bg-primary);
+    color:var(--text-primary);
+    transition:.25s;
+}
+
+.concrete-group input:focus,
+.concrete-group select:focus{
+    outline:none;
+    border-color:var(--primary-500);
+    box-shadow:0 0 0 3px rgba(59,130,246,.15);
+}
+
+/* ===== RESULT ===== */
+
+.concrete-result{
+    margin-top:30px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.result-card{
+    background:var(--bg-card);
+    border:1px solid var(--border-light);
+    border-radius:16px;
+    padding:22px;
+    text-align:center;
+}
+
+.result-card h4{
+    margin-bottom:12px;
+    color:var(--text-secondary);
+}
+
+.result-value{
+    font-size:32px;
+    font-weight:700;
+    color:var(--primary-600);
+}
+
+.result-unit{
+    font-size:14px;
+    color:var(--text-secondary);
+}
+
+/* ===== MATERIALS ===== */
+
+.material-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:18px;
+    margin-top:28px;
+}
+
+.material-card{
+    background:var(--bg-secondary);
+    border-radius:14px;
+    padding:18px;
+    text-align:center;
+}
+
+.material-card i{
+    font-size:30px;
+    color:var(--primary-600);
+    margin-bottom:12px;
+}
+
+.material-card h4{
+    margin-bottom:10px;
+}
+
+.material-card span{
+    font-size:24px;
+    font-weight:700;
+    color:var(--primary-600);
+}
+
+/* ===== PROGRESS ===== */
+
+.concrete-progress{
+    margin-top:25px;
+}
+
+.progress-title{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+}
+
+.progress-bar{
+    height:10px;
+    border-radius:999px;
+    background:var(--bg-secondary);
+    overflow:hidden;
+}
+
+.progress-fill{
+    width:75%;
+    height:100%;
+    background:linear-gradient(90deg,#3b82f6,#2563eb);
+}
+
+/* ===== ALERT ===== */
+
+.concrete-alert{
+    margin-top:25px;
+    padding:18px;
+    border-left:4px solid #f59e0b;
+    background:#fffbeb;
+    border-radius:12px;
+}
+
+.concrete-alert h4{
+    color:#b45309;
+    margin-bottom:8px;
+}
+
+.concrete-alert p{
+    color:#92400e;
+}
+
+/* ===== DARK MODE ===== */
+
+[data-theme="dark"] .concrete-card,
+[data-theme="dark"] .result-card,
+[data-theme="dark"] .concrete-calculator{
+    background:var(--bg-secondary);
+}
+
+[data-theme="dark"] .material-card{
+    background:var(--bg-tertiary);
+}
+
+[data-theme="dark"] .concrete-note{
+    background:rgba(59,130,246,.12);
+}
+
+[data-theme="dark"] .concrete-alert{
+    background:rgba(245,158,11,.12);
+}
+
+/* ===== SCROLLBAR ===== */
+
+.concrete-table-wrap::-webkit-scrollbar{
+    height:8px;
+}
+
+.concrete-table-wrap::-webkit-scrollbar-thumb{
+    background:var(--border-medium);
+    border-radius:999px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media(max-width:992px){
+
+    .concrete-grid{
+        grid-template-columns:1fr;
+    }
+
+    .concrete-specs{
+        grid-template-columns:1fr 1fr;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .concrete-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .mix-ratio{
+        flex-direction:column;
+    }
+
+    .concrete-specs{
+        grid-template-columns:1fr;
+    }
+
+    .concrete-form{
+        grid-template-columns:1fr;
+    }
+
+    .concrete-result{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:480px){
+
+    .concrete-title h2{
+        font-size:24px;
+    }
+
+    .concrete-card-body{
+        padding:18px;
+    }
+
+    .result-value{
+        font-size:26px;
+    }
+
+}

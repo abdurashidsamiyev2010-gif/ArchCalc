@@ -1,0 +1,474 @@
+/* ============================================
+   ARCHCALC - BRICK MODULE
+   Part 1 / 2
+   ============================================ */
+
+/* ===== MAIN CONTAINER ===== */
+
+.brick-module{
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+}
+
+/* ===== HEADER ===== */
+
+.brick-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+    padding-bottom:20px;
+    border-bottom:1px solid var(--border-light);
+}
+
+.brick-title{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.brick-title-icon{
+    width:60px;
+    height:60px;
+    border-radius:16px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:28px;
+    color:#fff;
+    background:linear-gradient(135deg,#b45309,#ea580c);
+    box-shadow:var(--shadow-md);
+}
+
+.brick-title h2{
+    font-size:30px;
+    font-weight:700;
+    color:var(--text-primary);
+}
+
+.brick-title p{
+    margin-top:4px;
+    color:var(--text-secondary);
+    font-size:14px;
+}
+
+/* ===== SEARCH ===== */
+
+.brick-search{
+    position:relative;
+    width:320px;
+    max-width:100%;
+}
+
+.brick-search input{
+    width:100%;
+    padding:14px 18px 14px 48px;
+    border:1px solid var(--border-light);
+    border-radius:14px;
+    background:var(--bg-card);
+}
+
+.brick-search i{
+    position:absolute;
+    left:18px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--text-secondary);
+}
+
+/* ===== CATEGORY ===== */
+
+.brick-category{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:18px;
+}
+
+.brick-category-card{
+    background:var(--bg-card);
+    border:1px solid var(--border-light);
+    border-radius:18px;
+    padding:22px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.brick-category-card:hover{
+    transform:translateY(-4px);
+    box-shadow:var(--shadow-md);
+    border-color:var(--primary-500);
+}
+
+.brick-category-card.active{
+    background:linear-gradient(135deg,var(--primary-600),var(--primary-700));
+    color:#fff;
+}
+
+.brick-category-card i{
+    font-size:30px;
+    margin-bottom:18px;
+}
+
+.brick-category-card h3{
+    font-size:18px;
+    margin-bottom:8px;
+}
+
+.brick-category-card p{
+    font-size:13px;
+    opacity:.8;
+}
+
+/* ===== INFO CARDS ===== */
+
+.brick-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:22px;
+}
+
+.brick-card{
+    background:var(--bg-card);
+    border:1px solid var(--border-light);
+    border-radius:18px;
+    overflow:hidden;
+    transition:.25s;
+}
+
+.brick-card:hover{
+    transform:translateY(-5px);
+    box-shadow:var(--shadow-lg);
+}
+
+.brick-image{
+    height:190px;
+    background:var(--bg-secondary);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.brick-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.brick-body{
+    padding:22px;
+}
+
+.brick-name{
+    font-size:22px;
+    font-weight:700;
+    margin-bottom:12px;
+    color:var(--text-primary);
+}
+
+.brick-desc{
+    color:var(--text-secondary);
+    line-height:1.6;
+    margin-bottom:18px;
+}
+
+/* ===== BADGES ===== */
+
+.brick-badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.brick-badge{
+    padding:7px 14px;
+    border-radius:999px;
+    background:var(--primary-100);
+    color:var(--primary-700);
+    font-size:13px;
+    font-weight:600;
+}
+
+/* ===== DIMENSIONS ===== */
+
+.brick-dimensions{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:18px;
+}
+
+.dimension-box{
+    background:var(--bg-secondary);
+    border-radius:12px;
+    padding:16px;
+    text-align:center;
+}
+
+.dimension-title{
+    font-size:12px;
+    color:var(--text-secondary);
+    margin-bottom:8px;
+}
+
+.dimension-value{
+    font-size:22px;
+    font-weight:700;
+    color:var(--primary-600);
+}
+
+/* ===== INFO BOX ===== */
+
+.brick-info{
+    background:linear-gradient(135deg,#fff7ed,#ffedd5);
+    border-left:5px solid #ea580c;
+    padding:22px;
+    border-radius:16px;
+}
+
+.brick-info h4{
+    margin-bottom:10px;
+    color:#9a3412;
+}
+
+.brick-info p{
+    color:#7c2d12;
+    line-height:1.7;
+}
+
+/* ===== BUTTON ===== */
+
+.brick-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 24px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,var(--primary-600),var(--primary-700));
+    color:#fff;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.brick-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--shadow-md);
+}
+
+/* ===== STATS ===== */
+
+.brick-stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:18px;
+}
+
+.brick-stat{
+    background:var(--bg-card);
+    border:1px solid var(--border-light);
+    border-radius:16px;
+    padding:20px;
+    text-align:center;
+}
+
+.brick-stat-value{
+    font-size:32px;
+    font-weight:700;
+    color:var(--primary-600);
+}
+
+.brick-stat-label{
+    margin-top:8px;
+    color:var(--text-secondary);
+    font-size:14px;
+}
+/* ============================================
+   Brick Details
+============================================ */
+
+.brick-details{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-top:25px;
+}
+
+.brick-detail-card{
+    background:var(--bg-card);
+    border:1px solid var(--border-light);
+    border-radius:12px;
+    padding:18px;
+    transition:.3s;
+}
+
+.brick-detail-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.brick-detail-title{
+    font-size:15px;
+    font-weight:700;
+    margin-bottom:12px;
+    color:var(--text-primary);
+}
+
+.brick-detail-value{
+    font-size:28px;
+    font-weight:700;
+    color:var(--primary-600);
+}
+
+.brick-detail-unit{
+    font-size:14px;
+    color:var(--text-secondary);
+}
+
+/* ============================================
+   Brick Notes
+============================================ */
+
+.brick-note{
+    margin-top:25px;
+    padding:18px;
+    background:rgba(14,165,233,.08);
+    border-left:4px solid var(--primary-600);
+    border-radius:10px;
+    color:var(--text-primary);
+    line-height:1.7;
+}
+
+.brick-warning{
+    margin-top:20px;
+    padding:18px;
+    background:rgba(239,68,68,.08);
+    border-left:4px solid #ef4444;
+    border-radius:10px;
+}
+
+.brick-warning-title{
+    font-weight:700;
+    margin-bottom:10px;
+    color:#dc2626;
+}
+
+.brick-warning p{
+    color:var(--text-secondary);
+}
+
+/* ============================================
+   Empty State
+============================================ */
+
+.brick-empty{
+    padding:60px 20px;
+    text-align:center;
+    color:var(--text-secondary);
+}
+
+.brick-empty i{
+    font-size:60px;
+    color:var(--border-medium);
+    margin-bottom:20px;
+}
+
+.brick-empty h3{
+    margin-bottom:10px;
+    color:var(--text-primary);
+}
+
+/* ============================================
+   Scrollbar
+============================================ */
+
+.brick-table-wrap::-webkit-scrollbar{
+    height:8px;
+}
+
+.brick-table-wrap::-webkit-scrollbar-thumb{
+    background:var(--border-medium);
+    border-radius:20px;
+}
+
+.brick-table-wrap::-webkit-scrollbar-track{
+    background:transparent;
+}
+
+/* ============================================
+   Dark Theme
+============================================ */
+
+[data-theme="dark"] .brick-card,
+[data-theme="dark"] .brick-detail-card{
+    background:var(--bg-secondary);
+}
+
+[data-theme="dark"] .brick-table tbody tr:hover{
+    background:rgba(255,255,255,.03);
+}
+
+[data-theme="dark"] .brick-note{
+    background:rgba(14,165,233,.12);
+}
+
+[data-theme="dark"] .brick-warning{
+    background:rgba(239,68,68,.12);
+}
+
+/* ============================================
+   Responsive
+============================================ */
+
+@media(max-width:992px){
+
+    .brick-grid{
+        grid-template-columns:1fr;
+    }
+
+    .brick-cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:768px){
+
+    .brick-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    .brick-cards{
+        grid-template-columns:1fr;
+    }
+
+    .brick-details{
+        grid-template-columns:1fr;
+    }
+
+    .brick-table th,
+    .brick-table td{
+        padding:10px;
+        font-size:13px;
+    }
+
+}
+
+@media(max-width:480px){
+
+    .brick-header h2{
+        font-size:22px;
+    }
+
+    .brick-search input{
+        padding:12px 14px;
+    }
+
+    .brick-filter button{
+        width:100%;
+    }
+
+}

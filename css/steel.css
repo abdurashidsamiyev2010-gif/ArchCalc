@@ -1,0 +1,272 @@
+/* ============================================
+   STEEL MODULE
+   Reinforcement Steel Reference
+   Part 1
+   ============================================ */
+
+.steel-book-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:var(--space-6);
+    padding-bottom:var(--space-4);
+    border-bottom:2px solid var(--border-light);
+}
+
+.steel-book-title{
+    display:flex;
+    align-items:center;
+    gap:var(--space-3);
+    font-size:var(--text-2xl);
+    font-weight:var(--font-bold);
+    color:var(--text-primary);
+}
+
+.steel-book-icon{
+    width:48px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:var(--radius-lg);
+    background:linear-gradient(135deg,#64748b,#334155);
+    color:#fff;
+    font-size:24px;
+}
+
+.steel-layout{
+    display:grid;
+    grid-template-columns:300px 1fr;
+    gap:var(--space-6);
+}
+
+@media(max-width:1024px){
+    .steel-layout{
+        grid-template-columns:1fr;
+    }
+}
+
+/* Sidebar */
+
+.steel-sidebar{
+    background:var(--bg-card);
+    border:1px solid var(--border-light);
+    border-radius:var(--radius-lg);
+    padding:var(--space-4);
+    position:sticky;
+    top:20px;
+}
+
+.steel-sidebar-title{
+    font-size:var(--text-sm);
+    font-weight:700;
+    color:var(--text-secondary);
+    text-transform:uppercase;
+    margin-bottom:var(--space-3);
+}
+
+.steel-menu{
+    list-style:none;
+}
+
+.steel-menu li{
+    margin-bottom:6px;
+}
+
+.steel-btn{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 16px;
+    border:none;
+    border-radius:var(--radius-md);
+    background:none;
+    cursor:pointer;
+    color:var(--text-secondary);
+    transition:.25s;
+    font-size:14px;
+    font-weight:600;
+}
+
+.steel-btn:hover{
+    background:var(--bg-secondary);
+    color:var(--text-primary);
+}
+
+.steel-btn.active{
+    background:linear-gradient(135deg,#475569,#1e293b);
+    color:#fff;
+}
+
+.steel-btn i{
+    width:30px;
+    height:30px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:8px;
+    background:rgba(255,255,255,.12);
+}
+
+/* Main */
+
+.steel-content{
+    background:var(--bg-card);
+    border:1px solid var(--border-light);
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+}
+
+.steel-content-header{
+    padding:24px;
+    border-bottom:1px solid var(--border-light);
+    background:linear-gradient(135deg,var(--bg-secondary),var(--bg-tertiary));
+}
+
+.steel-content-title{
+    font-size:24px;
+    font-weight:700;
+    color:var(--text-primary);
+    margin-bottom:6px;
+}
+
+.steel-content-description{
+    color:var(--text-tertiary);
+    font-size:14px;
+}
+/* ============================================
+   STEEL REFERENCE TABLE
+============================================ */
+
+.steel-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    margin-top: var(--space-5);
+}
+
+.steel-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+.steel-table thead {
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+}
+
+.steel-table th {
+    color: #fff;
+    padding: var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    text-align: center;
+}
+
+.steel-table td {
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--border-light);
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.steel-table tbody tr:nth-child(even) {
+    background: var(--bg-secondary);
+}
+
+.steel-table tbody tr:hover {
+    background: rgba(59,130,246,0.08);
+}
+
+/* ============================================
+   STEEL INFO BOX
+============================================ */
+
+.steel-info {
+    margin-top: var(--space-6);
+    background: var(--bg-secondary);
+    border-left: 4px solid var(--primary-600);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+}
+
+.steel-info h3 {
+    margin-bottom: var(--space-3);
+    color: var(--text-primary);
+    font-size: var(--text-lg);
+}
+
+.steel-info p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-3);
+}
+
+.steel-info ul {
+    margin-left: var(--space-5);
+    color: var(--text-secondary);
+}
+
+.steel-info li {
+    margin-bottom: var(--space-2);
+}
+
+/* ============================================
+   STEEL FORMULAS
+============================================ */
+
+.steel-formulas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+}
+
+.steel-formula-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    transition: .25s;
+}
+
+.steel-formula-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.steel-formula-title {
+    font-weight: var(--font-semibold);
+    margin-bottom: var(--space-3);
+    color: var(--primary-600);
+}
+
+.steel-formula {
+    font-family: monospace;
+    font-size: 18px;
+    background: var(--bg-secondary);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    text-align: center;
+}
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+
+@media (max-width:768px){
+
+.steel-grid{
+grid-template-columns:1fr;
+}
+
+.steel-formulas{
+grid-template-columns:1fr;
+}
+
+.steel-card{
+padding:var(--space-4);
+}
+
+}

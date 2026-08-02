@@ -1,0 +1,308 @@
+/* ============================================
+   POLE BOOK MODULE
+   Construction Pole & Column Reference
+============================================ */
+
+.pole-book-container{
+    display:flex;
+    flex-direction:column;
+    gap:30px;
+    width:100%;
+}
+
+/* Header */
+
+.pole-book-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    padding:25px 30px;
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    border-radius:16px;
+}
+
+.pole-book-title{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.pole-book-icon{
+    width:60px;
+    height:60px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#2563eb,#1e40af);
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:26px;
+}
+
+.pole-book-title h2{
+    font-size:28px;
+    color:var(--text-primary);
+    font-weight:700;
+    margin-bottom:4px;
+}
+
+.pole-book-title p{
+    color:var(--text-secondary);
+    font-size:15px;
+}
+
+/* Layout */
+
+.pole-book-layout{
+    display:grid;
+    grid-template-columns:280px 1fr;
+    gap:25px;
+}
+
+/* Sidebar */
+
+.pole-sidebar{
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    border-radius:16px;
+    padding:20px;
+    position:sticky;
+    top:20px;
+}
+
+.pole-sidebar-title{
+    font-size:14px;
+    text-transform:uppercase;
+    color:var(--text-secondary);
+    margin-bottom:15px;
+    letter-spacing:1px;
+    font-weight:700;
+}
+
+.pole-menu{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.pole-menu button{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    width:100%;
+    padding:14px 16px;
+    border:none;
+    border-radius:12px;
+    background:transparent;
+    color:var(--text-primary);
+    cursor:pointer;
+    transition:.25s;
+    font-size:15px;
+}
+
+.pole-menu button:hover{
+    background:rgba(37,99,235,.08);
+}
+
+.pole-menu button.active{
+    background:#2563eb;
+    color:#fff;
+}
+
+.pole-menu button i{
+    width:26px;
+    text-align:center;
+    font-size:18px;
+}
+
+/* Main Content */
+
+.pole-content{
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+.pole-card{
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.pole-card-header{
+    padding:22px 28px;
+    border-bottom:1px solid var(--border-color);
+    background:var(--bg-secondary);
+}
+
+.pole-card-header h3{
+    font-size:22px;
+    color:var(--text-primary);
+    margin-bottom:5px;
+}
+
+.pole-card-header p{
+    color:var(--text-secondary);
+    font-size:14px;
+}
+
+.pole-card-body{
+    padding:25px;
+}
+/* ============================================
+   POLE BOOK MODULE
+   Construction Pole & Column Reference
+============================================ */
+
+.pole-book-container{
+    display:flex;
+    flex-direction:column;
+    gap:30px;
+    width:100%;
+}
+
+/* Header */
+
+.pole-book-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    padding:25px 30px;
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    border-radius:16px;
+}
+
+.pole-book-title{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.pole-book-icon{
+    width:60px;
+    height:60px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#2563eb,#1e40af);
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:26px;
+}
+
+.pole-book-title h2{
+    font-size:28px;
+    color:var(--text-primary);
+    font-weight:700;
+    margin-bottom:4px;
+}
+
+.pole-book-title p{
+    color:var(--text-secondary);
+    font-size:15px;
+}
+
+/* Layout */
+
+.pole-book-layout{
+    display:grid;
+    grid-template-columns:280px 1fr;
+    gap:25px;
+}
+
+/* Sidebar */
+
+.pole-sidebar{
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    border-radius:16px;
+    padding:20px;
+    position:sticky;
+    top:20px;
+}
+
+.pole-sidebar-title{
+    font-size:14px;
+    text-transform:uppercase;
+    color:var(--text-secondary);
+    margin-bottom:15px;
+    letter-spacing:1px;
+    font-weight:700;
+}
+
+.pole-menu{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.pole-menu button{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    width:100%;
+    padding:14px 16px;
+    border:none;
+    border-radius:12px;
+    background:transparent;
+    color:var(--text-primary);
+    cursor:pointer;
+    transition:.25s;
+    font-size:15px;
+}
+
+.pole-menu button:hover{
+    background:rgba(37,99,235,.08);
+}
+
+.pole-menu button.active{
+    background:#2563eb;
+    color:#fff;
+}
+
+.pole-menu button i{
+    width:26px;
+    text-align:center;
+    font-size:18px;
+}
+
+/* Main Content */
+
+.pole-content{
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+.pole-card{
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.pole-card-header{
+    padding:22px 28px;
+    border-bottom:1px solid var(--border-color);
+    background:var(--bg-secondary);
+}
+
+.pole-card-header h3{
+    font-size:22px;
+    color:var(--text-primary);
+    margin-bottom:5px;
+}
+
+.pole-card-header p{
+    color:var(--text-secondary);
+    font-size:14px;
+}
+
+.pole-card-body{
+    padding:25px;
+}

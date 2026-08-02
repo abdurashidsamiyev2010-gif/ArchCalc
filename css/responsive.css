@@ -1,0 +1,394 @@
+/* ============================================
+   SEARCH
+============================================ */
+
+.pole-search{
+    position:relative;
+    margin-bottom:25px;
+}
+
+.pole-search input{
+    width:100%;
+    height:50px;
+    padding:0 18px 0 48px;
+    border:1px solid var(--border-color);
+    border-radius:12px;
+    background:var(--card-bg);
+    color:var(--text-primary);
+    font-size:15px;
+    transition:.25s;
+}
+
+.pole-search input:focus{
+    outline:none;
+    border-color:#2563eb;
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+}
+
+.pole-search i{
+    position:absolute;
+    left:16px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--text-secondary);
+}
+
+/* ============================================
+   TABLE
+============================================ */
+
+.pole-table-wrapper{
+    overflow-x:auto;
+}
+
+.pole-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:700px;
+}
+
+.pole-table thead{
+    background:#2563eb;
+    color:#fff;
+}
+
+.pole-table th{
+    padding:16px;
+    text-align:left;
+    font-size:14px;
+    font-weight:600;
+}
+
+.pole-table td{
+    padding:15px;
+    border-bottom:1px solid var(--border-color);
+    color:var(--text-primary);
+    font-size:14px;
+}
+
+.pole-table tbody tr:nth-child(even){
+    background:rgba(0,0,0,.02);
+}
+
+.pole-table tbody tr:hover{
+    background:rgba(37,99,235,.06);
+}
+
+/* ============================================
+   INFO CARDS
+============================================ */
+
+.pole-info-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.pole-info-card{
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    border-radius:15px;
+    padding:20px;
+    transition:.25s;
+}
+
+.pole-info-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.pole-info-card h4{
+    font-size:15px;
+    margin-bottom:12px;
+    color:var(--text-secondary);
+}
+
+.pole-info-card span{
+    display:block;
+    font-size:28px;
+    font-weight:700;
+    color:#2563eb;
+}
+
+.pole-info-card small{
+    display:block;
+    margin-top:8px;
+    color:var(--text-secondary);
+    line-height:1.6;
+}
+
+/* ============================================
+   TAGS
+============================================ */
+
+.pole-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.pole-tag{
+    padding:8px 14px;
+    border-radius:30px;
+    background:#dbeafe;
+    color:#1d4ed8;
+    font-size:13px;
+    font-weight:600;
+}
+
+[data-theme="dark"] .pole-tag{
+    background:rgba(37,99,235,.15);
+    color:#7dd3fc;
+}
+
+/* ============================================
+   IMAGE
+============================================ */
+
+.pole-image{
+    width:100%;
+    text-align:center;
+    padding:30px;
+}
+
+.pole-image img{
+    max-width:100%;
+    height:auto;
+}
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+
+@media(max-width:992px){
+
+    .pole-book-layout{
+        grid-template-columns:1fr;
+    }
+
+    .pole-sidebar{
+        position:static;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .pole-book-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .pole-book-title{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .pole-info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .pole-table th,
+    .pole-table td{
+        padding:12px;
+        font-size:13px;
+    }
+
+}
+/* ============================================
+   SEARCH
+============================================ */
+
+.pole-search{
+    position:relative;
+    margin-bottom:25px;
+}
+
+.pole-search input{
+    width:100%;
+    height:50px;
+    padding:0 18px 0 48px;
+    border:1px solid var(--border-color);
+    border-radius:12px;
+    background:var(--card-bg);
+    color:var(--text-primary);
+    font-size:15px;
+    transition:.25s;
+}
+
+.pole-search input:focus{
+    outline:none;
+    border-color:#2563eb;
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+}
+
+.pole-search i{
+    position:absolute;
+    left:16px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--text-secondary);
+}
+
+/* ============================================
+   TABLE
+============================================ */
+
+.pole-table-wrapper{
+    overflow-x:auto;
+}
+
+.pole-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:700px;
+}
+
+.pole-table thead{
+    background:#2563eb;
+    color:#fff;
+}
+
+.pole-table th{
+    padding:16px;
+    text-align:left;
+    font-size:14px;
+    font-weight:600;
+}
+
+.pole-table td{
+    padding:15px;
+    border-bottom:1px solid var(--border-color);
+    color:var(--text-primary);
+    font-size:14px;
+}
+
+.pole-table tbody tr:nth-child(even){
+    background:rgba(0,0,0,.02);
+}
+
+.pole-table tbody tr:hover{
+    background:rgba(37,99,235,.06);
+}
+
+/* ============================================
+   INFO CARDS
+============================================ */
+
+.pole-info-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.pole-info-card{
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    border-radius:15px;
+    padding:20px;
+    transition:.25s;
+}
+
+.pole-info-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.pole-info-card h4{
+    font-size:15px;
+    margin-bottom:12px;
+    color:var(--text-secondary);
+}
+
+.pole-info-card span{
+    display:block;
+    font-size:28px;
+    font-weight:700;
+    color:#2563eb;
+}
+
+.pole-info-card small{
+    display:block;
+    margin-top:8px;
+    color:var(--text-secondary);
+    line-height:1.6;
+}
+
+/* ============================================
+   TAGS
+============================================ */
+
+.pole-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.pole-tag{
+    padding:8px 14px;
+    border-radius:30px;
+    background:#dbeafe;
+    color:#1d4ed8;
+    font-size:13px;
+    font-weight:600;
+}
+
+[data-theme="dark"] .pole-tag{
+    background:rgba(37,99,235,.15);
+    color:#7dd3fc;
+}
+
+/* ============================================
+   IMAGE
+============================================ */
+
+.pole-image{
+    width:100%;
+    text-align:center;
+    padding:30px;
+}
+
+.pole-image img{
+    max-width:100%;
+    height:auto;
+}
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+
+@media(max-width:992px){
+
+    .pole-book-layout{
+        grid-template-columns:1fr;
+    }
+
+    .pole-sidebar{
+        position:static;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .pole-book-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .pole-book-title{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .pole-info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .pole-table th,
+    .pole-table td{
+        padding:12px;
+        font-size:13px;
+    }
+
+}

@@ -1,0 +1,349 @@
+/* ============================================
+   STAIRS BOOK MODULE
+   Stair Reference & Calculator
+============================================ */
+
+.stairs-container{
+    display:flex;
+    flex-direction:column;
+    gap:30px;
+    width:100%;
+}
+
+/* Header */
+
+.stairs-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    padding:25px 30px;
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    border-radius:16px;
+}
+
+.stairs-title{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.stairs-icon{
+    width:60px;
+    height:60px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:16px;
+    background:linear-gradient(135deg,#0f766e,#115e59);
+    color:#fff;
+    font-size:28px;
+}
+
+.stairs-title h2{
+    font-size:28px;
+    font-weight:700;
+    color:var(--text-primary);
+    margin-bottom:4px;
+}
+
+.stairs-title p{
+    color:var(--text-secondary);
+    font-size:15px;
+}
+
+/* Layout */
+
+.stairs-layout{
+    display:grid;
+    grid-template-columns:280px 1fr;
+    gap:24px;
+}
+
+/* Sidebar */
+
+.stairs-sidebar{
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    border-radius:16px;
+    padding:20px;
+    position:sticky;
+    top:20px;
+}
+
+.stairs-sidebar-title{
+    font-size:14px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--text-secondary);
+    margin-bottom:16px;
+}
+
+.stairs-menu{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.stairs-menu button{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 16px;
+    border:none;
+    border-radius:12px;
+    background:transparent;
+    color:var(--text-primary);
+    cursor:pointer;
+    transition:.25s;
+    font-size:15px;
+}
+
+.stairs-menu button:hover{
+    background:rgba(15,118,110,.08);
+}
+
+.stairs-menu button.active{
+    background:#0f766e;
+    color:#fff;
+}
+
+.stairs-menu button i{
+    width:24px;
+    text-align:center;
+}
+
+/* Content */
+
+.stairs-content{
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+}
+
+.stairs-card{
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.stairs-card-header{
+    padding:22px 28px;
+    background:var(--bg-secondary);
+    border-bottom:1px solid var(--border-color);
+}
+
+.stairs-card-header h3{
+    font-size:22px;
+    color:var(--text-primary);
+    margin-bottom:6px;
+}
+
+.stairs-card-header p{
+    color:var(--text-secondary);
+    font-size:14px;
+}
+
+.stairs-card-body{
+    padding:24px;
+}
+/* ============================================
+   SEARCH
+============================================ */
+
+.stairs-search{
+    position:relative;
+    margin-bottom:24px;
+}
+
+.stairs-search input{
+    width:100%;
+    height:50px;
+    padding:0 18px 0 48px;
+    border:1px solid var(--border-color);
+    border-radius:12px;
+    background:var(--card-bg);
+    color:var(--text-primary);
+    font-size:15px;
+    transition:.25s;
+}
+
+.stairs-search input:focus{
+    outline:none;
+    border-color:#0f766e;
+    box-shadow:0 0 0 4px rgba(15,118,110,.12);
+}
+
+.stairs-search i{
+    position:absolute;
+    left:16px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--text-secondary);
+}
+
+/* ============================================
+   TABLE
+============================================ */
+
+.stairs-table-wrapper{
+    overflow-x:auto;
+}
+
+.stairs-table{
+    width:100%;
+    min-width:720px;
+    border-collapse:collapse;
+}
+
+.stairs-table thead{
+    background:#0f766e;
+    color:#fff;
+}
+
+.stairs-table th{
+    padding:16px;
+    text-align:left;
+    font-size:14px;
+    font-weight:600;
+}
+
+.stairs-table td{
+    padding:15px;
+    border-bottom:1px solid var(--border-color);
+    color:var(--text-primary);
+    font-size:14px;
+}
+
+.stairs-table tbody tr:nth-child(even){
+    background:rgba(0,0,0,.02);
+}
+
+.stairs-table tbody tr:hover{
+    background:rgba(15,118,110,.06);
+}
+
+/* ============================================
+   SPECIFICATION CARDS
+============================================ */
+
+.stairs-spec-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.stairs-spec-card{
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    border-radius:15px;
+    padding:20px;
+    transition:.25s;
+}
+
+.stairs-spec-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 12px 24px rgba(0,0,0,.08);
+}
+
+.stairs-spec-card h4{
+    font-size:15px;
+    color:var(--text-secondary);
+    margin-bottom:10px;
+}
+
+.stairs-spec-card span{
+    display:block;
+    font-size:28px;
+    font-weight:700;
+    color:#0f766e;
+}
+
+.stairs-spec-card small{
+    display:block;
+    margin-top:8px;
+    color:var(--text-secondary);
+    line-height:1.6;
+}
+
+/* ============================================
+   TAGS
+============================================ */
+
+.stairs-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.stairs-tag{
+    padding:8px 14px;
+    border-radius:30px;
+    background:#ccfbf1;
+    color:#115e59;
+    font-size:13px;
+    font-weight:600;
+}
+
+[data-theme="dark"] .stairs-tag{
+    background:rgba(15,118,110,.15);
+    color:#99f6e4;
+}
+
+/* ============================================
+   IMAGE
+============================================ */
+
+.stairs-image{
+    text-align:center;
+    padding:30px;
+}
+
+.stairs-image img{
+    max-width:100%;
+    height:auto;
+}
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+
+@media(max-width:992px){
+
+    .stairs-layout{
+        grid-template-columns:1fr;
+    }
+
+    .stairs-sidebar{
+        position:static;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .stairs-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .stairs-title{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .stairs-spec-grid{
+        grid-template-columns:1fr;
+    }
+
+    .stairs-table th,
+    .stairs-table td{
+        padding:12px;
+        font-size:13px;
+    }
+
+}

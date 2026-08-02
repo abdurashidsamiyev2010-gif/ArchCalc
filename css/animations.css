@@ -1,0 +1,368 @@
+/* ============================================
+   ARCHCALC ANIMATIONS
+   ============================================ */
+
+/* =========================
+   FADE
+========================= */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* =========================
+   SLIDE
+========================= */
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideLeft {
+    from {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideRight {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* =========================
+   SCALE
+========================= */
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes scaleOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(.8);
+    }
+}
+
+/* =========================
+   ROTATE
+========================= */
+
+@keyframes rotate360 {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================
+   BOUNCE
+========================= */
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+/* =========================
+   PULSE
+========================= */
+
+@keyframes pulse {
+
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: .8;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* =========================
+   SHAKE
+========================= */
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-6px);
+    }
+
+    40% {
+        transform: translateX(6px);
+    }
+
+    60% {
+        transform: translateX(-6px);
+    }
+
+    80% {
+        transform: translateX(6px);
+    }
+}
+
+/* =========================
+   SPIN
+========================= */
+
+@keyframes spin {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================
+   FLOAT
+========================= */
+
+@keyframes floating {
+
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+   GLOW
+========================= */
+
+@keyframes glow {
+
+    0% {
+        box-shadow: 0 0 0 rgba(37,99,235,.3);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(37,99,235,.5);
+    }
+
+    100% {
+        box-shadow: 0 0 0 rgba(37,99,235,.3);
+    }
+}
+
+/* =========================
+   LOADING
+========================= */
+
+@keyframes loading {
+
+    0% {
+        width: 0%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+/* =========================
+   BLINK
+========================= */
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .3;
+    }
+}
+
+/* =========================
+   ANIMATION CLASSES
+========================= */
+
+.fade-in {
+    animation: fadeIn .4s ease forwards;
+}
+
+.fade-out {
+    animation: fadeOut .4s ease forwards;
+}
+
+.slide-up {
+    animation: slideUp .5s ease forwards;
+}
+
+.slide-down {
+    animation: slideDown .5s ease forwards;
+}
+
+.slide-left {
+    animation: slideLeft .5s ease forwards;
+}
+
+.slide-right {
+    animation: slideRight .5s ease forwards;
+}
+
+.scale-in {
+    animation: scaleIn .3s ease forwards;
+}
+
+.scale-out {
+    animation: scaleOut .3s ease forwards;
+}
+
+.rotate {
+    animation: rotate360 1s linear;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+.bounce {
+    animation: bounce 1s infinite;
+}
+
+.pulse {
+    animation: pulse 1.5s infinite;
+}
+
+.shake {
+    animation: shake .5s;
+}
+
+.float {
+    animation: floating 3s ease-in-out infinite;
+}
+
+.glow {
+    animation: glow 2s infinite;
+}
+
+.loading {
+    animation: loading 2s linear infinite;
+}
+
+.blink {
+    animation: blink 1s infinite;
+}
+
+/* =========================
+   HOVER EFFECTS
+========================= */
+
+.hover-lift {
+    transition: transform .25s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+}
+
+.hover-scale {
+    transition: transform .25s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+.hover-rotate {
+    transition: transform .25s ease;
+}
+
+.hover-rotate:hover {
+    transform: rotate(2deg);
+}
+
+.hover-shadow {
+    transition: box-shadow .25s ease;
+}
+
+.hover-shadow:hover {
+    box-shadow: var(--shadow-lg);
+}
