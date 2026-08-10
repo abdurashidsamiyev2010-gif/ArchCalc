@@ -1,246 +1,262 @@
 /* ============================================
-   POLE BOOK MODULE
+   CORE APPLICATION SCRIPT
+   Shared utilities used by every calculator
+   module (pole-book, concrete, brick, steel,
+   foundation, roof, stairs, calculator).
    ============================================ */
 
-const PoleBook = {
-    data: {
-        concrete: {
-            title: 'Concrete Poles',
-            desc: 'Standard reinforced concrete utility poles per IEC 60569',
-            specs: [
-                { label: 'Height Range', value: '6 - 18', unit: 'm', note: 'Standard lengths per IEC 60569' },
-                { label: 'Top Diameter', value: '150 - 250', unit: 'mm', note: 'Tapered design' },
-                { label: 'Base Diameter', value: '300 - 450', unit: 'mm', note: 'Varies by height' },
-                { label: 'Working Load', value: '150 - 350', unit: 'daN', note: 'Ultimate load 2.5x' }
-            ],
-            columns: ['Height (m)', 'Top Ø (mm)', 'Base Ø (mm)', 'Wall (mm)', 'Weight (kg)', 'Working Load (daN)', 'Embedment (m)'],
-            rows: [
-                [8, 150, 300, 50, 850, 150, 1.6],
-                [9, 160, 330, 55, 1100, 200, 1.8],
-                [10, 170, 360, 60, 1400, 200, 2.0],
-                [11, 180, 390, 65, 1750, 250, 2.2],
-                [12, 190, 420, 70, 2100, 250, 2.4]
-            ]
+/* ============================================
+   SAFE STORAGE
+   Wraps localStorage so the app keeps working
+   even when localStorage is unavailable/blocked
+   (private mode, sandboxed iframe, etc). Falls
+   back to an in-memory object — settings and
+   history simply won't survive a page reload.
+   ============================================ */
+const Storage = (function () {
+    let available = false;
+    try {
+        const testKey = '__ac_test__';
+        window.localStorage.setItem(testKey, '1');
+        window.localStorage.removeItem(testKey);
+        available = true;
+    } catch (e) {
+        available = false;
+        console.warn('localStorage is not available — falling back to in-memory storage. Settings and history will not persist across reloads.');
+    }
+
+    const memory = {};
+
+    return {
+        isAvailable: available,
+        getItem: function (key) {
+            if (available) {
+                try { return window.localStorage.getItem(key); }
+                catch (e) { return memory.hasOwnProperty(key) ? memory[key] : null; }
+            }
+            return memory.hasOwnProperty(key) ? memory[key] : null;
         },
-        steel: {
-            title: 'Steel Poles',
-            desc: 'Galvanized steel tubular poles per EN 40-5',
-            specs: [
-                { label: 'Height Range', value: '5 - 30', unit: 'm', note: 'Modular sections available' },
-                { label: 'Diameter', value: '60 - 300', unit: 'mm', note: 'Constant or tapered' },
-                { label: 'Wall Thickness', value: '3 - 8', unit: 'mm', note: 'Hot-dip galvanized' },
-                { label: 'Working Load', value: '200 - 500', unit: 'daN', note: 'High strength steel' }
-            ],
-            columns: ['Height (m)', 'Ø (mm)', 'Wall (mm)', 'Weight (kg)', 'Working Load (daN)', 'Embedment (m)'],
-            rows: [
-                [6, 76, 3, 45, 200, 1.2],
-                [8, 89, 3.5, 78, 250, 1.6],
-                [10, 102, 4, 120, 300, 2.0],
-                [12, 114, 4.5, 175, 350, 2.4]
-            ]
+        setItem: function (key, value) {
+            if (available) {
+                try { window.localStorage.setItem(key, value); return; }
+                catch (e) { /* fall through to memory */ }
+            }
+            memory[key] = value;
         },
-        wood: {
-            title: 'Wood Poles',
-            desc: 'Pressure-treated wooden utility poles per ANSI O5.1',
-            specs: [
-                { label: 'Height Range', value: '4.5 - 24', unit: 'm', note: 'Southern Pine / Douglas Fir' },
-                { label: 'Top Circumference', value: '30 - 55', unit: 'cm', note: 'Class 1-7' },
-                { label: 'Treatment', value: 'CCA / Creosote', unit: '', note: 'Pressure treated' },
-                { label: 'Lifespan', value: '25 - 40', unit: 'years', note: 'With maintenance' }
-            ],
-            columns: ['Height (m)', 'Class', 'Top Circ (cm)', 'Base Circ (cm)', 'Weight (kg)', 'Working Load (daN)'],
-            rows: [
-                [7.5, '4', 31, 57, 200, 1150],
-                [9, '3', 35, 63, 270, 1360],
-                [10.5, '2', 39, 69, 360, 1590],
-                [12, '1', 43, 75, 460, 1810]
-            ]
-        },
-        composite: {
-            title: 'Composite Poles',
-            desc: 'FRP fiberglass reinforced polymer poles',
-            specs: [
-                { label: 'Height Range', value: '6 - 20', unit: 'm', note: 'Lightweight alternative' },
-                { label: 'Weight', value: '30 - 150', unit: 'kg', note: '70% lighter than concrete' },
-                { label: 'Insulation', value: '100+', unit: 'kV', note: 'Electrical insulation' },
-                { label: 'Lifespan', value: '80+', unit: 'years', note: 'Corrosion resistant' }
-            ],
-            columns: ['Height (m)', 'Ø (mm)', 'Weight (kg)', 'Working Load (daN)', 'Insulation (kV)'],
-            rows: [
-                [8, 200, 35, 300, 110],
-                [10, 220, 55, 350, 110],
-                [12, 240, 80, 400, 150],
-                [15, 280, 120, 450, 150]
-            ]
-        },
-        spacing: {
-            title: 'Span & Spacing Guide',
-            desc: 'Recommended pole spacing for different applications',
-            specs: [
-                { label: 'LV Distribution', value: '40 - 50', unit: 'm', note: 'Low voltage lines' },
-                { label: 'MV Distribution', value: '80 - 120', unit: 'm', note: 'Medium voltage 6-35kV' },
-                { label: 'HV Transmission', value: '200 - 400', unit: 'm', note: 'High voltage 110kV+' },
-                { label: 'Communication', value: '50 - 70', unit: 'm', note: 'Fiber/copper cables' }
-            ],
-            columns: ['Application', 'Voltage', 'Span (m)', 'Pole Height (m)', 'Min Ground Clearance (m)'],
-            rows: [
-                ['Residential LV', '0.4 kV', 45, 8, 5.5],
-                ['Commercial LV', '0.4 kV', 50, 9, 5.5],
-                ['Rural MV', '10 kV', 100, 10, 6.0],
-                ['Urban MV', '10 kV', 80, 11, 6.5],
-                ['HV Line', '110 kV', 250, 18, 7.0]
-            ]
+        removeItem: function (key) {
+            if (available) {
+                try { window.localStorage.removeItem(key); return; }
+                catch (e) { /* fall through to memory */ }
+            }
+            delete memory[key];
         }
+    };
+})();
+
+/* Global settings (persisted via Storage) */
+let lang = 'en';
+let theme = 'light';
+let dec = 2;          // decimal places used by result formatting
+let unit = 'metric';  // 'metric' | 'imperial'
+let hist = [];         // calculation history: {feature, params, result, time}
+
+const App = {
+    showToast: function (message, type) {
+        toast(message, type);
     },
 
-    showCategory: function(category) {
-        // Update active button
-        document.querySelectorAll('.pole-category-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.category === category);
-        });
-        
-        const data = this.data[category];
-        if (!data) return;
-        
-        // Update header
-        document.getElementById('poleContentTitle').textContent = data.title;
-        document.getElementById('poleContentDesc').textContent = data.desc;
-        
-        // Update specs
-        const specsContainer = document.getElementById('poleSpecs');
-        specsContainer.innerHTML = data.specs.map(spec => `
-            <div class="pole-spec-card">
-                <div class="pole-spec-label">${spec.label}</div>
-                <div class="pole-spec-value">${spec.value} <span class="pole-spec-unit">${spec.unit}</span></div>
-                <div class="pole-spec-note">${spec.note}</div>
-            </div>
-        `).join('');
-        
-        // Update table
-        const thead = document.querySelector('#poleTable thead tr');
-        thead.innerHTML = data.columns.map(col => `<th>${col}</th>`).join('');
-        
-        const tbody = document.getElementById('poleTableBody');
-        tbody.innerHTML = data.rows.map(row => `
-            <tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>
-        `).join('');
+    saveToHistory: function (feature, params, result) {
+        sav(feature, params, result);
     },
 
-    calculate: function() {
-        const height = parseFloat(document.getElementById('poleCalcHeight').value) || 0;
-        const windSpeed = parseFloat(document.getElementById('poleWindSpeed').value) || 0;
-        const wireTension = parseFloat(document.getElementById('poleWireTension').value) || 0;
-        const span = parseFloat(document.getElementById('poleSpan').value) || 0;
-        
-        if (!height || !windSpeed) {
-            App.showToast('Please fill in all required fields', 'error');
-            return;
+    init: function () {
+        const savedLang = Storage.getItem('ac-lang') || 'en';
+        const savedTheme = Storage.getItem('ac-theme') || 'light';
+        const savedDec = Storage.getItem('ac-dec') || '2';
+        const savedUnit = Storage.getItem('ac-unit') || 'metric';
+
+        try {
+            hist = JSON.parse(Storage.getItem('ac-hist')) || [];
+        } catch (e) {
+            hist = [];
         }
-        
-        // Wind load calculation (simplified): F = 0.5 * ρ * v² * A * Cd
-        // ρ = 1.225 kg/m³, Cd ≈ 1.2 for cylinder
-        const rho = 1.225;
-        const Cd = 1.2;
-        const diameter = 0.2 + (height * 0.01); // Approximate average diameter
-        const area = height * diameter;
-        const windLoad = 0.5 * rho * Math.pow(windSpeed, 2) * area * Cd;
-        
-        // Total moment at base
-        const windMoment = windLoad * (height / 2);
-        const tensionMoment = wireTension * height;
-        const totalMoment = windMoment + tensionMoment;
-        
-        // Embedment depth (rule of thumb: 10% of height + 0.6m)
-        const embedment = height * 0.1 + 0.6;
-        
-        const resultHtml = `
-            <div class="result-panel" style="margin-top: var(--space-6);">
-                <div class="result-title">Calculation Results</div>
-                <div class="result-grid">
-                    <div class="result-item">
-                        <div class="result-label">Wind Load</div>
-                        <div class="result-value">${windLoad.toFixed(1)} <span class="result-unit">N</span></div>
-                    </div>
-                    <div class="result-item">
-                        <div class="result-label">Wind Moment</div>
-                        <div class="result-value">${(windMoment/1000).toFixed(1)} <span class="result-unit">kN·m</span></div>
-                    </div>
-                    <div class="result-item">
-                        <div class="result-label">Tension Moment</div>
-                        <div class="result-value">${(tensionMoment/1000).toFixed(1)} <span class="result-unit">kN·m</span></div>
-                    </div>
-                    <div class="result-item">
-                        <div class="result-label">Total Moment</div>
-                        <div class="result-value">${(totalMoment/1000).toFixed(1)} <span class="result-unit">kN·m</span></div>
-                    </div>
-                    <div class="result-item">
-                        <div class="result-label">Embedment Depth</div>
-                        <div class="result-value">${embedment.toFixed(1)} <span class="result-unit">m</span></div>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        document.getElementById('poleCalcResult').innerHTML = resultHtml;
-        App.saveToHistory('Pole Load', `H:${height}m V:${windSpeed}m/s`, `${(totalMoment/1000).toFixed(1)} kN·m`);
+
+        setLang(savedLang);
+        setTheme(savedTheme);
+        setDec(savedDec);
+        setUnit(savedUnit);
+        renH();
+        upSt();
+        go('dashboard', false);
     }
 };
-// Pole Book
-const pData={
-  concrete:{t:'Concrete Poles',d:'Standard reinforced concrete utility poles per IEC 60569',
-    sp:[{l:'Height Range',v:'6 - 18',u:'m',n:'Standard lengths per IEC 60569'},{l:'Top Diameter',v:'150 - 250',u:'mm',n:'Tapered design'},{l:'Base Diameter',v:'300 - 450',u:'mm',n:'Varies by height'},{l:'Working Load',v:'150 - 350',u:'daN',n:'Ultimate load 2.5x'}],
-    cl:['Height (m)','Top Ø (mm)','Base Ø (mm)','Wall (mm)','Weight (kg)','Working Load (daN)','Embedment (m)'],
-    rw:[[8,150,300,50,850,150,1.6],[9,160,330,55,1100,200,1.8],[10,170,360,60,1400,200,2.0],[11,180,390,65,1750,250,2.2],[12,190,420,70,2100,250,2.4]]},
-  steel:{t:'Steel Poles',d:'Galvanized steel tubular poles per EN 40-5',
-    sp:[{l:'Height Range',v:'5 - 30',u:'m',n:'Modular sections available'},{l:'Diameter',v:'60 - 300',u:'mm',n:'Constant or tapered'},{l:'Wall Thickness',v:'3 - 8',u:'mm',n:'Hot-dip galvanized'},{l:'Working Load',v:'200 - 500',u:'daN',n:'High strength steel'}],
-    cl:['Height (m)','Ø (mm)','Wall (mm)','Weight (kg)','Working Load (daN)','Embedment (m)'],
-    rw:[[6,76,3,45,200,1.2],[8,89,3.5,78,250,1.6],[10,102,4,120,300,2.0],[12,114,4.5,175,350,2.4]]},
-  wood:{t:'Wood Poles',d:'Pressure-treated wooden utility poles per ANSI O5.1',
-    sp:[{l:'Height Range',v:'4.5 - 24',u:'m',n:'Southern Pine / Douglas Fir'},{l:'Top Circumference',v:'30 - 55',u:'cm',n:'Class 1-7'},{l:'Treatment',v:'CCA / Creosote',u:'',n:'Pressure treated'},{l:'Lifespan',v:'25 - 40',u:'years',n:'With maintenance'}],
-    cl:['Height (m)','Class','Top Circ (cm)','Base Circ (cm)','Weight (kg)','Working Load (daN)'],
-    rw:[[7.5,'4',31,57,200,1150],[9,'3',35,63,270,1360],[10.5,'2',39,69,360,1590],[12,'1',43,75,460,1810]]},
-  composite:{t:'Composite Poles',d:'FRP fiberglass reinforced polymer poles',
-    sp:[{l:'Height Range',v:'6 - 20',u:'m',n:'Lightweight alternative'},{l:'Weight',v:'30 - 150',u:'kg',n:'70% lighter than concrete'},{l:'Insulation',v:'100+',u:'kV',n:'Electrical insulation'},{l:'Lifespan',v:'80+',u:'years',n:'Corrosion resistant'}],
-    cl:['Height (m)','Ø (mm)','Weight (kg)','Working Load (daN)','Insulation (kV)'],
-    rw:[[8,200,35,300,110],[10,220,55,350,110],[12,240,80,400,150],[15,280,120,450,150]]},
-  spacing:{t:'Span & Spacing Guide',d:'Recommended pole spacing for different applications',
-    sp:[{l:'LV Distribution',v:'40 - 50',u:'m',n:'Low voltage lines'},{l:'MV Distribution',v:'80 - 120',u:'m',n:'Medium voltage 6-35kV'},{l:'HV Transmission',v:'200 - 400',u:'m',n:'High voltage 110kV+'},{l:'Communication',v:'50 - 70',u:'m',n:'Fiber/copper cables'}],
-    cl:['Application','Voltage','Span (m)','Pole Height (m)','Min Ground Clearance (m)'],
-    rw:[['Residential LV','0.4 kV',45,8,5.5],['Commercial LV','0.4 kV',50,9,5.5],['Rural MV','10 kV',100,10,6.0],['Urban MV','10 kV',80,11,6.5],['HV Line','110 kV',250,18,7.0]]}
-};
-function pCat(c){
-  document.querySelectorAll('.pcb').forEach(b=>b.classList.toggle('on',b.dataset.c===c));
-  const d=pData[c];if(!d)return;
-  document.getElementById('p-title').textContent=d.t;
-  document.getElementById('p-desc').textContent=d.d;
-  document.getElementById('p-specs').innerHTML=d.sp.map(s=>'<div class=\"pstc\"><div class=\"pstl\">'+s.l+'</div><div class=\"pstv\">'+s.v+' <span class=\"pstu\">'+s.u+'</span></div><div class=\"pstn\">'+s.n+'</div></div>').join('');
-  document.querySelector('#p-table thead tr').innerHTML=d.cl.map(c=>'<th>'+c+'</th>').join('');
-  document.getElementById('p-tbody').innerHTML=d.rw.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('');
-}
-function pSearch(){
-  const t=document.getElementById('ps-in').value.toLowerCase();
-  document.querySelectorAll('#p-tbody tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(t)?'':'none');
-}
-function calcPole(){
-  const h=res(document.getElementById('pc-h').value),w=res(document.getElementById('pc-w').value),t=res(document.getElementById('pc-t').value),s=res(document.getElementById('pc-s').value);
-  if(!h||!w){toast('Fill required fields','e');return}
-  const rho=1.225,Cd=1.2,dia=0.2+(h*0.01),a=h*dia,wl=0.5*rho*Math.pow(w,2)*a*Cd,wm=wl*(h/2),tm=t*h+wm,em=h*0.1+0.6;
-  document.getElementById('res-pole').innerHTML=rp('Calculation Results',[{'l':'Wind Load','v':wl.toFixed(1),'u':'N'},{'l':'Wind Moment','v':(wm/1000).toFixed(1),'u':'kN·m'},{'l':'Tension Moment','v':(tm/1000).toFixed(1),'u':'kN·m'},{'l':'Embedment','v':em.toFixed(1),'u':'m'}]);
-  sav('Pole Load','H:'+h+'m V:'+w+'m/s',(tm/1000).toFixed(1)+' kN·m')
+
+function toast(message, type) {
+    type = type || 'info';
+    const container = document.getElementById('toastContainer') || (function () {
+        const c = document.createElement('div');
+        c.id = 'toastContainer';
+        c.className = 'toast-container';
+        document.body.appendChild(c);
+        return c;
+    })();
+
+    const el = document.createElement('div');
+    el.className = 'toast toast-' + type;
+    el.textContent = message;
+    container.appendChild(el);
+
+    requestAnimationFrame(() => el.classList.add('show'));
+
+    setTimeout(() => {
+        el.classList.remove('show');
+        setTimeout(() => el.remove(), 300);
+    }, 3000);
 }
 
-// Converters
-const cf={len:{m:1,cm:0.01,mm:0.001,km:1000,ft:0.3048,in:0.0254,yd:0.9144},area:{m2:1,cm2:0.0001,mm2:0.000001,km2:1000000,ft2:0.092903,ha:10000,ac:4046.86},vol:{m3:1,l:0.001,cm3:0.000001,ft3:0.0283168,gal:0.00378541},wgt:{kg:1,g:0.001,t:1000,lb:0.453592,oz:0.0283495}};
-function cv(v,f,t,ty){const x=cf[ty];if(!x||!x[f]||!x[t])return 0;return v*x[f]/x[t]}
-function cLen(){const v=res(document.getElementById('c-l-v').value),f=document.getElementById('c-l-f').value,t=document.getElementById('c-l-t').value;document.getElementById('c-l-r').value=cv(v,f,t,'len').toFixed(dec)}
-function cArea(){const v=res(document.getElementById('c-a-v').value),f=document.getElementById('c-a-f').value,t=document.getElementById('c-a-t').value;document.getElementById('c-a-r').value=cv(v,f,t,'area').toFixed(dec)}
-function cVol(){const v=res(document.getElementById('c-v-v').value),f=document.getElementById('c-v-f').value,t=document.getElementById('c-v-t').value;document.getElementById('c-v-r').value=cv(v,f,t,'vol').toFixed(dec)}
-function cWgt(){const v=res(document.getElementById('c-w-v').value),f=document.getElementById('c-w-f').value,t=document.getElementById('c-w-t').value;document.getElementById('c-w-r').value=cv(v,f,t,'wgt').toFixed(dec)}
+function res(v) {
+    const n = parseFloat(v);
+    return isNaN(n) ? 0 : n;
+}
 
-// Init
-document.addEventListener('DOMContentLoaded',function(){
-  const l=localStorage.getItem('ac-lang')||'en',t=localStorage.getItem('ac-theme')||'light',d=localStorage.getItem('ac-dec')||'2',u=localStorage.getItem('ac-unit')||'metric';
-  try{hist=JSON.parse(localStorage.getItem('ac-hist'))||[]}catch(e){hist=[]}
-  setLang(l);setTheme(t);setDec(d);setUnit(u);renH();upSt();go('dashboard',false);
-  cLen();cArea();cVol();cWgt();
+function rp(title, items) {
+    const rows = items.map(item => `
+        <div class="result-item">
+            <div class="result-label">${item.l}</div>
+            <div class="result-value">${item.v} <span class="result-unit">${item.u}</span></div>
+        </div>
+    `).join('');
+
+    return `
+        <div class="result-panel" style="margin-top: var(--space-6);">
+            <div class="result-title">${title}</div>
+            <div class="result-grid">${rows}</div>
+        </div>
+    `;
+}
+
+function sav(feature, params, result) {
+    hist.unshift({
+        feature: feature,
+        params: params,
+        result: result,
+        time: new Date().toISOString()
+    });
+
+    if (hist.length > 200) hist = hist.slice(0, 200);
+
+    try {
+        Storage.setItem('ac-hist', JSON.stringify(hist));
+    } catch (e) {
+        console.warn('Could not persist history:', e);
+    }
+
+    renH();
+    upSt();
+    toast(feature + ' saved to history', 'success');
+}
+
+function renH() {
+    const list = document.getElementById('historyList');
+    if (!list) return;
+
+    if (hist.length === 0) {
+        list.innerHTML = '<div class="empty-state">No calculations yet</div>';
+        return;
+    }
+
+    list.innerHTML = hist.map((h, i) => `
+        <div class="history-item" data-index="${i}">
+            <div class="history-feature">${h.feature}</div>
+            <div class="history-params">${h.params}</div>
+            <div class="history-result">${h.result}</div>
+            <div class="history-time">${new Date(h.time).toLocaleString()}</div>
+        </div>
+    `).join('');
+}
+
+function clearHistory() {
+    hist = [];
+    Storage.removeItem('ac-hist');
+    renH();
+    upSt();
+    toast('History cleared', 'info');
+}
+
+function upSt() {
+    const countEl = document.getElementById('statCalcCount');
+    if (countEl) countEl.textContent = hist.length;
+
+    const lastEl = document.getElementById('statLastCalc');
+    if (lastEl) lastEl.textContent = hist.length ? hist[0].feature : '—';
+}
+
+function setLang(l) {
+    lang = l;
+    Storage.setItem('ac-lang', l);
+    document.documentElement.setAttribute('lang', l);
+    document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.langBtn === l);
+    });
+}
+
+function setTheme(t) {
+    theme = t;
+    Storage.setItem('ac-theme', t);
+    document.documentElement.setAttribute('data-theme', t);
+    document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.themeBtn === t);
+    });
+}
+
+function setDec(d) {
+    dec = parseInt(d, 10) || 2;
+    Storage.setItem('ac-dec', String(dec));
+}
+
+function setUnit(u) {
+    unit = u;
+    Storage.setItem('ac-unit', u);
+    document.querySelectorAll('[data-unit-btn]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.unitBtn === u);
+    });
+}
+
+function go(page, pushHistory) {
+    if (pushHistory === undefined) pushHistory = true;
+
+    document.querySelectorAll('[data-page]').forEach(el => {
+        el.classList.toggle('active', el.dataset.page === page);
+    });
+    document.querySelectorAll('[data-goto]').forEach(el => {
+        el.classList.toggle('active', el.dataset.goto === page);
+    });
+
+    if (pushHistory && window.history && window.history.pushState) {
+        window.history.pushState({ page: page }, '', '#' + page);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    App.init();
+
+    document.querySelectorAll('[data-goto]').forEach(el => {
+        el.addEventListener('click', () => go(el.dataset.goto));
+    });
+    document.querySelectorAll('[data-lang-btn]').forEach(el => {
+        el.addEventListener('click', () => setLang(el.dataset.langBtn));
+    });
+    document.querySelectorAll('[data-theme-btn]').forEach(el => {
+        el.addEventListener('click', () => setTheme(el.dataset.themeBtn));
+    });
+    document.querySelectorAll('[data-unit-btn]').forEach(el => {
+        el.addEventListener('click', () => setUnit(el.dataset.unitBtn));
+    });
+
+    const clearBtn = document.getElementById('clearHistoryBtn');
+    if (clearBtn) clearBtn.addEventListener('click', clearHistory);
+});
+
+window.addEventListener('popstate', (e) => {
+    if (e.state && e.state.page) go(e.state.page, false);
 });
