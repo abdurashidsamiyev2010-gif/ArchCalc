@@ -69,6 +69,10 @@ const App = {
         sav(feature, params, result);
     },
 
+navigate: function (page) {
+    go(page);
+},
+
     init: function () {
         const savedLang = Storage.getItem('ac-lang') || 'en';
         const savedTheme = Storage.getItem('ac-theme') || 'light';
