@@ -404,127 +404,102 @@ button{
     line-height:1.5;
 }
 
-.card-form{
-    display:grid;
-    gap:0;
-}
 
-label{
-    display:block;
-    margin:11px 0 6px;
-    color:#7c828d;
-    font-size:10px;
-    font-weight:700;
-    letter-spacing:.02em;
-}
 
-input,select{
-    width:100%;
-    min-height:43px;
-    padding:0 12px;
-    border:1px solid rgba(214,168,79,.22);
-    border-radius:9px;
-    outline:0;
-    color:#e8e9ec;
-    background:#0b0d11;
-    font-size:13px;
-    transition:.2s ease;
-}
-
-input::placeholder{
-    color:#414650;
-}
-
-input:hover{
-    border-color:rgba(255,255,255,.12);
-}
-
-input:focus,select:focus{
-    border-color:rgba(214,168,79,.58);
-    box-shadow:0 0 0 3px rgba(214,168,79,.08);
-}
-
-.calc{
-    width:100%;
-    min-height:44px;
-    margin-top:17px;
-    padding:0 14px;
-    border:1px solid rgba(214,168,79,.3);
-    border-radius:9px;
-    background:linear-gradient(180deg,#d9ad55,#c99a3f);
-    color:#171108;
-    font-size:11px;
-    font-weight:850;
-    letter-spacing:.07em;
-    text-transform:uppercase;
-    cursor:pointer;
-    box-shadow:0 8px 22px rgba(214,168,79,.12);
-    transition:.2s ease;
-}
-
-.calc:hover{
-    transform:translateY(-1px);
-    filter:brightness(1.05);
-    box-shadow:0 10px 28px rgba(214,168,79,.18);
-}
-
-.calc:active{
-    transform:translateY(0);
-}
-
-.result{
-    margin-top:12px;
-    padding:13px 14px;
-    min-height:49px;
-    border:1px solid rgba(214,168,79,.20);
-    border-radius:10px;
-    background:#0b0d11;
-    color:#bfc3ca;
-    font-size:12px;
-    line-height:1.7;
-    font-weight:550;
-}
-
-.result::first-line{
-    color:#f0f1f3;
-}
-
+/* =========================================================
+   PREMIUM FIELD SYSTEM — ARCHCALC
+   ========================================================= */
 
 .card-form{
     display:grid;
     grid-template-columns:repeat(3,minmax(0,1fr));
-    column-gap:16px;
-    row-gap:0;
-    align-items:end;
+    column-gap:18px;
+    row-gap:22px;
+    align-items:start;
 }
 
-.card-form label{
-    grid-column:auto;
+.card-form .field{
+    min-width:0;
 }
 
-.card-form .calc,
-.card-form .result{
-    grid-column:1 / -1;
+.card-form .field label{
+    display:block;
+    margin:0 0 8px;
+    color:#c8c0af;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.035em;
+    line-height:1.35;
+}
+
+.card-form .field input,
+.card-form .field select{
+    width:100%;
+    min-height:46px;
+    color:#f4f0e8;
+    background:rgba(255,255,255,.025);
+    border:1px solid rgba(214,168,79,.24);
+    border-radius:10px;
+    outline:none;
+    transition:
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+}
+
+.card-form .field input::placeholder{
+    color:#6f6b63;
+}
+
+.card-form .field input:hover,
+.card-form .field select:hover{
+    border-color:rgba(214,168,79,.42);
+    background:rgba(214,168,79,.035);
+}
+
+.card-form .field input:focus,
+.card-form .field select:focus{
+    border-color:#d6a84f;
+    background:rgba(214,168,79,.055);
+    box-shadow:
+        0 0 0 2px rgba(214,168,79,.09),
+        0 0 22px rgba(214,168,79,.07);
+}
+
+.card-form .field input:focus-visible,
+.card-form .field select:focus-visible{
+    outline:none;
 }
 
 .card-form .calc{
+    grid-column:1 / -1;
     max-width:240px;
     justify-self:start;
+    margin-top:2px;
 }
 
-@media(max-width:760px){
-    .card{
-        padding:23px;
-    }
-    .card-form{
-        grid-template-columns:1fr;
-    }
-    .card-form .calc{
-        max-width:none;
-    }
+.card-form .result{
+    grid-column:1 / -1;
+border-color:rgba(214,168,79,.20);}
+
+/* Gold accent for important numeric values */
+.card-form .field input[type="number"]{
+    font-variant-numeric:tabular-nums;
 }
 
-footer{
+/* Select arrow / dropdown harmony */
+.card-form .field select{
+    color:#f4f0e8;
+}
+
+.card-form .field select option{
+    background:#101116;
+    color:#f4f0e8;
+}
+
+@media(max-width:1050px){
+    footer{
     max-width:1380px;
     margin:0 auto;
     padding:0 42px 32px;
@@ -783,14 +758,14 @@ body.light .section-title{
 <!-- XONA -->
 <div class="card" id="room"><div class="card-top"><span class="card-index">01</span><span class="card-type">ROOM</span></div><h2 class="card-title" data-i18n="room_title">Room calculator</h2><p class="card-desc" data-i18n="room_desc">Space, area and volume</p><div class="card-form">
 
-<label><span data-i18n="room_l">Uzunlik (m)</span></label>
-<input id="roomL" type="number" placeholder="5">
+<div class="field"><label><span data-i18n="room_l">Uzunlik (m)</span></label>
+<input id="roomL" type="number" placeholder="5"></div>
 
-<label><span data-i18n="room_w">Kenglik (m)</span></label>
-<input id="roomW" type="number" placeholder="4">
+<div class="field"><label><span data-i18n="room_w">Kenglik (m)</span></label>
+<input id="roomW" type="number" placeholder="4"></div>
 
-<label><span data-i18n="room_h">Balandlik (m)</span></label>
-<input id="roomH" type="number" placeholder="2.8">
+<div class="field"><label><span data-i18n="room_h">Balandlik (m)</span></label>
+<input id="roomH" type="number" placeholder="2.8"></div>
 
 <button class="calc" onclick="roomCalc()"><span data-i18n="calc_room">Hisoblash</span></button>
 
@@ -802,20 +777,20 @@ Natija shu yerda chiqadi.
 <!-- G‘ISHT -->
 <div class="card" id="brick"><div class="card-top"><span class="card-index">02</span><span class="card-type">BRICK</span></div><h2 class="card-title" data-i18n="brick_title">Brick calculator</h2><p class="card-desc" data-i18n="brick_desc">Wall brick estimation</p><div class="card-form">
 
-<label><span data-i18n="wall_l">Devor uzunligi (m)</span></label>
-<input id="wallL" type="number" placeholder="10">
+<div class="field"><label><span data-i18n="wall_l">Devor uzunligi (m)</span></label>
+<input id="wallL" type="number" placeholder="10"></div>
 
-<label><span data-i18n="wall_h">Devor balandligi (m)</span></label>
-<input id="wallH" type="number" placeholder="3">
+<div class="field"><label><span data-i18n="wall_h">Devor balandligi (m)</span></label>
+<input id="wallH" type="number" placeholder="3"></div>
 
-<label><span data-i18n="brick_l">G‘isht uzunligi (cm)</span></label>
-<input id="brickL" type="number" value="25">
+<div class="field"><label><span data-i18n="brick_l">G‘isht uzunligi (cm)</span></label>
+<input id="brickL" type="number" value="25"></div>
 
-<label><span data-i18n="brick_h">G‘isht balandligi (cm)</span></label>
-<input id="brickH" type="number" value="6.5">
+<div class="field"><label><span data-i18n="brick_h">G‘isht balandligi (cm)</span></label>
+<input id="brickH" type="number" value="6.5"></div>
 
-<label><span data-i18n="brick_reserve">Qorishma/zaxira (%)</span></label>
-<input id="brickReserve" type="number" value="10">
+<div class="field"><label><span data-i18n="brick_reserve">Qorishma/zaxira (%)</span></label>
+<input id="brickReserve" type="number" value="10"></div>
 
 <button class="calc" onclick="brickCalc()"><span data-i18n="calc_brick">G‘ishtni hisoblash</span></button>
 
@@ -827,20 +802,20 @@ Natija shu yerda chiqadi.
 <!-- BLOK -->
 <div class="card" id="block"><div class="card-top"><span class="card-index">03</span><span class="card-type">BLOCK</span></div><h2 class="card-title" data-i18n="block_title">Block calculator</h2><p class="card-desc" data-i18n="block_desc">Block quantity estimation</p><div class="card-form">
 
-<label><span data-i18n="wall_l">Devor uzunligi (m)</span></label>
-<input id="blockWallL" type="number" placeholder="10">
+<div class="field"><label><span data-i18n="wall_l">Devor uzunligi (m)</span></label>
+<input id="blockWallL" type="number" placeholder="10"></div>
 
-<label><span data-i18n="wall_h">Devor balandligi (m)</span></label>
-<input id="blockWallH" type="number" placeholder="3">
+<div class="field"><label><span data-i18n="wall_h">Devor balandligi (m)</span></label>
+<input id="blockWallH" type="number" placeholder="3"></div>
 
-<label><span data-i18n="block_l">Blok uzunligi (cm)</span></label>
-<input id="blockL" type="number" value="40">
+<div class="field"><label><span data-i18n="block_l">Blok uzunligi (cm)</span></label>
+<input id="blockL" type="number" value="40"></div>
 
-<label><span data-i18n="block_h">Blok balandligi (cm)</span></label>
-<input id="blockH" type="number" value="20">
+<div class="field"><label><span data-i18n="block_h">Blok balandligi (cm)</span></label>
+<input id="blockH" type="number" value="20"></div>
 
-<label><span data-i18n="reserve">Zaxira (%)</span></label>
-<input id="blockReserve" type="number" value="5">
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
+<input id="blockReserve" type="number" value="5"></div>
 
 <button class="calc" onclick="blockCalc()"><span data-i18n="calc_block">Blokni hisoblash</span></button>
 
@@ -852,17 +827,17 @@ Natija shu yerda chiqadi.
 <!-- BETON -->
 <div class="card" id="concrete"><div class="card-top"><span class="card-index">04</span><span class="card-type">CONCRETE</span></div><h2 class="card-title" data-i18n="concrete_title">Concrete calculator</h2><p class="card-desc" data-i18n="concrete_desc">Concrete volume estimation</p><div class="card-form">
 
-<label><span data-i18n="con_l">Uzunlik (m)</span></label>
-<input id="conL" type="number" placeholder="10">
+<div class="field"><label><span data-i18n="con_l">Uzunlik (m)</span></label>
+<input id="conL" type="number" placeholder="10"></div>
 
-<label><span data-i18n="con_w">Kenglik (m)</span></label>
-<input id="conW" type="number" placeholder="2">
+<div class="field"><label><span data-i18n="con_w">Kenglik (m)</span></label>
+<input id="conW" type="number" placeholder="2"></div>
 
-<label><span data-i18n="con_h">Qalinlik (cm)</span></label>
-<input id="conH" type="number" placeholder="15">
+<div class="field"><label><span data-i18n="con_h">Qalinlik (cm)</span></label>
+<input id="conH" type="number" placeholder="15"></div>
 
-<label><span data-i18n="reserve">Zaxira (%)</span></label>
-<input id="conReserve" type="number" value="5">
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
+<input id="conReserve" type="number" value="5"></div>
 
 <button class="calc" onclick="concreteCalc()"><span data-i18n="calc_concrete">Betonni hisoblash</span></button>
 
@@ -874,17 +849,17 @@ Natija shu yerda chiqadi.
 <!-- BO‘YOQ -->
 <div class="card" id="paint"><div class="card-top"><span class="card-index">05</span><span class="card-type">PAINT</span></div><h2 class="card-title" data-i18n="paint_title">Paint calculator</h2><p class="card-desc" data-i18n="paint_desc">Paint quantity estimation</p><div class="card-form">
 
-<label><span data-i18n="paint_area">Bo‘yaladigan maydon (m²)</span></label>
-<input id="paintArea" type="number" placeholder="50">
+<div class="field"><label><span data-i18n="paint_area">Bo‘yaladigan maydon (m²)</span></label>
+<input id="paintArea" type="number" placeholder="50"></div>
 
-<label><span data-i18n="paint_cover">1 litr bo‘yoq qoplaydigan maydon (m²)</span></label>
-<input id="paintCover" type="number" value="10">
+<div class="field"><label><span data-i18n="paint_cover">1 litr bo‘yoq qoplaydigan maydon (m²)</span></label>
+<input id="paintCover" type="number" value="10"></div>
 
-<label><span data-i18n="paint_coats">Qavatlar soni</span></label>
-<input id="paintCoats" type="number" value="2">
+<div class="field"><label><span data-i18n="paint_coats">Qavatlar soni</span></label>
+<input id="paintCoats" type="number" value="2"></div>
 
-<label><span data-i18n="reserve">Zaxira (%)</span></label>
-<input id="paintReserve" type="number" value="10">
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
+<input id="paintReserve" type="number" value="10"></div>
 
 <button class="calc" onclick="paintCalc()"><span data-i18n="calc_paint">Bo‘yoqni hisoblash</span></button>
 
@@ -896,20 +871,20 @@ Natija shu yerda chiqadi.
 <!-- KAFEL -->
 <div class="card" id="tile"><div class="card-top"><span class="card-index">06</span><span class="card-type">TILE</span></div><h2 class="card-title" data-i18n="tile_title">Tile calculator</h2><p class="card-desc" data-i18n="tile_desc">Tile quantity estimation</p><div class="card-form">
 
-<label><span data-i18n="tile_area_l">Maydon uzunligi (m)</span></label>
-<input id="tileAreaL" type="number" placeholder="5">
+<div class="field"><label><span data-i18n="tile_area_l">Maydon uzunligi (m)</span></label>
+<input id="tileAreaL" type="number" placeholder="5"></div>
 
-<label><span data-i18n="tile_area_w">Maydon kengligi (m)</span></label>
-<input id="tileAreaW" type="number" placeholder="4">
+<div class="field"><label><span data-i18n="tile_area_w">Maydon kengligi (m)</span></label>
+<input id="tileAreaW" type="number" placeholder="4"></div>
 
-<label><span data-i18n="tile_l">Kafel uzunligi (cm)</span></label>
-<input id="tileL" type="number" value="60">
+<div class="field"><label><span data-i18n="tile_l">Kafel uzunligi (cm)</span></label>
+<input id="tileL" type="number" value="60"></div>
 
-<label><span data-i18n="tile_w">Kafel kengligi (cm)</span></label>
-<input id="tileW" type="number" value="60">
+<div class="field"><label><span data-i18n="tile_w">Kafel kengligi (cm)</span></label>
+<input id="tileW" type="number" value="60"></div>
 
-<label><span data-i18n="reserve">Zaxira (%)</span></label>
-<input id="tileReserve" type="number" value="10">
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
+<input id="tileReserve" type="number" value="10"></div>
 
 <button class="calc" onclick="tileCalc()"><span data-i18n="calc_tile">Kafelni hisoblash</span></button>
 
@@ -921,17 +896,17 @@ Natija shu yerda chiqadi.
 <!-- POL -->
 <div class="card" id="floor"><div class="card-top"><span class="card-index">07</span><span class="card-type">FLOOR</span></div><h2 class="card-title" data-i18n="floor_title">Floor calculator</h2><p class="card-desc" data-i18n="floor_desc">Floor material estimation</p><div class="card-form">
 
-<label><span data-i18n="floor_l">Xona uzunligi (m)</span></label>
-<input id="floorL" type="number" placeholder="5">
+<div class="field"><label><span data-i18n="floor_l">Xona uzunligi (m)</span></label>
+<input id="floorL" type="number" placeholder="5"></div>
 
-<label><span data-i18n="floor_w">Xona kengligi (m)</span></label>
-<input id="floorW" type="number" placeholder="4">
+<div class="field"><label><span data-i18n="floor_w">Xona kengligi (m)</span></label>
+<input id="floorW" type="number" placeholder="4"></div>
 
-<label><span data-i18n="floor_piece">1 dona material maydoni (m²)</span></label>
-<input id="floorPiece" type="number" placeholder="0.5">
+<div class="field"><label><span data-i18n="floor_piece">1 dona material maydoni (m²)</span></label>
+<input id="floorPiece" type="number" placeholder="0.5"></div>
 
-<label><span data-i18n="reserve">Zaxira (%)</span></label>
-<input id="floorReserve" type="number" value="10">
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
+<input id="floorReserve" type="number" value="10"></div>
 
 <button class="calc" onclick="floorCalc()"><span data-i18n="calc_floor">Polni hisoblash</span></button>
 
@@ -943,14 +918,14 @@ Natija shu yerda chiqadi.
 <!-- TOM -->
 <div class="card" id="roof"><div class="card-top"><span class="card-index">08</span><span class="card-type">ROOF</span></div><h2 class="card-title" data-i18n="roof_title">Roof calculator</h2><p class="card-desc" data-i18n="roof_desc">Roof area estimation</p><div class="card-form">
 
-<label><span data-i18n="roof_l">Tom uzunligi (m)</span></label>
-<input id="roofL" type="number" placeholder="10">
+<div class="field"><label><span data-i18n="roof_l">Tom uzunligi (m)</span></label>
+<input id="roofL" type="number" placeholder="10"></div>
 
-<label><span data-i18n="roof_s">Tomning bir tomoni qiya uzunligi (m)</span></label>
-<input id="roofS" type="number" placeholder="5">
+<div class="field"><label><span data-i18n="roof_s">Tomning bir tomoni qiya uzunligi (m)</span></label>
+<input id="roofS" type="number" placeholder="5"></div>
 
-<label><span data-i18n="reserve">Zaxira (%)</span></label>
-<input id="roofReserve" type="number" value="10">
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
+<input id="roofReserve" type="number" value="10"></div>
 
 <button class="calc" onclick="roofCalc()"><span data-i18n="calc_roof">Tomni hisoblash</span></button>
 
@@ -962,14 +937,14 @@ Natija shu yerda chiqadi.
 <!-- ZINA -->
 <div class="card" id="stair"><div class="card-top"><span class="card-index">09</span><span class="card-type">STAIRS</span></div><h2 class="card-title" data-i18n="stair_title">Stairs calculator</h2><p class="card-desc" data-i18n="stair_desc">Stair geometry estimation</p><div class="card-form">
 
-<label><span data-i18n="stair_height">Umumiy balandlik (cm)</span></label>
-<input id="stairHeight" type="number" placeholder="280">
+<div class="field"><label><span data-i18n="stair_height">Umumiy balandlik (cm)</span></label>
+<input id="stairHeight" type="number" placeholder="280"></div>
 
-<label><span data-i18n="step_height">Bitta zina balandligi (cm)</span></label>
-<input id="stepHeight" type="number" value="17">
+<div class="field"><label><span data-i18n="step_height">Bitta zina balandligi (cm)</span></label>
+<input id="stepHeight" type="number" value="17"></div>
 
-<label><span data-i18n="step_depth">Bitta zina chuqurligi (cm)</span></label>
-<input id="stepDepth" type="number" value="28">
+<div class="field"><label><span data-i18n="step_depth">Bitta zina chuqurligi (cm)</span></label>
+<input id="stepDepth" type="number" value="28"></div>
 
 <button class="calc" onclick="stairCalc()"><span data-i18n="calc_stair">Zinani hisoblash</span></button>
 
