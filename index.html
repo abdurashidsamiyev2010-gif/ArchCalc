@@ -2,10 +2,9 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" type="image/png" href="images/archcalc-logo.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#08090c">
-<title>ArchCalc — Professional Architecture & Engineering Calculator</title>
+<title>ArchCalc — Architecture & Construction</title>
 <style>
 
 :root{
@@ -103,13 +102,6 @@ button{
     color:var(--accent);
     background:var(--accent-soft);
     font-weight:800;
-}
-
-.brand-logo{
-    width: 90px;
-    height:90px;
-    object-fit:contain;
-    flex-shrink:0;
 }
 
 .brand-name{
@@ -489,9 +481,15 @@ button{
 
 .card-form .result{
     grid-column:1 / -1;
-border-color:rgba(214,168,79,.20);}
+    border-color:rgba(214,168,79,.20);
+}
 
 /* Gold accent for important numeric values */
+.result-warning{
+    color:var(--danger);
+    font-size:11px;
+}
+
 .card-form .field input[type="number"]{
     font-variant-numeric:tabular-nums;
 }
@@ -507,20 +505,90 @@ border-color:rgba(214,168,79,.20);}
 }
 
 @media(max-width:1050px){
+    .hero{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+    .container{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:760px){
+    .app{
+        display:block;
+    }
+
+    .sidebar{
+        display:none;
+    }
+
+    .topbar{
+        height:62px;
+        padding:0 16px;
+    }
+
+    .workspace{
+        padding:34px 16px 60px;
+    }
+
+    .hero{
+        margin-bottom:30px;
+    }
+
+    .hero h1{
+        font-size:42px;
+    }
+
+    .hero-meta{
+        display:none;
+    }
+
+    .container{
+        grid-template-columns:1fr;
+    }
+
+    .mobile-nav{
+        display:flex;
+        position:sticky;
+        top:62px;
+        z-index:14;
+        overflow-x:auto;
+        gap:6px;
+        padding:9px 16px;
+        border-bottom:1px solid rgba(214,168,79,.34);
+        background:rgba(8,9,12,.86);
+        backdrop-filter:blur(20px);
+    }
+
+    .mobile-nav button{
+        flex:0 0 auto;
+        padding:8px 10px;
+        border:1px solid var(--line);
+        border-radius:8px;
+        background:rgba(255,255,255,.025);
+        color:#858b96;
+        font-size:10px;
+        cursor:pointer;
+    }
+
+    .card{
+        padding:24px 20px;
+    }
+
+    .card-form{
+        grid-template-columns:1fr;
+        gap:16px;
+    }
+
+    .card-form .calc{
+        max-width:none;
+    }
+
     footer{
-    max-width:1380px;
-    margin:0 auto;
-    padding:0 42px 32px;
-    color:#424852;
-    font-size:10px;
-    letter-spacing:.05em;
+        padding:0 16px 25px;
+    }
 }
-}
-
-.mobile-nav{
-    display:none;
-}
-
 
 /* LIGHT THEME */
 body.light{
@@ -686,9 +754,10 @@ body.light .section-title{
 
 <aside class="sidebar">
     <div class="brand">
-        <img src="./images/archcalc-logo.png" alt="ArchCalc" class="brand-logo">
+        <div class="brand-mark">A</div>
         <div>
-            
+            <div class="brand-name">ARCHCALC</div>
+            <div class="brand-sub">ARCHITECTURE TOOLS</div>
         </div>
     </div>
 
@@ -706,15 +775,13 @@ body.light .section-title{
         <button onclick="go('block')"><span class="side-num">03</span> <span data-i18n="nav_block">Block</span></button>
         <button onclick="go('concrete')"><span class="side-num">04</span> <span data-i18n="nav_concrete">Concrete</span></button>
         <button onclick="go('paint')"><span class="side-num">05</span> <span data-i18n="nav_paint">Paint</span></button>
-        <button onclick="go('tile')"><span class="side-num">06</span> <span data-i18n="nav_tile">Tile</span></button>
-        <button onclick="go('floor')"><span class="side-num">07</span> <span data-i18n="nav_floor">Floor</span></button>
-        <button onclick="go('roof')"><span class="side-num">08</span> <span data-i18n="nav_roof">Roof</span></button>
-        <button onclick="go('stair')"><span class="side-num">09</span> <span data-i18n="nav_stairs">Stairs</span></button>
+        <button onclick="go('floor')"><span class="side-num">06</span> <span data-i18n="nav_floor">Floor</span></button>
+        <button onclick="go('stair')"><span class="side-num">07</span> <span data-i18n="nav_stairs">Stairs</span></button>
     </div>
 
     <div class="side-bottom">
         <div class="side-nav">
-
+            
         </div>
     </div>
 </aside>
@@ -735,9 +802,7 @@ body.light .section-title{
         <button onclick="go('block')"><span data-i18n="nav_block">Block</span></button>
         <button onclick="go('concrete')"><span data-i18n="nav_concrete">Concrete</span></button>
         <button onclick="go('paint')"><span data-i18n="nav_paint">Paint</span></button>
-        <button onclick="go('tile')"><span data-i18n="nav_tile">Tile</span></button>
         <button onclick="go('floor')"><span data-i18n="nav_floor">Floor</span></button>
-        <button onclick="go('roof')"><span data-i18n="nav_roof">Roof</span></button>
         <button onclick="go('stair')"><span data-i18n="nav_stairs">Stairs</span></button>
     </div>
 
@@ -752,13 +817,13 @@ body.light .section-title{
 
             <div class="hero-meta">
                 <div class="meta-label" data-i18n="system">SYSTEM</div>
-                <div class="meta-value" data-i18n="toolCount">9 calculation tools</div>
+                <div class="meta-value" data-i18n="toolCount">7 calculation tools</div>
             </div>
         </div>
 
         <div class="section-head">
             <div class="section-title" data-i18n="calcTools">Calculation tools</div>
-            <div class="section-count">01 — 09</div>
+            <div class="section-count">01 — 07</div>
         </div>
 
         <div class="container">
@@ -767,13 +832,13 @@ body.light .section-title{
 <div class="card" id="room"><div class="card-top"><span class="card-index">01</span><span class="card-type">ROOM</span></div><h2 class="card-title" data-i18n="room_title">Room calculator</h2><p class="card-desc" data-i18n="room_desc">Space, area and volume</p><div class="card-form">
 
 <div class="field"><label><span data-i18n="room_l">Uzunlik (m)</span></label>
-<input id="roomL" type="number" placeholder="5"></div>
+<input id="roomL" type="number" min="0" step="any" placeholder="5"></div>
 
 <div class="field"><label><span data-i18n="room_w">Kenglik (m)</span></label>
-<input id="roomW" type="number" placeholder="4"></div>
+<input id="roomW" type="number" min="0" step="any" placeholder="4"></div>
 
 <div class="field"><label><span data-i18n="room_h">Balandlik (m)</span></label>
-<input id="roomH" type="number" placeholder="2.8"></div>
+<input id="roomH" type="number" min="0" step="any" placeholder="2.8"></div>
 
 <button class="calc" onclick="roomCalc()"><span data-i18n="calc_room">Hisoblash</span></button>
 
@@ -786,179 +851,202 @@ Natija shu yerda chiqadi.
 <div class="card" id="brick"><div class="card-top"><span class="card-index">02</span><span class="card-type">BRICK</span></div><h2 class="card-title" data-i18n="brick_title">Brick calculator</h2><p class="card-desc" data-i18n="brick_desc">Wall brick estimation</p><div class="card-form">
 
 <div class="field"><label><span data-i18n="wall_l">Devor uzunligi (m)</span></label>
-<input id="wallL" type="number" placeholder="10"></div>
+<input id="wallL" type="number" min="0" step="any" placeholder="10"></div>
 
 <div class="field"><label><span data-i18n="wall_h">Devor balandligi (m)</span></label>
-<input id="wallH" type="number" placeholder="3"></div>
+<input id="wallH" type="number" min="0" step="any" placeholder="3"></div>
+
+<div class="field"><label><span data-i18n="brick_type">G‘isht o‘lchami</span></label>
+<select id="brickType" onchange="applyBrickPreset()">
+<option value="250x120x65">Oddiy g‘isht — 250×120×65 mm</option>
+<option value="250x120x88">Qalin g‘isht — 250×120×88 mm</option>
+<option value="custom">Maxsus o‘lcham</option>
+</select></div>
+
+<div class="field"><label><span data-i18n="brick_thickness">G‘isht urish qalinligi</span></label>
+<select id="brickThickness">
+<option value="0.5">0.5 g‘isht — yarim g‘isht</option>
+<option value="1" selected>1 g‘isht</option>
+<option value="1.5">1.5 g‘isht</option>
+<option value="2">2 g‘isht</option>
+</select></div>
 
 <div class="field"><label><span data-i18n="brick_l">G‘isht uzunligi (cm)</span></label>
-<input id="brickL" type="number" value="25"></div>
+<input id="brickL" type="number" min="0" step="any" value="25"></div>
+
+<div class="field"><label><span data-i18n="brick_w">G‘isht eni (cm)</span></label>
+<input id="brickW" type="number" min="0" step="any" value="12"></div>
 
 <div class="field"><label><span data-i18n="brick_h">G‘isht balandligi (cm)</span></label>
-<input id="brickH" type="number" value="6.5"></div>
+<input id="brickH" type="number" min="0" step="any" value="6.5"></div>
 
-<div class="field"><label><span data-i18n="brick_reserve">Qorishma/zaxira (%)</span></label>
-<input id="brickReserve" type="number" value="10"></div>
+<div class="field"><label><span data-i18n="mortar_joint">Qorishma chok qalinligi (mm)</span></label>
+<input id="mortarJoint" type="number" min="0" step="0.5" value="10"></div>
+
+<div class="field"><label><span data-i18n="brick_openings">Eshik/deraza maydoni (m²)</span></label>
+<input id="brickOpenings" type="number" min="0" step="any" value="0"></div>
+
+<div class="field"><label><span data-i18n="brick_reserve">Zaxira (%)</span></label>
+<input id="brickReserve" type="number" value="5" min="0" max="100" step="0.1"></div>
 
 <button class="calc" onclick="brickCalc()"><span data-i18n="calc_brick">G‘ishtni hisoblash</span></button>
 
-<div class="result" id="brickResult">
-Natija shu yerda chiqadi.
-</div></div></div>
-
+<div class="result" id="brickResult">Natija shu yerda chiqadi.</div></div></div>
 
 <!-- BLOK -->
 <div class="card" id="block"><div class="card-top"><span class="card-index">03</span><span class="card-type">BLOCK</span></div><h2 class="card-title" data-i18n="block_title">Block calculator</h2><p class="card-desc" data-i18n="block_desc">Block quantity estimation</p><div class="card-form">
 
+<div class="field"><label><span data-i18n="block_type">Blok turi</span></label>
+<select id="blockType" onchange="applyBlockPreset()">
+<option value="aac">AAC / Gazobeton — 600×300×200 mm</option>
+<option value="foam">Penoblok — 600×300×200 mm</option>
+<option value="concrete">Beton blok — 400×200×200 mm</option>
+<option value="ceramic">Keramik blok — 380×250×219 mm</option>
+<option value="custom">Maxsus o‘lcham</option>
+</select></div>
+
 <div class="field"><label><span data-i18n="wall_l">Devor uzunligi (m)</span></label>
-<input id="blockWallL" type="number" placeholder="10"></div>
+<input id="blockWallL" type="number" min="0" step="any" placeholder="10"></div>
 
 <div class="field"><label><span data-i18n="wall_h">Devor balandligi (m)</span></label>
-<input id="blockWallH" type="number" placeholder="3"></div>
+<input id="blockWallH" type="number" min="0" step="any" placeholder="3"></div>
 
 <div class="field"><label><span data-i18n="block_l">Blok uzunligi (cm)</span></label>
-<input id="blockL" type="number" value="40"></div>
+<input id="blockL" type="number" min="0" step="any" value="60"></div>
+
+<div class="field"><label><span data-i18n="block_w">Blok eni/qalinligi (cm)</span></label>
+<input id="blockW" type="number" min="0" step="any" value="30"></div>
 
 <div class="field"><label><span data-i18n="block_h">Blok balandligi (cm)</span></label>
-<input id="blockH" type="number" value="20"></div>
+<input id="blockH" type="number" min="0" step="any" value="20"></div>
+
+<div class="field"><label><span data-i18n="block_joint">Yelim/qorishma chok (mm)</span></label>
+<input id="blockJoint" type="number" min="0" step="0.5" value="3"></div>
+
+<div class="field"><label><span data-i18n="block_openings">Eshik/deraza maydoni (m²)</span></label>
+<input id="blockOpenings" type="number" min="0" step="any" value="0"></div>
 
 <div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
-<input id="blockReserve" type="number" value="5"></div>
+<input id="blockReserve" type="number" value="5" min="0" max="100" step="0.1"></div>
 
 <button class="calc" onclick="blockCalc()"><span data-i18n="calc_block">Blokni hisoblash</span></button>
 
-<div class="result" id="blockResult">
-Natija shu yerda chiqadi.
-</div></div></div>
-
+<div class="result" id="blockResult">Natija shu yerda chiqadi.</div></div></div>
 
 <!-- BETON -->
-<div class="card" id="concrete"><div class="card-top"><span class="card-index">04</span><span class="card-type">CONCRETE</span></div><h2 class="card-title" data-i18n="concrete_title">Concrete calculator</h2><p class="card-desc" data-i18n="concrete_desc">Concrete volume estimation</p><div class="card-form">
+<div class="card" id="concrete"><div class="card-top"><span class="card-index">04</span><span class="card-type">CONCRETE</span></div><h2 class="card-title" data-i18n="concrete_title">Concrete calculator</h2><p class="card-desc" data-i18n="concrete_desc">Concrete volume and cement bag estimation</p><div class="card-form">
 
 <div class="field"><label><span data-i18n="con_l">Uzunlik (m)</span></label>
-<input id="conL" type="number" placeholder="10"></div>
+<input id="conL" type="number" min="0" step="any" placeholder="10"></div>
 
 <div class="field"><label><span data-i18n="con_w">Kenglik (m)</span></label>
-<input id="conW" type="number" placeholder="2"></div>
+<input id="conW" type="number" min="0" step="any" placeholder="2"></div>
 
 <div class="field"><label><span data-i18n="con_h">Qalinlik (cm)</span></label>
-<input id="conH" type="number" placeholder="15"></div>
+<input id="conH" type="number" min="0" step="any" placeholder="15"></div>
+
+<div class="field"><label><span data-i18n="con_qty">Bir xil elementlar soni</span></label>
+<input id="conQty" type="number" min="1" step="1" value="1"></div>
+
+<div class="field"><label><span data-i18n="cementPerM3">1 m³ beton uchun sement (kg)</span></label>
+<input id="cementPerM3" type="number" min="0" step="1" value="300"></div>
+
+<div class="field"><label><span data-i18n="cementBag">1 qop sement (kg)</span></label>
+<input id="cementBag" type="number" min="0" step="0.5" value="50"></div>
 
 <div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
-<input id="conReserve" type="number" value="5"></div>
+<input id="conReserve" type="number" value="5" min="0" max="100" step="0.1"></div>
 
 <button class="calc" onclick="concreteCalc()"><span data-i18n="calc_concrete">Betonni hisoblash</span></button>
 
-<div class="result" id="conResult">
-Natija shu yerda chiqadi.
-</div></div></div>
-
+<div class="result" id="conResult">Natija shu yerda chiqadi.</div></div></div>
 
 <!-- BO‘YOQ -->
 <div class="card" id="paint"><div class="card-top"><span class="card-index">05</span><span class="card-type">PAINT</span></div><h2 class="card-title" data-i18n="paint_title">Paint calculator</h2><p class="card-desc" data-i18n="paint_desc">Paint quantity estimation</p><div class="card-form">
 
-<div class="field"><label><span data-i18n="paint_area">Bo‘yaladigan maydon (m²)</span></label>
-<input id="paintArea" type="number" placeholder="50"></div>
+<div class="field"><label><span data-i18n="paint_w">Bo‘yaladigan maydon eni (m)</span></label>
+<input id="paintW" type="number" min="0" step="any" placeholder="5"></div>
 
-<div class="field"><label><span data-i18n="paint_cover">1 litr bo‘yoq qoplaydigan maydon (m²)</span></label>
-<input id="paintCover" type="number" value="10"></div>
+<div class="field"><label><span data-i18n="paint_h">Bo‘yaladigan maydon bo‘yi (m)</span></label>
+<input id="paintH" type="number" min="0" step="any" placeholder="3"></div>
 
 <div class="field"><label><span data-i18n="paint_coats">Qavatlar soni</span></label>
-<input id="paintCoats" type="number" value="2"></div>
+<input id="paintCoats" type="number" min="0" step="1" value="2"></div>
+
+<div class="field"><label><span data-i18n="paint_liter_cover">1 litr bo‘yoq qoplaydigan maydon (m²)</span></label>
+<input id="paintLiterCover" type="number" min="0" step="any" placeholder="10"></div>
+
+<div class="field"><label><span data-i18n="paint_can_cover">1 banka bo‘yoq qoplaydigan maydon (m²)</span></label>
+<input id="paintCanCover" type="number" min="0" step="any" placeholder="50"></div>
+
+<div class="field"><label><span data-i18n="paint_can_liters">1 banka hajmi (L) — ixtiyoriy</span></label>
+<input id="paintCanLiters" type="number" min="0" step="any" placeholder="5"></div>
 
 <div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
-<input id="paintReserve" type="number" value="10"></div>
+<input id="paintReserve" type="number" value="10" min="0" max="100" step="0.1"></div>
 
 <button class="calc" onclick="paintCalc()"><span data-i18n="calc_paint">Bo‘yoqni hisoblash</span></button>
 
-<div class="result" id="paintResult">
-Natija shu yerda chiqadi.
-</div></div></div>
-
-
-<!-- KAFEL -->
-<div class="card" id="tile"><div class="card-top"><span class="card-index">06</span><span class="card-type">TILE</span></div><h2 class="card-title" data-i18n="tile_title">Tile calculator</h2><p class="card-desc" data-i18n="tile_desc">Tile quantity estimation</p><div class="card-form">
-
-<div class="field"><label><span data-i18n="tile_area_l">Maydon uzunligi (m)</span></label>
-<input id="tileAreaL" type="number" placeholder="5"></div>
-
-<div class="field"><label><span data-i18n="tile_area_w">Maydon kengligi (m)</span></label>
-<input id="tileAreaW" type="number" placeholder="4"></div>
-
-<div class="field"><label><span data-i18n="tile_l">Kafel uzunligi (cm)</span></label>
-<input id="tileL" type="number" value="60"></div>
-
-<div class="field"><label><span data-i18n="tile_w">Kafel kengligi (cm)</span></label>
-<input id="tileW" type="number" value="60"></div>
-
-<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
-<input id="tileReserve" type="number" value="10"></div>
-
-<button class="calc" onclick="tileCalc()"><span data-i18n="calc_tile">Kafelni hisoblash</span></button>
-
-<div class="result" id="tileResult">
-Natija shu yerda chiqadi.
-</div></div></div>
-
+<div class="result" id="paintResult">Natija shu yerda chiqadi.</div></div></div>
 
 <!-- POL -->
-<div class="card" id="floor"><div class="card-top"><span class="card-index">07</span><span class="card-type">FLOOR</span></div><h2 class="card-title" data-i18n="floor_title">Floor calculator</h2><p class="card-desc" data-i18n="floor_desc">Floor material estimation</p><div class="card-form">
+<div class="card" id="floor"><div class="card-top"><span class="card-index">06</span><span class="card-type">FLOOR</span></div><h2 class="card-title" data-i18n="floor_title">Floor calculator</h2><p class="card-desc" data-i18n="floor_desc">Floor material quantity by floor type</p><div class="card-form">
+
+<div class="field"><label><span data-i18n="floor_type">Pol turi</span></label>
+<select id="floorType" onchange="applyFloorPreset()">
+<option value="laminate">Laminat — 1 quti m² bo‘yicha</option>
+<option value="parquet">Parket — 1 quti m² bo‘yicha</option>
+<option value="vinyl">Vinil/LVT — 1 quti m² bo‘yicha</option>
+<option value="tile">Keramik plitka — 1 quti m² bo‘yicha</option>
+<option value="linoleum">Linoleum — 1 rulon m² bo‘yicha</option>
+<option value="carpet">Kovrolin — 1 rulon m² bo‘yicha</option>
+<option value="board">Pol taxtasi — 1 quti/paket m² bo‘yicha</option>
+<option value="custom">Maxsus material</option>
+</select></div>
 
 <div class="field"><label><span data-i18n="floor_l">Xona uzunligi (m)</span></label>
-<input id="floorL" type="number" placeholder="5"></div>
+<input id="floorL" type="number" min="0" step="any" placeholder="5"></div>
 
 <div class="field"><label><span data-i18n="floor_w">Xona kengligi (m)</span></label>
-<input id="floorW" type="number" placeholder="4"></div>
+<input id="floorW" type="number" min="0" step="any" placeholder="4"></div>
 
-<div class="field"><label><span data-i18n="floor_piece">1 dona material maydoni (m²)</span></label>
-<input id="floorPiece" type="number" placeholder="0.5"></div>
+<div class="field"><label><span data-i18n="floor_package">1 qadoq/rulon qoplaydigan maydon (m²)</span></label>
+<input id="floorPackage" type="number" min="0" step="any" value="2.22"></div>
+
+<div class="field"><label><span data-i18n="floor_piece">1 dona mahsulot maydoni (m²) — ixtiyoriy</span></label>
+<input id="floorPiece" type="number" min="0" step="any" placeholder="0.36"></div>
 
 <div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
-<input id="floorReserve" type="number" value="10"></div>
+<input id="floorReserve" type="number" value="10" min="0" max="100" step="0.1"></div>
 
 <button class="calc" onclick="floorCalc()"><span data-i18n="calc_floor">Polni hisoblash</span></button>
 
-<div class="result" id="floorResult">
-Natija shu yerda chiqadi.
-</div></div></div>
-
-
-<!-- TOM -->
-<div class="card" id="roof"><div class="card-top"><span class="card-index">08</span><span class="card-type">ROOF</span></div><h2 class="card-title" data-i18n="roof_title">Roof calculator</h2><p class="card-desc" data-i18n="roof_desc">Roof area estimation</p><div class="card-form">
-
-<div class="field"><label><span data-i18n="roof_l">Tom uzunligi (m)</span></label>
-<input id="roofL" type="number" placeholder="10"></div>
-
-<div class="field"><label><span data-i18n="roof_s">Tomning bir tomoni qiya uzunligi (m)</span></label>
-<input id="roofS" type="number" placeholder="5"></div>
-
-<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
-<input id="roofReserve" type="number" value="10"></div>
-
-<button class="calc" onclick="roofCalc()"><span data-i18n="calc_roof">Tomni hisoblash</span></button>
-
-<div class="result" id="roofResult">
-Natija shu yerda chiqadi.
-</div></div></div>
-
+<div class="result" id="floorResult">Natija shu yerda chiqadi.</div></div></div>
 
 <!-- ZINA -->
-<div class="card" id="stair"><div class="card-top"><span class="card-index">09</span><span class="card-type">STAIRS</span></div><h2 class="card-title" data-i18n="stair_title">Stairs calculator</h2><p class="card-desc" data-i18n="stair_desc">Stair geometry estimation</p><div class="card-form">
+<div class="card" id="stair"><div class="card-top"><span class="card-index">07</span><span class="card-type">STAIRS</span></div><h2 class="card-title" data-i18n="stair_title">Stairs calculator</h2><p class="card-desc" data-i18n="stair_desc">Detailed stair geometry and comfort check</p><div class="card-form">
 
-<div class="field"><label><span data-i18n="stair_height">Umumiy balandlik (cm)</span></label>
-<input id="stairHeight" type="number" placeholder="280"></div>
+<div class="field"><label><span data-i18n="stair_height">Qavatlar orasidagi umumiy balandlik (cm)</span></label>
+<input id="stairHeight" type="number" min="0" step="any" placeholder="280"></div>
 
-<div class="field"><label><span data-i18n="step_height">Bitta zina balandligi (cm)</span></label>
-<input id="stepHeight" type="number" value="17"></div>
+<div class="field"><label><span data-i18n="step_height">Maqsadli zina balandligi (cm)</span></label>
+<input id="stepHeight" type="number" min="0" step="any" value="17"></div>
 
-<div class="field"><label><span data-i18n="step_depth">Bitta zina chuqurligi (cm)</span></label>
-<input id="stepDepth" type="number" value="28"></div>
+<div class="field"><label><span data-i18n="step_depth">Maqsadli zina chuqurligi (cm)</span></label>
+<input id="stepDepth" type="number" min="0" step="any" value="28"></div>
+
+<div class="field"><label><span data-i18n="stair_width">Zina eni (cm)</span></label>
+<input id="stairWidth" type="number" min="0" step="any" value="100"></div>
+
+<div class="field"><label><span data-i18n="available_run">Mavjud gorizontal joy (m) — ixtiyoriy</span></label>
+<input id="availableRun" type="number" min="0" step="any" placeholder="4.5"></div>
+
+<div class="field"><label><span data-i18n="landing">Yuqori maydoncha uzunligi (m) — ixtiyoriy</span></label>
+<input id="landingLength" type="number" min="0" step="any" placeholder="1.0"></div>
 
 <button class="calc" onclick="stairCalc()"><span data-i18n="calc_stair">Zinani hisoblash</span></button>
 
-<div class="result" id="stairResult">
-Natija shu yerda chiqadi.
-</div></div></div>
+<div class="result" id="stairResult">Natija shu yerda chiqadi.</div></div></div>
 
 </div>
 
@@ -981,221 +1069,227 @@ function go(id){
 }
 
 
+/* =========================================================
+   CALCULATOR ENGINE
+   ========================================================= */
+
+function getNumber(id){
+    const el = document.getElementById(id);
+    if (!el) return NaN;
+    return Number.parseFloat(el.value);
+}
+
+function setResult(id, htmlText){
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = htmlText;
+}
+
+function isPositive(...values){
+    return values.every(value => Number.isFinite(value) && value > 0);
+}
+
+function validPercent(value){
+    return Number.isFinite(value) && value >= 0 && value <= 100;
+}
+
+function fmt(value, digits = 2){
+    return Number(value).toLocaleString(undefined, {
+        minimumFractionDigits:digits,
+        maximumFractionDigits:digits
+    });
+}
+
 /* XONA */
-
 function roomCalc(){
+    const l = getNumber("roomL");
+    const w = getNumber("roomW");
+    const h = getNumber("roomH");
 
-    let l=Number(document.getElementById("roomL").value);
-    let w=Number(document.getElementById("roomW").value);
-    let h=Number(document.getElementById("roomH").value);
-
-    if(l<=0||w<=0||h<=0){
-        roomResult.innerHTML=outText("invalid");
+    if (!isPositive(l,w,h)){
+        setResult("roomResult", outText("invalid"));
         return;
     }
 
-    let area=l*w;
-    let volume=area*h;
-    let perimeter=2*(l+w);
+    const area = l*w;
+    const volume = area*h;
+    const perimeter = 2*(l+w);
 
-    roomResult.innerHTML=
-        outText("roomArea")+" "+area.toFixed(2)+" m²<br>"+
-        outText("roomVol")+" "+volume.toFixed(2)+" m³<br>"+
-        outText("roomPer")+" "+perimeter.toFixed(2)+" m";
+    setResult("roomResult",
+        outText("roomArea")+" "+fmt(area)+" m²<br>"+
+        outText("roomVol")+" "+fmt(volume)+" m³<br>"+
+        outText("roomPer")+" "+fmt(perimeter)+" m"
+    );
 }
 
 
 /* G‘ISHT */
-
-function brickCalc(){
-
-    let l=Number(wallL.value);
-    let h=Number(wallH.value);
-    let bl=Number(brickL.value)/100;
-    let bh=Number(brickH.value)/100;
-    let reserve=Number(brickReserve.value);
-
-    if(l<=0||h<=0||bl<=0||bh<=0){
-        brickResult.innerHTML=outText("invalid");
-        return;
-    }
-
-    let wallArea=l*h;
-    let oneBrick=bl*bh;
-    let count=wallArea/oneBrick;
-    let total=Math.ceil(count*(1+reserve/100));
-
-    brickResult.innerHTML=
-        outText("wallArea")+" "+wallArea.toFixed(2)+" m²<br>"+
-        outText("base")+" "+Math.ceil(count).toLocaleString()+" pcs<br>"+
-        outText("reserve")+" "+total.toLocaleString()+" pcs";
+const BRICK_PRESETS = {
+    "250x120x65": [25,12,6.5],
+    "250x120x88": [25,12,8.8]
+};
+function applyBrickPreset(){
+    const preset = BRICK_PRESETS[document.getElementById("brickType")?.value];
+    if (!preset) return;
+    ["brickL","brickW","brickH"].forEach((id,i)=>{
+        const el=document.getElementById(id);
+        if(el) el.value=preset[i];
+    });
 }
-
+function brickCalc(){
+    const wallL=getNumber("wallL"), wallH=getNumber("wallH");
+    const brickL=getNumber("brickL")/100, brickW=getNumber("brickW")/100, brickH=getNumber("brickH")/100;
+    const thickness=Number.parseFloat(document.getElementById("brickThickness")?.value);
+    const joint=getNumber("mortarJoint")/1000;
+    const openings=getNumber("brickOpenings");
+    const reserve=getNumber("brickReserve");
+    if(!isPositive(wallL,wallH,brickL,brickW,brickH) || !Number.isFinite(thickness) || thickness<=0 || joint<0 || openings<0 || !validPercent(reserve)){
+        setResult("brickResult",outText("invalid")); return;
+    }
+    const grossArea=wallL*wallH;
+    if(openings>=grossArea){ setResult("brickResult",outText("invalidOpenings")); return; }
+    const netArea=grossArea-openings;
+    const wallThickness={0.5:brickW,1:brickL,1.5:brickL+brickW+joint,2:2*brickL+joint}[thickness];
+    const wallVolume=netArea*wallThickness;
+    const moduleVolume=(brickL+joint)*(brickH+joint)*wallThickness;
+    const baseCount=wallVolume/moduleVolume;
+    const total=Math.ceil(baseCount*(1+reserve/100));
+    const brickVolume=brickL*brickW*brickH;
+    const brickSolidVolume=total*brickVolume;
+    const estimatedMortar=Math.max(0,wallVolume-brickSolidVolume);
+    setResult("brickResult",
+        outText("wallArea")+" "+fmt(netArea)+" m²<br>"+
+        outText("brickWallThickness")+" "+fmt(wallThickness*100,1)+" cm<br>"+
+        outText("brickBase")+" "+Math.ceil(baseCount).toLocaleString()+" pcs<br>"+
+        outText("reserve")+" "+total.toLocaleString()+" pcs<br>"+
+        outText("brickVolume")+" "+fmt(brickSolidVolume,3)+" m³<br>"+
+        outText("mortar")+" ~"+fmt(estimatedMortar,3)+" m³"
+    );
+}
 
 /* BLOK */
-
-function blockCalc(){
-
-    let l=Number(blockWallL.value);
-    let h=Number(blockWallH.value);
-    let bl=Number(blockL.value)/100;
-    let bh=Number(blockH.value)/100;
-    let r=Number(blockReserve.value);
-
-    if(l<=0||h<=0||bl<=0||bh<=0){
-        blockResult.innerHTML=outText("invalid");
-        return;
-    }
-
-    let area=l*h;
-    let one=bl*bh;
-    let count=Math.ceil((area/one)*(1+r/100));
-
-    blockResult.innerHTML=
-        "🧱 Devor maydoni: "+area.toFixed(2)+" m²<br>"+
-        outText("blocks")+" "+count.toLocaleString()+" pcs";
+const BLOCK_PRESETS = {
+    aac:[60,30,20], foam:[60,30,20], concrete:[40,20,20], ceramic:[38,25,21.9]
+};
+function applyBlockPreset(){
+    const preset=BLOCK_PRESETS[document.getElementById("blockType")?.value];
+    if(!preset) return;
+    ["blockL","blockW","blockH"].forEach((id,i)=>{ const el=document.getElementById(id); if(el) el.value=preset[i]; });
 }
-
+function blockCalc(){
+    const l=getNumber("blockWallL"), h=getNumber("blockWallH");
+    const bl=getNumber("blockL")/100, bw=getNumber("blockW")/100, bh=getNumber("blockH")/100;
+    const joint=getNumber("blockJoint")/1000, openings=getNumber("blockOpenings"), reserve=getNumber("blockReserve");
+    if(!isPositive(l,h,bl,bw,bh) || joint<0 || openings<0 || !validPercent(reserve)){ setResult("blockResult",outText("invalid")); return; }
+    const grossArea=l*h;
+    if(openings>=grossArea){ setResult("blockResult",outText("invalidOpenings")); return; }
+    const area=grossArea-openings;
+    const moduleArea=(bl+joint)*(bh+joint);
+    const baseCount=area/moduleArea;
+    const total=Math.ceil(baseCount*(1+reserve/100));
+    const volume=area*bw;
+    setResult("blockResult",
+        outText("wallArea")+" "+fmt(area)+" m²<br>"+
+        outText("blockTypeResult")+" "+document.getElementById("blockType").selectedOptions[0].text+"<br>"+
+        outText("blockVolume")+" "+fmt(volume,3)+" m³<br>"+
+        outText("base")+" "+Math.ceil(baseCount).toLocaleString()+" pcs<br>"+
+        outText("reserve")+" "+total.toLocaleString()+" pcs"
+    );
+}
 
 /* BETON */
-
 function concreteCalc(){
-
-    let l=Number(conL.value);
-    let w=Number(conW.value);
-    let h=Number(conH.value)/100;
-    let r=Number(conReserve.value);
-
-    if(l<=0||w<=0||h<=0){
-        conResult.innerHTML=outText("invalid");
-        return;
-    }
-
-    let volume=l*w*h;
-    let total=volume*(1+r/100);
-
-    conResult.innerHTML=
-        outText("concrete")+" "+volume.toFixed(2)+" m³<br>"+
-        outText("reserve")+" "+total.toFixed(2)+" m³";
+    const l=getNumber("conL"), w=getNumber("conW"), h=getNumber("conH")/100;
+    const qty=getNumber("conQty"), cementPerM3=getNumber("cementPerM3"), bag=getNumber("cementBag"), reserve=getNumber("conReserve");
+    if(!isPositive(l,w,h,qty,cementPerM3,bag) || !validPercent(reserve)){ setResult("conResult",outText("invalid")); return; }
+    const unitVolume=l*w*h;
+    const exactVolume=unitVolume*qty;
+    const totalVolume=exactVolume*(1+reserve/100);
+    const cementKg=totalVolume*cementPerM3;
+    const bags=cementKg/bag;
+    const wholeBags=Math.ceil(bags);
+    setResult("conResult",
+        outText("conUnit")+" "+fmt(unitVolume,3)+" m³<br>"+
+        outText("conExact")+" "+fmt(exactVolume,3)+" m³<br>"+
+        outText("reserve")+" "+fmt(totalVolume,3)+" m³<br>"+
+        outText("cementKg")+" "+fmt(cementKg,1)+" kg<br>"+
+        outText("cementBags")+" "+fmt(bags,2)+" qop (~"+wholeBags+" qop)"
+    );
 }
-
 
 /* BO‘YOQ */
-
 function paintCalc(){
-
-    let area=Number(paintArea.value);
-    let cover=Number(paintCover.value);
-    let coats=Number(paintCoats.value);
-    let r=Number(paintReserve.value);
-
-    if(area<=0||cover<=0||coats<=0){
-        paintResult.innerHTML=outText("invalid");
-        return;
-    }
-
-    let liters=(area*coats/cover)*(1+r/100);
-
-    paintResult.innerHTML=
-        outText("paint")+" "+liters.toFixed(2)+" L";
+    const w=getNumber("paintW"), h=getNumber("paintH"), coats=getNumber("paintCoats");
+    const literCover=getNumber("paintLiterCover"), canCover=getNumber("paintCanCover"), canLiters=getNumber("paintCanLiters"), reserve=getNumber("paintReserve");
+    if(!isPositive(w,h,coats) || !validPercent(reserve) || (literCover<=0 && canCover<=0)){ setResult("paintResult",outText("invalidPaint")); return; }
+    const area=w*h, workingArea=area*coats, reserveArea=workingArea*(1+reserve/100);
+    let html=outText("paintAreaResult")+" "+fmt(area)+" m²<br>"+outText("paintTotalArea")+" "+fmt(reserveArea)+" m²<br>";
+    if(literCover>0){ html+=outText("paintLiters")+" "+fmt(reserveArea/literCover,2)+" L<br>"; }
+    if(canCover>0){ html+=outText("paintCans")+" "+fmt(reserveArea/canCover,2)+" banka (~"+Math.ceil(reserveArea/canCover)+")<br>"; }
+    if(literCover>0 && canLiters>0){ html+=outText("paintByCanVolume")+" "+fmt((reserveArea/literCover)/canLiters,2)+" banka (liter bo‘yicha)<br>"; }
+    if(canCover>0 && canLiters>0){ html+=outText("paintCanLitersTotal")+" "+fmt((reserveArea/canCover)*canLiters,2)+" L"; }
+    setResult("paintResult",html);
 }
-
-
-/* KAFEL */
-
-function tileCalc(){
-
-    let l=Number(tileAreaL.value);
-    let w=Number(tileAreaW.value);
-    let tl=Number(tileL.value)/100;
-    let tw=Number(tileW.value)/100;
-    let r=Number(tileReserve.value);
-
-    if(l<=0||w<=0||tl<=0||tw<=0){
-        tileResult.innerHTML=outText("invalid");
-        return;
-    }
-
-    let area=l*w;
-    let one=tl*tw;
-    let count=Math.ceil((area/one)*(1+r/100));
-
-    tileResult.innerHTML=
-        outText("tileArea")+" "+area.toFixed(2)+" m²<br>"+
-        outText("tiles")+" "+count.toLocaleString()+" pcs";
-}
-
 
 /* POL */
-
+const FLOOR_PRESETS={
+    laminate:2.22, parquet:1.8, vinyl:2.5, tile:1.44, linoleum:15, carpet:20, board:2.4
+};
+function applyFloorPreset(){
+    const val=document.getElementById("floorType")?.value;
+    const el=document.getElementById("floorPackage");
+    if(el && FLOOR_PRESETS[val]) el.value=FLOOR_PRESETS[val];
+}
 function floorCalc(){
-
-    let l=Number(floorL.value);
-    let w=Number(floorW.value);
-    let piece=Number(floorPiece.value);
-    let r=Number(floorReserve.value);
-
-    if(l<=0||w<=0||piece<=0){
-        floorResult.innerHTML=outText("invalid");
-        return;
-    }
-
-    let area=l*w;
-    let count=Math.ceil((area/piece)*(1+r/100));
-
-    floorResult.innerHTML=
-        outText("floorArea")+" "+area.toFixed(2)+" m²<br>"+
-        outText("pieces")+" "+count.toLocaleString()+" pcs";
+    const l=getNumber("floorL"), w=getNumber("floorW"), pack=getNumber("floorPackage"), piece=getNumber("floorPiece"), reserve=getNumber("floorReserve");
+    if(!isPositive(l,w,pack) || !validPercent(reserve)){ setResult("floorResult",outText("invalid")); return; }
+    const area=l*w, totalArea=area*(1+reserve/100), packages=totalArea/pack;
+    let html=outText("floorArea")+" "+fmt(area)+" m²<br>"+outText("floorReserveArea")+" "+fmt(totalArea)+" m²<br>"+outText("floorPackages")+" "+fmt(packages,2)+" qadoq/rulon (~"+Math.ceil(packages)+")";
+    if(piece>0){ html+="<br>"+outText("floorPieces")+" "+Math.ceil(totalArea/piece).toLocaleString()+" pcs"; }
+    html+="<br>"+outText("floorTypeResult")+" "+document.getElementById("floorType").selectedOptions[0].text;
+    setResult("floorResult",html);
 }
-
-
-/* TOM */
-
-function roofCalc(){
-
-    let l=Number(roofL.value);
-    let s=Number(roofS.value);
-    let r=Number(roofReserve.value);
-
-    if(l<=0||s<=0){
-        roofResult.innerHTML=outText("invalid");
-        return;
-    }
-
-    let area=l*s*2;
-    let total=area*(1+r/100);
-
-    roofResult.innerHTML=
-        outText("roofArea")+" "+area.toFixed(2)+" m²<br>"+
-        outText("reserve")+" "+total.toFixed(2)+" m²";
-}
-
 
 /* ZINA */
-
 function stairCalc(){
-
-    let total=Number(stairHeight.value);
-    let height=Number(stepHeight.value);
-    let depth=Number(stepDepth.value);
-
-    if(total<=0||height<=0||depth<=0){
-        stairResult.innerHTML=outText("invalid");
-        return;
+    const total=getNumber("stairHeight"), targetH=getNumber("stepHeight"), targetB=getNumber("stepDepth"), width=getNumber("stairWidth");
+    const available=getNumber("availableRun"), landing=getNumber("landingLength");
+    if(!isPositive(total,targetH,targetB,width) || (Number.isFinite(available)&&available<0) || (Number.isFinite(landing)&&landing<0)){ setResult("stairResult",outText("invalid")); return; }
+    let best=null;
+    const minR=Math.max(1,Math.floor(total/20));
+    const maxR=Math.max(minR+1,Math.ceil(total/15)+2);
+    for(let r=minR;r<=maxR;r++){
+        const h=total/r;
+        const b=targetB;
+        const comfort=2*h+b;
+        const angle=Math.atan2(h,b)*180/Math.PI;
+        const score=Math.abs(h-targetH)*3 + Math.abs(comfort-62) + Math.abs(angle-33)*0.5;
+        if(!best || score<best.score) best={r,h,b,comfort,angle,score};
     }
-
-    let steps=Math.ceil(total/height);
-    let realHeight=total/steps;
-    let run=(steps-1)*depth/100;
-
-    stairResult.innerHTML=
-        outText("stairs")+" "+steps+" pcs<br>"+
-        outText("stepHeight")+" "+realHeight.toFixed(1)+" cm<br>"+
-        outText("run")+" "+run.toFixed(2)+" m";
+    const risers=best.r, riserH=best.h, tread=best.b, treads=Math.max(0,risers-1), run=treads*tread/100;
+    const totalHorizontal=(Number.isFinite(landing)?landing:0)+run;
+    const slopeArea=run*(width/100);
+    const comfort=best.comfort, angle=best.angle;
+    const riserOk=riserH>=15 && riserH<=20, treadOk=tread>=25 && tread<=32, comfortOk=comfort>=59 && comfort<=65, angleOk=angle>=25 && angle<=45;
+    let warnings=[];
+    if(!riserOk) warnings.push(outText("stairWarnRiser"));
+    if(!treadOk) warnings.push(outText("stairWarnTread"));
+    if(!comfortOk) warnings.push(outText("stairWarnComfort"));
+    if(!angleOk) warnings.push(outText("stairWarnAngle"));
+    if(Number.isFinite(available) && totalHorizontal>available) warnings.push(outText("stairWarnSpace"));
+    const warning=warnings.length?"<br><span class=\"result-warning\">⚠️ "+warnings.join("<br>⚠️ ")+"</span>":"<br><span class=\"result-ok\">✓ "+outText("stairGood")+"</span>";
+    setResult("stairResult",
+        outText("stairs")+" "+risers+" pcs<br>"+
+        outText("treads")+" "+treads+" pcs<br>"+
+        outText("stepHeight")+" "+fmt(riserH,1)+" cm<br>"+
+        outText("stepDepthResult")+" "+fmt(tread,1)+" cm<br>"+
+        outText("run")+" "+fmt(run,2)+" m<br>"+
+        outText("stairTotalRun")+" "+fmt(totalHorizontal,2)+" m<br>"+
+        outText("stairWidthResult")+" "+fmt(width,0)+" cm<br>"+
+        outText("stairComfort")+" "+fmt(comfort,1)+" cm<br>"+
+        outText("stairAngle")+" "+fmt(angle,1)+"°"+
+        warning
+    );
 }
-
-
-
 
 function currentLang(){
     return localStorage.getItem("archcalc-language") || "uz";
@@ -1203,33 +1297,37 @@ function currentLang(){
 
 const outputTranslations = {
     uz:{
-        invalid:"⚠️ Qiymatlarni to‘g‘ri kiriting.",
-        roomArea:"📐 Maydon:", roomVol:"📦 Hajm:", roomPer:"📏 Perimetr:",
-        wallArea:"🧱 Devor maydoni:", base:"📦 Asosiy hisob:", reserve:"➕ Zaxira bilan:",
-        blocks:"📦 Kerakli blok:", concrete:"🪨 Beton hajmi:", paint:"🎨 Kerakli bo‘yoq:",
-        tileArea:"⬜ Maydon:", tiles:"📦 Kerakli kafel:", floorArea:"🪵 Pol maydoni:", pieces:"📦 Kerakli dona:",
-        roofArea:"🏠 Tom maydoni:", stairs:"🪜 Zinalar soni:", stepHeight:"📏 Har bir zina balandligi:", run:"↔️ Umumiy yurish uzunligi:"
+        invalid:"⚠️ Qiymatlarni to‘g‘ri kiriting.", invalidOpenings:"⚠️ Eshik/deraza maydoni devor maydonidan kichik bo‘lishi kerak.", invalidPaint:"⚠️ Maydon va qavatlar sonini kiriting. Kamida 1 litr qoplash yoki 1 banka qoplash qiymatini kiriting.",
+        roomArea:"📐 Maydon:", roomVol:"📦 Hajm:", roomPer:"📏 Perimetr:", wallArea:"🧱 Sof devor maydoni:", base:"📦 Asosiy hisob:", reserve:"➕ Zaxira bilan:",
+        brickWallThickness:"📏 Devor qalinligi:", brickBase:"🧱 Hisoblangan g‘isht:", brickVolume:"🧱 G‘isht hajmi:", mortar:"🪨 Taxminiy qorishma:",
+        blockTypeResult:"🧱 Blok turi:", blockVolume:"📦 Devor hajmi:", concrete:"🪨 Beton hajmi:", conUnit:"📦 1 element hajmi:", conExact:"🎯 Aniq umumiy hajm:", cementKg:"🧱 Sement massasi:", cementBags:"🛍️ Sement:",
+        paintAreaResult:"🎨 Bo‘yaladigan maydon:", paintTotalArea:"🖌️ Qavatlar + zaxira bilan maydon:", paintLiters:"🧴 Kerakli bo‘yoq:", paintCans:"🪣 Kerakli banka:", paintByCanVolume:"🪣 Litr bo‘yicha banka:", paintCanLitersTotal:"🧴 Bankalar bo‘yicha jami:",
+        floorArea:"🪵 Pol maydoni:", floorReserveArea:"📐 Zaxira bilan maydon:", floorPackages:"📦 Kerakli qadoq/rulon:", floorPieces:"🧩 Taxminiy dona:", floorTypeResult:"🏷️ Pol turi:",
+        stairs:"🪜 Zinalar soni:", treads:"🪜 Pog‘onalar soni:", stepHeight:"📏 Har bir zina balandligi:", stepDepthResult:"📏 Har bir zina chuqurligi:", run:"↔️ Gorizontal yurish:", stairTotalRun:"📐 Maydoncha bilan umumiy uzunlik:", stairWidthResult:"↔️ Zina eni:", stairComfort:"📐 Qulaylik (2h+b):", stairAngle:"📏 Qiyalik burchagi:", stairGood:"Asosiy geometriya tavsiya etilgan diapazonda.", stairWarnRiser:"zina balandligi 15–20 cm oralig‘idan tashqarida", stairWarnTread:"zina chuqurligi 25–32 cm oralig‘idan tashqarida", stairWarnComfort:"2h+b 59–65 cm diapazonidan tashqarida", stairWarnAngle:"qiyalik 25–45° diapazonidan tashqarida", stairWarnSpace:"mavjud gorizontal joy yetarli emas"
     },
     ru:{
-        invalid:"⚠️ Введите корректные значения.",
-        roomArea:"📐 Площадь:", roomVol:"📦 Объём:", roomPer:"📏 Периметр:",
-        wallArea:"🧱 Площадь стены:", base:"📦 Основной расчёт:", reserve:"➕ С запасом:",
-        blocks:"📦 Необходимое количество блоков:", concrete:"🪨 Объём бетона:", paint:"🎨 Необходимое количество краски:",
-        tileArea:"⬜ Площадь:", tiles:"📦 Необходимое количество плитки:", floorArea:"🪵 Площадь пола:", pieces:"📦 Необходимое количество:",
-        roofArea:"🏠 Площадь крыши:", stairs:"🪜 Количество ступеней:", stepHeight:"📏 Высота ступени:", run:"↔️ Общая длина марша:"
+        invalid:"⚠️ Введите корректные значения.", invalidOpenings:"⚠️ Площадь дверей/окон должна быть меньше площади стены.", invalidPaint:"⚠️ Введите размеры и количество слоёв. Укажите покрытие на 1 литр или на 1 банку.",
+        roomArea:"📐 Площадь:", roomVol:"📦 Объём:", roomPer:"📏 Периметр:", wallArea:"🧱 Чистая площадь стены:", base:"📦 Основной расчёт:", reserve:"➕ С запасом:",
+        brickWallThickness:"📏 Толщина стены:", brickBase:"🧱 Расчётный кирпич:", brickVolume:"🧱 Объём кирпича:", mortar:"🪨 Примерный раствор:", blockTypeResult:"🧱 Тип блока:", blockVolume:"📦 Объём стены:", concrete:"🪨 Объём бетона:", conUnit:"📦 Объём 1 элемента:", conExact:"🎯 Точный общий объём:", cementKg:"🧱 Масса цемента:", cementBags:"🛍️ Цемент:",
+        paintAreaResult:"🎨 Площадь окраски:", paintTotalArea:"🖌️ Площадь с учётом слоёв и запаса:", paintLiters:"🧴 Необходимо краски:", paintCans:"🪣 Необходимо банок:", paintByCanVolume:"🪣 Банок по литражу:", paintCanLitersTotal:"🧴 Общий объём по банкам:",
+        floorArea:"🪵 Площадь пола:", floorReserveArea:"📐 Площадь с запасом:", floorPackages:"📦 Необходимо упаковок/рулонов:", floorPieces:"🧩 Примерное количество штук:", floorTypeResult:"🏷️ Тип пола:",
+        stairs:"🪜 Количество ступеней:", treads:"🪜 Количество проступей:", stepHeight:"📏 Высота ступени:", stepDepthResult:"📏 Глубина ступени:", run:"↔️ Горизонтальный марш:", stairTotalRun:"📐 Общая длина с площадкой:", stairWidthResult:"↔️ Ширина лестницы:", stairComfort:"📐 Удобство (2h+b):", stairAngle:"📏 Угол наклона:", stairGood:"Основная геометрия в рекомендуемом диапазоне.", stairWarnRiser:"высота ступени вне диапазона 15–20 см", stairWarnTread:"глубина ступени вне диапазона 25–32 см", stairWarnComfort:"2h+b вне диапазона 59–65 см", stairWarnAngle:"угол вне диапазона 25–45°", stairWarnSpace:"недостаточно доступного горизонтального места"
     },
     en:{
-        invalid:"⚠️ Enter valid values.",
-        roomArea:"📐 Area:", roomVol:"📦 Volume:", roomPer:"📏 Perimeter:",
-        wallArea:"🧱 Wall area:", base:"📦 Base calculation:", reserve:"➕ With reserve:",
-        blocks:"📦 Required blocks:", concrete:"🪨 Concrete volume:", paint:"🎨 Required paint:",
-        tileArea:"⬜ Area:", tiles:"📦 Required tiles:", floorArea:"🪵 Floor area:", pieces:"📦 Required pieces:",
-        roofArea:"🏠 Roof area:", stairs:"🪜 Number of steps:", stepHeight:"📏 Step height:", run:"↔️ Total run:"
+        invalid:"⚠️ Enter valid values.", invalidOpenings:"⚠️ Door/window area must be smaller than wall area.", invalidPaint:"⚠️ Enter dimensions and coats. Provide coverage per liter or per can.",
+        roomArea:"📐 Area:", roomVol:"📦 Volume:", roomPer:"📏 Perimeter:", wallArea:"🧱 Net wall area:", base:"📦 Base calculation:", reserve:"➕ With reserve:",
+        brickWallThickness:"📏 Wall thickness:", brickBase:"🧱 Calculated bricks:", brickVolume:"🧱 Brick volume:", mortar:"🪨 Estimated mortar:", blockTypeResult:"🧱 Block type:", blockVolume:"📦 Wall volume:", concrete:"🪨 Concrete volume:", conUnit:"📦 Volume per element:", conExact:"🎯 Exact total volume:", cementKg:"🧱 Cement mass:", cementBags:"🛍️ Cement:",
+        paintAreaResult:"🎨 Paint area:", paintTotalArea:"🖌️ Area with coats and reserve:", paintLiters:"🧴 Required paint:", paintCans:"🪣 Required cans:", paintByCanVolume:"🪣 Cans by liters:", paintCanLitersTotal:"🧴 Total volume by cans:",
+        floorArea:"🪵 Floor area:", floorReserveArea:"📐 Area with reserve:", floorPackages:"📦 Required packs/rolls:", floorPieces:"🧩 Approx. pieces:", floorTypeResult:"🏷️ Floor type:",
+        stairs:"🪜 Number of risers:", treads:"🪜 Number of treads:", stepHeight:"📏 Riser height:", stepDepthResult:"📏 Tread depth:", run:"↔️ Horizontal run:", stairTotalRun:"📐 Total length with landing:", stairWidthResult:"↔️ Stair width:", stairComfort:"📐 Comfort (2h+b):", stairAngle:"📏 Stair angle:", stairGood:"Core geometry is within the recommended range.", stairWarnRiser:"riser height is outside 15–20 cm", stairWarnTread:"tread depth is outside 25–32 cm", stairWarnComfort:"2h+b is outside 59–65 cm", stairWarnAngle:"angle is outside 25–45°", stairWarnSpace:"available horizontal space is insufficient"
     }
 };
 
 function outText(key){
-    return outputTranslations[currentLang()][key];
+    const lang = currentLang();
+    return (outputTranslations[lang] && outputTranslations[lang][key])
+        || outputTranslations.uz[key]
+        || key;
 }
 
 /* ============================================
@@ -1239,82 +1337,39 @@ function outText(key){
 
 const archCalcFullTranslations = {
   uz: {
-    room_title:"Xona kalkulyatori", room_desc:"Maydon, yuza va hajm",
-    brick_title:"G‘isht kalkulyatori", brick_desc:"Devor uchun g‘isht hisoblash",
-    block_title:"Blok kalkulyatori", block_desc:"Blok miqdorini hisoblash",
-    concrete_title:"Beton kalkulyatori", concrete_desc:"Beton hajmini hisoblash",
-    paint_title:"Bo‘yoq kalkulyatori", paint_desc:"Bo‘yoq miqdorini hisoblash",
-    tile_title:"Kafel kalkulyatori", tile_desc:"Kafel miqdorini hisoblash",
-    floor_title:"Pol kalkulyatori", floor_desc:"Pol materiali hisoblash",
-    roof_title:"Tom kalkulyatori", roof_desc:"Tom maydonini hisoblash",
-    stair_title:"Zina kalkulyatori", stair_desc:"Zina geometriyasini hisoblash",
-    room_l:"Uzunlik (m)", room_w:"Kenglik (m)", room_h:"Balandlik (m)",
-    wall_l:"Devor uzunligi (m)", wall_h:"Devor balandligi (m)",
-    brick_l:"G‘isht uzunligi (cm)", brick_h:"G‘isht balandligi (cm)", brick_reserve:"Qorishma/zaxira (%)",
-    block_l:"Blok uzunligi (cm)", block_h:"Blok balandligi (cm)", reserve:"Zaxira (%)",
-    con_l:"Uzunlik (m)", con_w:"Kenglik (m)", con_h:"Qalinlik (cm)",
-    paint_area:"Bo‘yaladigan maydon (m²)", paint_cover:"1 litr bo‘yoq qoplaydigan maydon (m²)", paint_coats:"Qavatlar soni",
-    tile_area_l:"Maydon uzunligi (m)", tile_area_w:"Maydon kengligi (m)", tile_l:"Kafel uzunligi (cm)", tile_w:"Kafel kengligi (cm)",
-    floor_l:"Xona uzunligi (m)", floor_w:"Xona kengligi (m)", floor_piece:"1 dona material maydoni (m²)",
-    roof_l:"Tom uzunligi (m)", roof_s:"Tomning bir tomoni qiya uzunligi (m)",
-    stair_height:"Umumiy balandlik (cm)", step_height:"Bitta zina balandligi (cm)", step_depth:"Bitta zina chuqurligi (cm)",
-    calc_room:"Hisoblash", calc_brick:"G‘ishtni hisoblash", calc_block:"Blokni hisoblash", calc_concrete:"Betonni hisoblash",
-    calc_paint:"Bo‘yoqni hisoblash", calc_tile:"Kafelni hisoblash", calc_floor:"Polni hisoblash", calc_roof:"Tomni hisoblash", calc_stair:"Zinani hisoblash",
-    result_empty:"Natija shu yerda chiqadi.", nav_room:"Xona", nav_brick:"G‘isht", nav_block:"Blok", nav_concrete:"Beton",
-    nav_paint:"Bo‘yoq", nav_tile:"Kafel", nav_floor:"Pol", nav_roof:"Tom", nav_stair:"Zina", footer:"ARCHCALC · ARXITEKTURA VA QURILISH · 2026"
+    dashboard:"Bosh sahifa", calculators:"KALKULYATORLAR", workspace:"Ish maydoni", eyebrow:"Arxitektura / Qurilish", heroTitle:"Aniqlik bilan hisoblang.", heroDesc:"Arxitektura va qurilish hisoblari uchun toza, aniq va amaliy ish maydoni.", system:"TIZIM", toolCount:"8 ta hisoblash vositasi", calcTools:"Hisoblash vositalari",
+    room_title:"Xona kalkulyatori", room_desc:"Maydon, hajm va perimetr", brick_title:"G‘isht kalkulyatori", brick_desc:"G‘isht urish qalinligi va miqdori", block_title:"Blok kalkulyatori", block_desc:"Blok turi va miqdorini hisoblash", concrete_title:"Beton kalkulyatori", concrete_desc:"Aniq hajm va sement qoplarini hisoblash", paint_title:"Bo‘yoq kalkulyatori", paint_desc:"Litr yoki banka bo‘yicha bo‘yoq hisoblash", floor_title:"Pol kalkulyatori", floor_desc:"Pol turiga qarab material miqdorini hisoblash", stair_title:"Zina kalkulyatori", stair_desc:"Zina geometriyasi va qulaylik tekshiruvi",
+    room_l:"Uzunlik (m)", room_w:"Kenglik (m)", room_h:"Balandlik (m)", wall_l:"Devor uzunligi (m)", wall_h:"Devor balandligi (m)", brick_type:"G‘isht o‘lchami", brick_thickness:"G‘isht urish qalinligi", brick_l:"G‘isht uzunligi (cm)", brick_w:"G‘isht eni (cm)", brick_h:"G‘isht balandligi (cm)", mortar_joint:"Qorishma chok qalinligi (mm)", brick_openings:"Eshik/deraza maydoni (m²)", brick_reserve:"Zaxira (%)",
+    block_type:"Blok turi", block_l:"Blok uzunligi (cm)", block_w:"Blok eni/qalinligi (cm)", block_h:"Blok balandligi (cm)", block_joint:"Yelim/qorishma chok (mm)", block_openings:"Eshik/deraza maydoni (m²)", reserve:"Zaxira (%)",
+    con_l:"Uzunlik (m)", con_w:"Kenglik (m)", con_h:"Qalinlik (cm)", con_qty:"Bir xil elementlar soni", cementPerM3:"1 m³ beton uchun sement (kg)", cementBag:"1 qop sement (kg)",
+    paint_w:"Bo‘yaladigan maydon eni (m)", paint_h:"Bo‘yaladigan maydon bo‘yi (m)", paint_coats:"Qavatlar soni", paint_liter_cover:"1 litr bo‘yoq qoplaydigan maydon (m²)", paint_can_cover:"1 banka bo‘yoq qoplaydigan maydon (m²)", paint_can_liters:"1 banka hajmi (L) — ixtiyoriy",
+    floor_type:"Pol turi", floor_l:"Xona uzunligi (m)", floor_w:"Xona kengligi (m)", floor_package:"1 qadoq/rulon qoplaydigan maydon (m²)", floor_piece:"1 dona mahsulot maydoni (m²) — ixtiyoriy",
+    stair_height:"Qavatlar orasidagi umumiy balandlik (cm)", step_height:"Maqsadli zina balandligi (cm)", step_depth:"Maqsadli zina chuqurligi (cm)", stair_width:"Zina eni (cm)", available_run:"Mavjud gorizontal joy (m) — ixtiyoriy", landing:"Yuqori maydoncha uzunligi (m) — ixtiyoriy",
+    calc_room:"Hisoblash", calc_brick:"G‘ishtni hisoblash", calc_block:"Blokni hisoblash", calc_concrete:"Betonni hisoblash", calc_paint:"Bo‘yoqni hisoblash", calc_floor:"Polni hisoblash", calc_stair:"Zinani hisoblash", result_empty:"Natija shu yerda chiqadi.", nav_room:"Xona", nav_brick:"G‘isht", nav_block:"Blok", nav_concrete:"Beton", nav_paint:"Bo‘yoq", nav_floor:"Pol", nav_stairs:"Zina", footer:"ARCHCALC · ARXITEKTURA VA QURILISH · 2026"
   },
   ru: {
-    room_title:"Калькулятор помещения", room_desc:"Площадь, площадь стен и объём",
-    brick_title:"Калькулятор кирпича", brick_desc:"Расчёт кирпича для стены",
-    block_title:"Калькулятор блоков", block_desc:"Расчёт количества блоков",
-    concrete_title:"Калькулятор бетона", concrete_desc:"Расчёт объёма бетона",
-    paint_title:"Калькулятор краски", paint_desc:"Расчёт количества краски",
-    tile_title:"Калькулятор плитки", tile_desc:"Расчёт количества плитки",
-    floor_title:"Калькулятор пола", floor_desc:"Расчёт материала для пола",
-    roof_title:"Калькулятор крыши", roof_desc:"Расчёт площади крыши",
-    stair_title:"Калькулятор лестницы", stair_desc:"Расчёт геометрии лестницы",
-    room_l:"Длина (м)", room_w:"Ширина (м)", room_h:"Высота (м)",
-    wall_l:"Длина стены (м)", wall_h:"Высота стены (м)",
-    brick_l:"Длина кирпича (см)", brick_h:"Высота кирпича (см)", brick_reserve:"Раствор/запас (%)",
-    block_l:"Длина блока (см)", block_h:"Высота блока (см)", reserve:"Запас (%)",
-    con_l:"Длина (м)", con_w:"Ширина (м)", con_h:"Толщина (см)",
-    paint_area:"Площадь окраски (м²)", paint_cover:"Покрытие 1 литра (м²)", paint_coats:"Количество слоёв",
-    tile_area_l:"Длина площади (м)", tile_area_w:"Ширина площади (м)", tile_l:"Длина плитки (см)", tile_w:"Ширина плитки (см)",
-    floor_l:"Длина комнаты (м)", floor_w:"Ширина комнаты (м)", floor_piece:"Площадь 1 единицы материала (м²)",
-    roof_l:"Длина крыши (м)", roof_s:"Длина одного ската (м)",
-    stair_height:"Общая высота (см)", step_height:"Высота ступени (см)", step_depth:"Глубина ступени (см)",
-    calc_room:"Рассчитать", calc_brick:"Рассчитать кирпич", calc_block:"Рассчитать блоки", calc_concrete:"Рассчитать бетон",
-    calc_paint:"Рассчитать краску", calc_tile:"Рассчитать плитку", calc_floor:"Рассчитать пол", calc_roof:"Рассчитать крышу", calc_stair:"Рассчитать лестницу",
-    result_empty:"Результат появится здесь.", nav_room:"Помещение", nav_brick:"Кирпич", nav_block:"Блок", nav_concrete:"Бетон",
-    nav_paint:"Краска", nav_tile:"Плитка", nav_floor:"Пол", nav_roof:"Крыша", nav_stair:"Лестница", footer:"ARCHCALC · АРХИТЕКТУРА И СТРОИТЕЛЬСТВО · 2026"
+    dashboard:"Главная", calculators:"КАЛЬКУЛЯТОРЫ", workspace:"Рабочая область", eyebrow:"Архитектура / Строительство", heroTitle:"Расчёты с точностью.", heroDesc:"Чистое и практичное рабочее пространство для архитектурных и строительных расчётов.", system:"СИСТЕМА", toolCount:"8 инструментов", calcTools:"Инструменты расчёта",
+    room_title:"Калькулятор помещения", room_desc:"Площадь, объём и периметр", brick_title:"Калькулятор кирпича", brick_desc:"Толщина кладки и количество кирпича", block_title:"Калькулятор блоков", block_desc:"Тип блока и количество", concrete_title:"Калькулятор бетона", concrete_desc:"Точный объём и мешки цемента", paint_title:"Калькулятор краски", paint_desc:"Расчёт краски по литрам или банкам", floor_title:"Калькулятор пола", floor_desc:"Количество материала по типу пола", stair_title:"Калькулятор лестницы", stair_desc:"Геометрия и проверка удобства",
+    room_l:"Длина (м)", room_w:"Ширина (м)", room_h:"Высота (м)", wall_l:"Длина стены (м)", wall_h:"Высота стены (м)", brick_type:"Размер кирпича", brick_thickness:"Толщина кладки", brick_l:"Длина кирпича (см)", brick_w:"Ширина кирпича (см)", brick_h:"Высота кирпича (см)", mortar_joint:"Толщина шва раствора (мм)", brick_openings:"Площадь дверей/окон (м²)", brick_reserve:"Запас (%)",
+    block_type:"Тип блока", block_l:"Длина блока (см)", block_w:"Ширина/толщина блока (см)", block_h:"Высота блока (см)", block_joint:"Шов клея/раствора (мм)", block_openings:"Площадь дверей/окон (м²)", reserve:"Запас (%)",
+    con_l:"Длина (м)", con_w:"Ширина (м)", con_h:"Толщина (см)", con_qty:"Количество одинаковых элементов", cementPerM3:"Цемент на 1 м³ бетона (кг)", cementBag:"Вес 1 мешка цемента (кг)",
+    paint_w:"Ширина окрашиваемой площади (м)", paint_h:"Высота окрашиваемой площади (м)", paint_coats:"Количество слоёв", paint_liter_cover:"Площадь покрытия 1 литром (м²)", paint_can_cover:"Площадь покрытия 1 банкой (м²)", paint_can_liters:"Объём 1 банки (л) — необязательно",
+    floor_type:"Тип пола", floor_l:"Длина комнаты (м)", floor_w:"Ширина комнаты (м)", floor_package:"Площадь 1 упаковки/рулона (м²)", floor_piece:"Площадь 1 единицы (м²) — необязательно",
+    stair_height:"Общая высота между этажами (см)", step_height:"Целевая высота ступени (см)", step_depth:"Целевая глубина ступени (см)", stair_width:"Ширина лестницы (см)", available_run:"Доступная горизонтальная длина (м) — необязательно", landing:"Длина верхней площадки (м) — необязательно",
+    calc_room:"Рассчитать", calc_brick:"Рассчитать кирпич", calc_block:"Рассчитать блоки", calc_concrete:"Рассчитать бетон", calc_paint:"Рассчитать краску", calc_floor:"Рассчитать пол", calc_stair:"Рассчитать лестницу", result_empty:"Результат появится здесь.", nav_room:"Помещение", nav_brick:"Кирпич", nav_block:"Блок", nav_concrete:"Бетон", nav_paint:"Краска", nav_floor:"Пол", nav_stairs:"Лестница", footer:"ARCHCALC · АРХИТЕКТУРА И СТРОИТЕЛЬСТВО · 2026"
   },
   en: {
-    room_title:"Room calculator", room_desc:"Area, surface and volume",
-    brick_title:"Brick calculator", brick_desc:"Wall brick estimation",
-    block_title:"Block calculator", block_desc:"Block quantity estimation",
-    concrete_title:"Concrete calculator", concrete_desc:"Concrete volume estimation",
-    paint_title:"Paint calculator", paint_desc:"Paint quantity estimation",
-    tile_title:"Tile calculator", tile_desc:"Tile quantity estimation",
-    floor_title:"Floor calculator", floor_desc:"Floor material estimation",
-    roof_title:"Roof calculator", roof_desc:"Roof area estimation",
-    stair_title:"Stairs calculator", stair_desc:"Stair geometry estimation",
-    room_l:"Length (m)", room_w:"Width (m)", room_h:"Height (m)",
-    wall_l:"Wall length (m)", wall_h:"Wall height (m)",
-    brick_l:"Brick length (cm)", brick_h:"Brick height (cm)", brick_reserve:"Mortar/reserve (%)",
-    block_l:"Block length (cm)", block_h:"Block height (cm)", reserve:"Reserve (%)",
-    con_l:"Length (m)", con_w:"Width (m)", con_h:"Thickness (cm)",
-    paint_area:"Painted area (m²)", paint_cover:"Area covered by 1 liter (m²)", paint_coats:"Number of coats",
-    tile_area_l:"Area length (m)", tile_area_w:"Area width (m)", tile_l:"Tile length (cm)", tile_w:"Tile width (cm)",
-    floor_l:"Room length (m)", floor_w:"Room width (m)", floor_piece:"Area per material piece (m²)",
-    roof_l:"Roof length (m)", roof_s:"One roof slope length (m)",
-    stair_height:"Total height (cm)", step_height:"Step height (cm)", step_depth:"Step depth (cm)",
-    calc_room:"Calculate", calc_brick:"Calculate bricks", calc_block:"Calculate blocks", calc_concrete:"Calculate concrete",
-    calc_paint:"Calculate paint", calc_tile:"Calculate tiles", calc_floor:"Calculate floor", calc_roof:"Calculate roof", calc_stair:"Calculate stairs",
-    result_empty:"Result will appear here.", nav_room:"Room", nav_brick:"Brick", nav_block:"Block", nav_concrete:"Concrete",
-    nav_paint:"Paint", nav_tile:"Tile", nav_floor:"Floor", nav_roof:"Roof", nav_stair:"Stairs", footer:"ARCHCALC · ARCHITECTURE & CONSTRUCTION · 2026"
+    dashboard:"Dashboard", calculators:"CALCULATORS", workspace:"Workspace", eyebrow:"Architecture / Construction", heroTitle:"Calculate with precision.", heroDesc:"A focused workspace for practical architectural and construction calculations.", system:"SYSTEM", toolCount:"7 calculation tools", calcTools:"Calculation tools",
+    room_title:"Room calculator", room_desc:"Area, volume and perimeter", brick_title:"Brick calculator", brick_desc:"Masonry thickness and brick quantity", block_title:"Block calculator", block_desc:"Block type and quantity", concrete_title:"Concrete calculator", concrete_desc:"Accurate volume and cement bag estimate", paint_title:"Paint calculator", paint_desc:"Paint quantity by liters or cans", floor_title:"Floor calculator", floor_desc:"Material quantity by floor type", stair_title:"Stairs calculator", stair_desc:"Stair geometry and comfort check",
+    room_l:"Length (m)", room_w:"Width (m)", room_h:"Height (m)", wall_l:"Wall length (m)", wall_h:"Wall height (m)", brick_type:"Brick size", brick_thickness:"Masonry thickness", brick_l:"Brick length (cm)", brick_w:"Brick width (cm)", brick_h:"Brick height (cm)", mortar_joint:"Mortar joint thickness (mm)", brick_openings:"Door/window area (m²)", brick_reserve:"Reserve (%)",
+    block_type:"Block type", block_l:"Block length (cm)", block_w:"Block width/thickness (cm)", block_h:"Block height (cm)", block_joint:"Adhesive/mortar joint (mm)", block_openings:"Door/window area (m²)", reserve:"Reserve (%)",
+    con_l:"Length (m)", con_w:"Width (m)", con_h:"Thickness (cm)", con_qty:"Number of identical elements", cementPerM3:"Cement per 1 m³ concrete (kg)", cementBag:"Cement bag weight (kg)",
+    paint_w:"Paint area width (m)", paint_h:"Paint area height (m)", paint_coats:"Number of coats", paint_liter_cover:"Area covered by 1 liter (m²)", paint_can_cover:"Area covered by 1 can (m²)", paint_can_liters:"Can volume (L) — optional",
+    floor_type:"Floor type", floor_l:"Room length (m)", floor_w:"Room width (m)", floor_package:"Area covered by 1 pack/roll (m²)", floor_piece:"Area per piece (m²) — optional",
+    stair_height:"Total floor-to-floor height (cm)", step_height:"Target riser height (cm)", step_depth:"Target tread depth (cm)", stair_width:"Stair width (cm)", available_run:"Available horizontal space (m) — optional", landing:"Upper landing length (m) — optional",
+    calc_room:"Calculate", calc_brick:"Calculate bricks", calc_block:"Calculate blocks", calc_concrete:"Calculate concrete", calc_paint:"Calculate paint", calc_floor:"Calculate floor", calc_stair:"Calculate stairs", result_empty:"Result will appear here.", nav_room:"Room", nav_brick:"Brick", nav_block:"Block", nav_concrete:"Concrete", nav_paint:"Paint", nav_floor:"Floor", nav_stairs:"Stairs", footer:"ARCHCALC · ARCHITECTURE & CONSTRUCTION · 2026"
   }
 };
-
 const archCalcTranslations = Object.fromEntries(Object.keys(archCalcFullTranslations).map(lang => [lang, {...archCalcFullTranslations[lang]}]));
 const archCalcLanguageOrder = ["uz", "ru", "en"];
 
@@ -1363,6 +1418,9 @@ function toggleTheme() {
 document.addEventListener("DOMContentLoaded", () => {
     applyLanguage(localStorage.getItem("archcalc-language") || "uz");
     applyTheme(localStorage.getItem("archcalc-theme") || "dark");
+    applyBrickPreset();
+    applyBlockPreset();
+    applyFloorPreset();
 });
 
 </script>
