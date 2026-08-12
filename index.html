@@ -75,18 +75,21 @@ button{
     position:sticky;
     top:0;
     height:100vh;
-    padding:24px 16px;
+    min-height:0;
+    padding:20px 16px;
     border-right:1px solid rgba(214,168,79,.42);
     background:rgba(9,10,13,.78);
     backdrop-filter:blur(24px);
     z-index:20;
+    overflow:hidden;
 }
 
 .brand{
     display:flex;
     align-items:center;
     gap:11px;
-    padding:6px 10px 30px;
+    padding:4px 10px 22px;
+    flex-shrink:0;
 }
 
 .brand-mark{
@@ -115,22 +118,25 @@ button{
 }
 
 .side-label{
-    padding:0 10px 9px;
+    padding:0 10px 7px;
     color:#565c67;
     font-size:9px;
     font-weight:800;
     letter-spacing:.16em;
+    flex-shrink:0;
 }
 
 .side-nav{
     display:grid;
-    gap:3px;
-    margin-bottom:26px;
+    gap:2px;
+    margin-bottom:16px;
+    flex-shrink:0;
 }
 
 .side-nav button{
     width:100%;
-    padding:10px 11px;
+    height:34px;
+    padding:0 11px;
     display:flex;
     align-items:center;
     gap:11px;
@@ -162,7 +168,22 @@ button{
 
 .side-nav button.active .side-num{
     color:var(--accent);
-}.
+}
+.sidebar > .side-nav:nth-of-type(2){
+    max-height:calc(100vh - 285px);
+    overflow-y:auto;
+    padding-bottom:8px;
+    scrollbar-width:thin;
+    scrollbar-color:rgba(214,168,79,.28) transparent;
+}
+
+
+.side-bottom{
+    position:absolute;
+    left:16px;
+    right:16px;
+    bottom:20px;
+}
 
 .main{
     min-width:0;
@@ -297,18 +318,18 @@ button{
 }
 
 .container{
-    max-width:none;
-    margin:0;
+    max-width:980px;
+    margin:0 auto;
     padding:0;
     display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:14px;
+    grid-template-columns:1fr;
+    gap:22px;
 }
 
 .card{
     position:relative;
     overflow:hidden;
-    padding:23px;
+    padding:30px 32px;
     border:1px solid rgba(214,168,79,.48);
     border-radius:var(--radius);
     background:
@@ -468,6 +489,41 @@ input:focus,select:focus{
     color:#f0f1f3;
 }
 
+
+.card-form{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    column-gap:16px;
+    row-gap:0;
+    align-items:end;
+}
+
+.card-form label{
+    grid-column:auto;
+}
+
+.card-form .calc,
+.card-form .result{
+    grid-column:1 / -1;
+}
+
+.card-form .calc{
+    max-width:240px;
+    justify-self:start;
+}
+
+@media(max-width:760px){
+    .card{
+        padding:23px;
+    }
+    .card-form{
+        grid-template-columns:1fr;
+    }
+    .card-form .calc{
+        max-width:none;
+    }
+}
+
 footer{
     max-width:1380px;
     margin:0 auto;
@@ -569,7 +625,7 @@ body.light .section-title{
 
 @media(max-width:1050px){
     .container{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-columns:1fr;
     }
     .hero{
         align-items:flex-start;
@@ -675,6 +731,7 @@ body.light .section-title{
 
     <div class="side-bottom">
         <div class="side-nav">
+            <button><span class="side-num">—</span> <span data-i18n="settings">Settings</span></button>
         </div>
     </div>
 </aside>
