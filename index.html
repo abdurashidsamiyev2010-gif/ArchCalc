@@ -491,6 +491,60 @@ button{
     font-size:11px;
 }
 
+.result-ok{
+    color:var(--success);
+    font-size:11px;
+}
+
+.field.field-wide{
+    grid-column:1 / -1;
+}
+
+.field[hidden]{
+    display:none;
+}
+
+.stair-diagram-wrap{
+    margin-bottom:14px;
+}
+
+.stair-diagram-wrap .diagram-label{
+    color:var(--accent);
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:6px;
+}
+
+.stair-diagram{
+    width:100%;
+    height:auto;
+    display:block;
+    color:var(--text);
+    background:rgba(255,255,255,.02);
+    border:1px solid var(--line);
+    border-radius:10px;
+}
+
+.stair-diagram text{
+    fill:currentColor;
+    font-size:12px;
+    font-family:inherit;
+}
+
+.stair-views-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+}
+
+@media(max-width:760px){
+    .stair-views-grid{
+        grid-template-columns:1fr;
+    }
+}
+
 .card-form .field input[type="number"]{
     font-variant-numeric:tabular-nums;
 }
@@ -866,11 +920,11 @@ Natija shu yerda chiqadi.
 
 <div class="field"><label><span data-i18n="brick_thickness">G‘isht urish qalinligi</span></label>
 <select id="brickThickness">
-<option value="0.5">0.5 g‘isht — yarim g‘isht</option>
-<option value="1" selected>1 g‘isht</option>
-<option value="1.5">1.5 g‘isht</option>
-<option value="2">2 g‘isht</option>
-</select></div>
+        <option value="0.5">0.5 g‘isht — 120 mm</option>
+        <option value="1">1 g‘isht — 250 mm</option>
+        <option value="1.5">1.5 g‘isht — 380 mm</option>
+        <option value="2">2 g‘isht — 500 mm</option>
+    </select></div>
 
 <div class="field"><label><span data-i18n="brick_l">G‘isht uzunligi (cm)</span></label>
 <input id="brickL" type="number" min="0" step="any" value="25"></div>
@@ -880,9 +934,6 @@ Natija shu yerda chiqadi.
 
 <div class="field"><label><span data-i18n="brick_h">G‘isht balandligi (cm)</span></label>
 <input id="brickH" type="number" min="0" step="any" value="6.5"></div>
-
-<div class="field"><label><span data-i18n="mortar_joint">Qorishma chok qalinligi (mm)</span></label>
-<input id="mortarJoint" type="number" min="0" step="0.5" value="10"></div>
 
 <div class="field"><label><span data-i18n="brick_openings">Eshik/deraza maydoni (m²)</span></label>
 <input id="brickOpenings" type="number" min="0" step="any" value="0"></div>
@@ -922,7 +973,7 @@ Natija shu yerda chiqadi.
 <input id="blockH" type="number" min="0" step="any" value="20"></div>
 
 <div class="field"><label><span data-i18n="block_joint">Yelim/qorishma chok (mm)</span></label>
-<input id="blockJoint" type="number" min="0" step="0.5" value="3"></div>
+<input id="" type="number" min="0" step="0.5" value="3"></div>
 
 <div class="field"><label><span data-i18n="block_openings">Eshik/deraza maydoni (m²)</span></label>
 <input id="blockOpenings" type="number" min="0" step="any" value="0"></div>
@@ -1011,8 +1062,8 @@ Natija shu yerda chiqadi.
 <div class="field"><label><span data-i18n="floor_w">Xona kengligi (m)</span></label>
 <input id="floorW" type="number" min="0" step="any" placeholder="4"></div>
 
-<div class="field"><label><span data-i18n="floor_package">1 qadoq/rulon qoplaydigan maydon (m²)</span></label>
-<input id="floorPackage" type="number" min="0" step="any" value="2.22"></div>
+<div class="field"><label><span data-i18n="floor_package">1 qadoq/rulon qoplaydigan maydon (m²) — majburiy</span></label>
+<input id="floorPackage" type="number" min="0" step="any" value="2.22" required></div>
 
 <div class="field"><label><span data-i18n="floor_piece">1 dona mahsulot maydoni (m²) — ixtiyoriy</span></label>
 <input id="floorPiece" type="number" min="0" step="any" placeholder="0.36"></div>
@@ -1026,6 +1077,16 @@ Natija shu yerda chiqadi.
 
 <!-- ZINA -->
 <div class="card" id="stair"><div class="card-top"><span class="card-index">07</span><span class="card-type">STAIRS</span></div><h2 class="card-title" data-i18n="stair_title">Stairs calculator</h2><p class="card-desc" data-i18n="stair_desc">Detailed stair geometry and comfort check</p><div class="card-form">
+
+<div class="field field-wide"><label><span data-i18n="stair_type">Zina turi</span></label>
+<select id="stairType" onchange="onStairTypeChange()">
+<option value="straight" data-i18n="stair_straight">To‘g‘ri zina</option>
+<option value="l_shape" data-i18n="stair_l">L-shakldagi zina (90°)</option>
+<option value="u_shape" data-i18n="stair_u">U-shakldagi zina (180°)</option>
+<option value="two_flight" data-i18n="stair_two_flight">Maydonchali ikki marshli zina</option>
+<option value="winder" data-i18n="stair_winder">Burama pog‘onali (winder) zina</option>
+<option value="spiral" data-i18n="stair_spiral">Spiral (vintli) zina</option>
+</select></div>
 
 <div class="field"><label><span data-i18n="stair_height">Qavatlar orasidagi umumiy balandlik (cm)</span></label>
 <input id="stairHeight" type="number" min="0" step="any" placeholder="280"></div>
@@ -1042,12 +1103,19 @@ Natija shu yerda chiqadi.
 <div class="field"><label><span data-i18n="available_run">Mavjud gorizontal joy (m) — ixtiyoriy</span></label>
 <input id="availableRun" type="number" min="0" step="any" placeholder="4.5"></div>
 
-<div class="field"><label><span data-i18n="landing">Yuqori maydoncha uzunligi (m) — ixtiyoriy</span></label>
+<div class="field" id="landingField"><label><span data-i18n="landing">Maydoncha uzunligi (m) — ixtiyoriy</span></label>
 <input id="landingLength" type="number" min="0" step="any" placeholder="1.0"></div>
+
+<div class="field" id="spiralField" hidden><label><span data-i18n="spiral_diameter">Spiral zina diametri (cm)</span></label>
+<input id="spiralDiameter" type="number" min="0" step="any" value="150"></div>
+
+<div class="field" id="winderField" hidden><label><span data-i18n="winder_count">Burilishdagi burama pog‘onalar soni</span></label>
+<input id="winderCount" type="number" min="1" step="1" value="3"></div>
 
 <button class="calc" onclick="stairCalc()"><span data-i18n="calc_stair">Zinani hisoblash</span></button>
 
-<div class="result" id="stairResult">Natija shu yerda chiqadi.</div></div></div>
+<div class="result" id="stairResult">Natija shu yerda chiqadi.</div>
+<div class="result" id="stairDiagrams"></div></div></div>
 
 </div>
 
@@ -1128,6 +1196,7 @@ const BRICK_PRESETS = {
     "250x120x65": [25,12,6.5],
     "250x120x88": [25,12,8.8]
 };
+
 function applyBrickPreset(){
     const preset = BRICK_PRESETS[document.getElementById("brickType")?.value];
     if (!preset) return;
@@ -1136,62 +1205,113 @@ function applyBrickPreset(){
         if(el) el.value=preset[i];
     });
 }
+
 function brickCalc(){
-    const wallL=getNumber("wallL"), wallH=getNumber("wallH");
-    const brickL=getNumber("brickL")/100, brickW=getNumber("brickW")/100, brickH=getNumber("brickH")/100;
-    const thickness=Number.parseFloat(document.getElementById("brickThickness")?.value);
-    const joint=getNumber("mortarJoint")/1000;
-    const openings=getNumber("brickOpenings");
-    const reserve=getNumber("brickReserve");
-    if(!isPositive(wallL,wallH,brickL,brickW,brickH) || !Number.isFinite(thickness) || thickness<=0 || joint<0 || openings<0 || !validPercent(reserve)){
-        setResult("brickResult",outText("invalid")); return;
+    const wallL = getNumber("wallL");
+    const wallH = getNumber("wallH");
+    const brickL = getNumber("brickL") / 100;
+    const brickW = getNumber("brickW") / 100;
+    const brickH = getNumber("brickH") / 100;
+    const thickness = Number.parseFloat(document.getElementById("brickThickness")?.value);
+    const openings = getNumber("brickOpenings");
+    const reserve = getNumber("brickReserve");
+
+    if(!isPositive(wallL, wallH, brickL, brickW, brickH) ||
+       !Number.isFinite(thickness) || openings < 0 || !validPercent(reserve)){
+        setResult("brickResult", outText("invalid"));
+        return;
     }
-    const grossArea=wallL*wallH;
-    if(openings>=grossArea){ setResult("brickResult",outText("invalidOpenings")); return; }
-    const netArea=grossArea-openings;
-    const wallThickness={0.5:brickW,1:brickL,1.5:brickL+brickW+joint,2:2*brickL+joint}[thickness];
-    const wallVolume=netArea*wallThickness;
-    const moduleVolume=(brickL+joint)*(brickH+joint)*wallThickness;
-    const baseCount=wallVolume/moduleVolume;
-    const total=Math.ceil(baseCount*(1+reserve/100));
-    const brickVolume=brickL*brickW*brickH;
-    const brickSolidVolume=total*brickVolume;
-    const estimatedMortar=Math.max(0,wallVolume-brickSolidVolume);
+
+    const grossArea = wallL * wallH;
+    if(openings >= grossArea){
+        setResult("brickResult", outText("invalidOpenings"));
+        return;
+    }
+
+    // Faqat g‘isht kalkulyatori uchun:
+    // 0.5 g‘isht = 120 mm
+    // 1 g‘isht   = 250 mm
+    // 1.5 g‘isht = 380 mm
+    // 2 g‘isht   = 500 mm
+    // Qorishma/chok hisobga olinmaydi.
+    const thicknessMap = {
+        0.5: 0.120,
+        1:   0.250,
+        1.5: 0.380,
+        2:   0.500
+    };
+
+    const wallThickness = thicknessMap[thickness];
+    if(!wallThickness){
+        setResult("brickResult", outText("invalid"));
+        return;
+    }
+
+    const netArea = grossArea - openings;
+    const wallVolume = netArea * wallThickness;
+    const oneBrickVolume = brickL * brickW * brickH;
+
+    // Asosiy hisob: devor m³ / 1 dona g‘isht m³.
+    const exactBricks = wallVolume / oneBrickVolume;
+    const bricksWithoutReserve = Math.ceil(exactBricks);
+    const bricksWithReserve = Math.ceil(exactBricks * (1 + reserve / 100));
+
     setResult("brickResult",
-        outText("wallArea")+" "+fmt(netArea)+" m²<br>"+
-        outText("brickWallThickness")+" "+fmt(wallThickness*100,1)+" cm<br>"+
-        outText("brickBase")+" "+Math.ceil(baseCount).toLocaleString()+" pcs<br>"+
-        outText("reserve")+" "+total.toLocaleString()+" pcs<br>"+
-        outText("brickVolume")+" "+fmt(brickSolidVolume,3)+" m³<br>"+
-        outText("mortar")+" ~"+fmt(estimatedMortar,3)+" m³"
+        outText("wallArea") + " " + fmt(netArea) + " m²<br>" +
+        outText("brickWallThickness") + " " + fmt(wallThickness * 1000, 0) + " mm<br>" +
+        outText("brickWallVolume") + " " + fmt(wallVolume, 3) + " m³<br>" +
+        outText("brickUnitVolume") + " " + fmt(oneBrickVolume, 6) + " m³<br>" +
+        outText("brickBase") + " " + bricksWithoutReserve.toLocaleString() + " pcs<br>" +
+        outText("reserve") + " " + bricksWithReserve.toLocaleString() + " pcs"
     );
 }
 
 /* BLOK */
 const BLOCK_PRESETS = {
-    aac:[60,30,20], foam:[60,30,20], concrete:[40,20,20], ceramic:[38,25,21.9]
+    aac:[60,30,20],
+    foam:[60,30,20],
+    concrete:[40,20,20],
+    ceramic:[38,25,21.9]
 };
+
 function applyBlockPreset(){
     const preset=BLOCK_PRESETS[document.getElementById("blockType")?.value];
     if(!preset) return;
-    ["blockL","blockW","blockH"].forEach((id,i)=>{ const el=document.getElementById(id); if(el) el.value=preset[i]; });
+    ["blockL","blockW","blockH"].forEach((id,i)=>{
+        const el=document.getElementById(id);
+        if(el) el.value=preset[i];
+    });
 }
+
 function blockCalc(){
-    const l=getNumber("blockWallL"), h=getNumber("blockWallH");
-    const bl=getNumber("blockL")/100, bw=getNumber("blockW")/100, bh=getNumber("blockH")/100;
-    const joint=getNumber("blockJoint")/1000, openings=getNumber("blockOpenings"), reserve=getNumber("blockReserve");
-    if(!isPositive(l,h,bl,bw,bh) || joint<0 || openings<0 || !validPercent(reserve)){ setResult("blockResult",outText("invalid")); return; }
+    const l=getNumber("blockWallL");
+    const h=getNumber("blockWallH");
+    const bl=getNumber("blockL")/100;
+    const bw=getNumber("blockW")/100;
+    const bh=getNumber("blockH")/100;
+    const openings=getNumber("blockOpenings");
+    const reserve=getNumber("blockReserve");
+
+    if(!isPositive(l,h,bl,bw,bh) || openings<0 || !validPercent(reserve)){
+        setResult("blockResult",outText("invalid")); return;
+    }
+
     const grossArea=l*h;
-    if(openings>=grossArea){ setResult("blockResult",outText("invalidOpenings")); return; }
+    if(openings>=grossArea){
+        setResult("blockResult",outText("invalidOpenings")); return;
+    }
+
     const area=grossArea-openings;
-    const moduleArea=(bl+joint)*(bh+joint);
-    const baseCount=area/moduleArea;
+    const wallVolume=area*bw;
+    const blockVolume=bl*bw*bh;
+    const baseCount=wallVolume/blockVolume;
     const total=Math.ceil(baseCount*(1+reserve/100));
-    const volume=area*bw;
+
     setResult("blockResult",
         outText("wallArea")+" "+fmt(area)+" m²<br>"+
         outText("blockTypeResult")+" "+document.getElementById("blockType").selectedOptions[0].text+"<br>"+
-        outText("blockVolume")+" "+fmt(volume,3)+" m³<br>"+
+        outText("blockWallVolume")+" "+fmt(wallVolume,3)+" m³<br>"+
+        outText("blockUnitVolume")+" "+fmt(blockVolume,6)+" m³<br>"+
         outText("base")+" "+Math.ceil(baseCount).toLocaleString()+" pcs<br>"+
         outText("reserve")+" "+total.toLocaleString()+" pcs"
     );
@@ -1201,13 +1321,18 @@ function blockCalc(){
 function concreteCalc(){
     const l=getNumber("conL"), w=getNumber("conW"), h=getNumber("conH")/100;
     const qty=getNumber("conQty"), cementPerM3=getNumber("cementPerM3"), bag=getNumber("cementBag"), reserve=getNumber("conReserve");
-    if(!isPositive(l,w,h,qty,cementPerM3,bag) || !validPercent(reserve)){ setResult("conResult",outText("invalid")); return; }
+
+    if(!isPositive(l,w,h,qty,cementPerM3,bag) || !validPercent(reserve)){
+        setResult("conResult",outText("invalid")); return;
+    }
+
     const unitVolume=l*w*h;
     const exactVolume=unitVolume*qty;
     const totalVolume=exactVolume*(1+reserve/100);
     const cementKg=totalVolume*cementPerM3;
     const bags=cementKg/bag;
     const wholeBags=Math.ceil(bags);
+
     setResult("conResult",
         outText("conUnit")+" "+fmt(unitVolume,3)+" m³<br>"+
         outText("conExact")+" "+fmt(exactVolume,3)+" m³<br>"+
@@ -1221,13 +1346,19 @@ function concreteCalc(){
 function paintCalc(){
     const w=getNumber("paintW"), h=getNumber("paintH"), coats=getNumber("paintCoats");
     const literCover=getNumber("paintLiterCover"), canCover=getNumber("paintCanCover"), canLiters=getNumber("paintCanLiters"), reserve=getNumber("paintReserve");
-    if(!isPositive(w,h,coats) || !validPercent(reserve) || (literCover<=0 && canCover<=0)){ setResult("paintResult",outText("invalidPaint")); return; }
+
+    if(!isPositive(w,h,coats) || !validPercent(reserve) || (literCover<=0 && canCover<=0)){
+        setResult("paintResult",outText("invalidPaint")); return;
+    }
+
     const area=w*h, workingArea=area*coats, reserveArea=workingArea*(1+reserve/100);
     let html=outText("paintAreaResult")+" "+fmt(area)+" m²<br>"+outText("paintTotalArea")+" "+fmt(reserveArea)+" m²<br>";
-    if(literCover>0){ html+=outText("paintLiters")+" "+fmt(reserveArea/literCover,2)+" L<br>"; }
-    if(canCover>0){ html+=outText("paintCans")+" "+fmt(reserveArea/canCover,2)+" banka (~"+Math.ceil(reserveArea/canCover)+")<br>"; }
-    if(literCover>0 && canLiters>0){ html+=outText("paintByCanVolume")+" "+fmt((reserveArea/literCover)/canLiters,2)+" banka (liter bo‘yicha)<br>"; }
-    if(canCover>0 && canLiters>0){ html+=outText("paintCanLitersTotal")+" "+fmt((reserveArea/canCover)*canLiters,2)+" L"; }
+
+    if(literCover>0) html+=outText("paintLiters")+" "+fmt(reserveArea/literCover,2)+" L<br>";
+    if(canCover>0) html+=outText("paintCans")+" "+fmt(reserveArea/canCover,2)+" banka (~"+Math.ceil(reserveArea/canCover)+")<br>";
+    if(literCover>0 && canLiters>0) html+=outText("paintByCanVolume")+" "+fmt((reserveArea/literCover)/canLiters,2)+" banka (liter bo‘yicha)<br>";
+    if(canCover>0 && canLiters>0) html+=outText("paintCanLitersTotal")+" "+fmt((reserveArea/canCover)*canLiters,2)+" L";
+
     setResult("paintResult",html);
 }
 
@@ -1235,22 +1366,275 @@ function paintCalc(){
 const FLOOR_PRESETS={
     laminate:2.22, parquet:1.8, vinyl:2.5, tile:1.44, linoleum:15, carpet:20, board:2.4
 };
+
 function applyFloorPreset(){
     const val=document.getElementById("floorType")?.value;
     const el=document.getElementById("floorPackage");
     if(el && FLOOR_PRESETS[val]) el.value=FLOOR_PRESETS[val];
 }
+
 function floorCalc(){
-    const l=getNumber("floorL"), w=getNumber("floorW"), pack=getNumber("floorPackage"), piece=getNumber("floorPiece"), reserve=getNumber("floorReserve");
-    if(!isPositive(l,w,pack) || !validPercent(reserve)){ setResult("floorResult",outText("invalid")); return; }
-    const area=l*w, totalArea=area*(1+reserve/100), packages=totalArea/pack;
-    let html=outText("floorArea")+" "+fmt(area)+" m²<br>"+outText("floorReserveArea")+" "+fmt(totalArea)+" m²<br>"+outText("floorPackages")+" "+fmt(packages,2)+" qadoq/rulon (~"+Math.ceil(packages)+")";
-    if(piece>0){ html+="<br>"+outText("floorPieces")+" "+Math.ceil(totalArea/piece).toLocaleString()+" pcs"; }
+    const l=getNumber("floorL");
+    const w=getNumber("floorW");
+    const pack=getNumber("floorPackage");
+    const piece=getNumber("floorPiece");
+    const reserve=getNumber("floorReserve");
+
+    if(!isPositive(l,w,pack) || !validPercent(reserve)){
+        setResult("floorResult",outText("invalid")); return;
+    }
+
+    const area=l*w;
+    const totalArea=area*(1+reserve/100);
+    const packages=totalArea/pack;
+
+    let html=outText("floorArea")+" "+fmt(area)+" m²<br>"+
+              outText("floorReserveArea")+" "+fmt(totalArea)+" m²<br>"+
+              outText("floorPackages")+" "+fmt(packages,2)+" qadoq/rulon (~"+Math.ceil(packages)+")";
+
+    if(piece>0){
+        html+="<br>"+outText("floorPieces")+" "+Math.ceil(totalArea/piece).toLocaleString()+" pcs";
+    }
+
     html+="<br>"+outText("floorTypeResult")+" "+document.getElementById("floorType").selectedOptions[0].text;
     setResult("floorResult",html);
 }
 
-/* ZINA */
+/* ZINA — bir nechta zina turi va dinamik SVG chizmalar bilan */
+
+function onStairTypeChange(){
+    const type=document.getElementById("stairType")?.value || "straight";
+    const spiralField=document.getElementById("spiralField");
+    const winderField=document.getElementById("winderField");
+    const landingField=document.getElementById("landingField");
+    if(spiralField) spiralField.hidden = type!=="spiral";
+    if(winderField) winderField.hidden = type!=="winder";
+    if(landingField) landingField.hidden = (type==="spiral" || type==="straight");
+}
+
+/* Riser/tread sonini tanlash — barcha zina turlari uchun umumiy asos. */
+function computeStairCore(total,targetH,targetB){
+    const minR=Math.max(1,Math.ceil(total/20));
+    const maxR=Math.max(minR,Math.floor(total/15));
+    let best=null;
+
+    for(let r=minR;r<=maxR;r++){
+        const h=total/r;
+        const b=targetB;
+        const comfort=2*h+b;
+        const angle=Math.atan2(h,b)*180/Math.PI;
+        const score=Math.abs(h-targetH)*3 + Math.abs(comfort-62) + Math.abs(angle-33)*0.5;
+        if(!best || score<best.score) best={r,h,b,comfort,angle,score};
+    }
+
+    if(!best){
+        const candidates=[];
+        for(let r=Math.max(1,Math.round(total/targetH)-2);r<=Math.round(total/targetH)+2;r++){
+            if(r>0){
+                const h=total/r;
+                const b=targetB;
+                const comfort=2*h+b;
+                const angle=Math.atan2(h,b)*180/Math.PI;
+                candidates.push({r,h,b,comfort,angle,score:Math.abs(h-targetH)*3+Math.abs(comfort-62)+Math.abs(angle-33)*0.5});
+            }
+        }
+        best=candidates.sort((a,b)=>a.score-b.score)[0];
+    }
+    return best;
+}
+
+/* Har bir zina turi uchun taxminiy planировка (footprint) hisoblanadi. */
+function buildStairGeometry(type,risers,tread,widthM,landingLenM,winderCount){
+    const treadsTotal=Math.max(0,risers-1);
+
+    if(type==="straight"){
+        const run=treadsTotal*tread/100;
+        return{ flights:[{risers,treads:treadsTotal,run}], turnDeg:0, landingLen:0,
+                footprintX:Math.max(run,0.3), footprintY:widthM, totalHorizontal:run };
+    }
+
+    if(type==="l_shape" || type==="u_shape" || type==="two_flight"){
+        const r1=Math.ceil(risers/2), r2=risers-r1;
+        const t1=r1, t2=Math.max(0,r2-1);
+        const run1=t1*tread/100, run2=t2*tread/100;
+        const turnDeg = type==="l_shape" ? 90 : (type==="u_shape" ? 180 : 0);
+        let footprintX,footprintY,totalHorizontal;
+
+        if(type==="two_flight"){
+            footprintX=run1+landingLenM+run2; footprintY=widthM;
+            totalHorizontal=footprintX;
+        } else if(type==="l_shape"){
+            footprintX=run1+landingLenM; footprintY=landingLenM+run2;
+            totalHorizontal=run1+run2+landingLenM;
+        } else {
+            footprintX=Math.max(run1,run2); footprintY=widthM*2+landingLenM;
+            totalHorizontal=run1+run2+landingLenM;
+        }
+        return{ flights:[{risers:r1,treads:t1,run:run1},{risers:r2,treads:t2,run:run2}],
+                turnDeg, landingLen:landingLenM,
+                footprintX:Math.max(footprintX,0.3), footprintY:Math.max(footprintY,0.3), totalHorizontal };
+    }
+
+    if(type==="winder"){
+        const wCount=Math.max(1,Math.round(winderCount));
+        const straightRisers=Math.max(0,risers-wCount);
+        const r1=Math.ceil(straightRisers/2), r2=straightRisers-r1;
+        const t1=r1, t2=Math.max(0,r2-1);
+        const run1=t1*tread/100, run2=t2*tread/100;
+        const corner=widthM;
+        return{ flights:[{risers:r1,treads:t1,run:run1},{risers:wCount,treads:wCount,run:corner,winder:true},{risers:r2,treads:t2,run:run2}],
+                turnDeg:90, landingLen:0,
+                footprintX:Math.max(run1+corner,0.3), footprintY:Math.max(corner+run2,0.3),
+                totalHorizontal:run1+run2+corner };
+    }
+
+    // spiral
+    const dM=widthM*2; // placeholder, overwritten by caller using real diameter
+    return{ flights:[{risers,treads:treadsTotal,run:0}], turnDeg:360, landingLen:0,
+            footprintX:dM, footprintY:dM, totalHorizontal:0 };
+}
+
+function buildSideView(risers,runM,heightM){
+    const svgW=300,svgH=210,pad=34;
+    const maxW=svgW-pad*2, maxH=svgH-pad*2;
+    const scale=Math.min(maxW/Math.max(runM,0.01), maxH/Math.max(heightM,0.01));
+    const drawRun=Math.max(runM*scale,60);
+    const drawH=Math.max(heightM*scale,60);
+    const x0=pad, y0=svgH-pad;
+    const treads=Math.max(1,risers-1);
+    const dx=drawRun/treads;
+    const dy=drawH/Math.max(risers,1);
+
+    let path=`M ${x0} ${y0}`;
+    for(let i=0;i<treads;i++){ path+=` h ${dx.toFixed(1)} v ${(-dy).toFixed(1)}`; }
+    path+=` h ${dx.toFixed(1)} v 0`;
+
+    return `<div class="stair-diagram-wrap"><div class="diagram-label">${outText("sideView")}</div>
+      <svg class="stair-diagram" viewBox="0 0 ${svgW} ${svgH}" role="img" aria-label="${outText("sideView")}">
+        <path d="${path}" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+        <line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y0-drawH}" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="${x0}" y1="${y0+14}" x2="${x0+drawRun}" y2="${y0+14}" stroke="currentColor" stroke-width="1"/>
+        <text x="${x0+drawRun/2}" y="${y0+30}" text-anchor="middle">${fmt(runM,2)} m</text>
+        <text x="${x0-6}" y="${y0-drawH-6}" text-anchor="start">${fmt(heightM,2)} m</text>
+      </svg></div>`;
+}
+
+function buildTopView(type,geo,widthM){
+    const svgW=300,svgH=210,pad=26;
+    const maxW=svgW-pad*2, maxH=svgH-pad*2;
+    const fx=Math.max(geo.footprintX,0.3), fy=Math.max(geo.footprintY,0.3);
+    const scale=Math.min(maxW/fx,maxH/fy);
+    const toX=m=>pad+m*scale;
+    const toY=m=>svgH-pad-m*scale;
+    const wPx=widthM*scale;
+    let shapes="";
+
+    if(type==="straight"){
+        const run=geo.flights[0].run, t=Math.max(1,geo.flights[0].treads);
+        shapes+=`<rect x="${toX(0).toFixed(1)}" y="${toY(widthM).toFixed(1)}" width="${(run*scale).toFixed(1)}" height="${wPx.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        for(let i=1;i<t;i++){
+            const x=toX(i*run/t);
+            shapes+=`<line x1="${x.toFixed(1)}" y1="${toY(widthM).toFixed(1)}" x2="${x.toFixed(1)}" y2="${toY(0).toFixed(1)}" stroke="currentColor" stroke-width="1" opacity="0.5"/>`;
+        }
+    } else if(type==="l_shape" || type==="winder"){
+        const run1=geo.flights[0].run;
+        const corner=type==="winder"?widthM:geo.landingLen;
+        const run2=geo.flights[geo.flights.length-1].run;
+        shapes+=`<rect x="${toX(0).toFixed(1)}" y="${toY(widthM).toFixed(1)}" width="${(run1*scale).toFixed(1)}" height="${wPx.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        shapes+=`<rect x="${toX(run1).toFixed(1)}" y="${toY(corner).toFixed(1)}" width="${(corner*scale).toFixed(1)}" height="${(corner*scale).toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2" ${type==="winder"?'stroke-dasharray="3 3"':''}/>`;
+        shapes+=`<rect x="${toX(run1).toFixed(1)}" y="${toY(corner+run2).toFixed(1)}" width="${wPx.toFixed(1)}" height="${(run2*scale).toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+    } else if(type==="u_shape"){
+        const run1=geo.flights[0].run, run2=geo.flights[1].run, gap=geo.landingLen;
+        shapes+=`<rect x="${toX(0).toFixed(1)}" y="${toY(widthM).toFixed(1)}" width="${(run1*scale).toFixed(1)}" height="${wPx.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        shapes+=`<rect x="${toX(0).toFixed(1)}" y="${toY(widthM*2+gap).toFixed(1)}" width="${(run2*scale).toFixed(1)}" height="${wPx.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        shapes+=`<rect x="${toX(Math.max(run1,run2)).toFixed(1)}" y="${toY(widthM*2+gap).toFixed(1)}" width="${wPx.toFixed(1)}" height="${((widthM+gap)*scale).toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3"/>`;
+    } else if(type==="two_flight"){
+        const run1=geo.flights[0].run, run2=geo.flights[1].run, landing=geo.landingLen;
+        shapes+=`<rect x="${toX(0).toFixed(1)}" y="${toY(widthM).toFixed(1)}" width="${(run1*scale).toFixed(1)}" height="${wPx.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        shapes+=`<rect x="${toX(run1).toFixed(1)}" y="${toY(widthM).toFixed(1)}" width="${(landing*scale).toFixed(1)}" height="${wPx.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/>`;
+        shapes+=`<rect x="${toX(run1+landing).toFixed(1)}" y="${toY(widthM).toFixed(1)}" width="${(run2*scale).toFixed(1)}" height="${wPx.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+    } else if(type==="spiral"){
+        const cx=svgW/2, cy=svgH/2;
+        const rOuter=Math.min(maxW,maxH)/2*0.92;
+        const rInner=rOuter*0.18;
+        shapes+=`<circle cx="${cx}" cy="${cy}" r="${rOuter.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        shapes+=`<circle cx="${cx}" cy="${cy}" r="${rInner.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        const n=Math.max(4,Math.min(24,geo.flights[0].risers));
+        for(let i=0;i<n;i++){
+            const a=(i/n)*Math.PI*2;
+            const x1=cx+Math.cos(a)*rInner, y1=cy+Math.sin(a)*rInner;
+            const x2=cx+Math.cos(a)*rOuter, y2=cy+Math.sin(a)*rOuter;
+            shapes+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="currentColor" stroke-width="1" opacity="0.6"/>`;
+        }
+    }
+
+    return `<div class="stair-diagram-wrap"><div class="diagram-label">${outText("topView")}</div>
+      <svg class="stair-diagram" viewBox="0 0 ${svgW} ${svgH}" role="img" aria-label="${outText("topView")}">${shapes}</svg></div>`;
+}
+
+function buildFrontView(widthM,heightM,risers){
+    const svgW=300,svgH=210,pad=30;
+    const maxW=svgW-pad*2, maxH=svgH-pad*2;
+    const scale=Math.min(maxW/Math.max(widthM,0.3), maxH/Math.max(heightM,0.3));
+    const w=widthM*scale, h=heightM*scale;
+    const x0=(svgW-w)/2, y0=svgH-pad-h;
+    let lines="";
+    for(let i=1;i<risers;i++){
+        const y=y0+h-(h*i/risers);
+        lines+=`<line x1="${x0.toFixed(1)}" y1="${y.toFixed(1)}" x2="${(x0+w).toFixed(1)}" y2="${y.toFixed(1)}" stroke="currentColor" stroke-width="1" opacity="0.3"/>`;
+    }
+    return `<div class="stair-diagram-wrap"><div class="diagram-label">${outText("frontView")}</div>
+      <svg class="stair-diagram" viewBox="0 0 ${svgW} ${svgH}" role="img" aria-label="${outText("frontView")}">
+        <rect x="${x0.toFixed(1)}" y="${y0.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>
+        ${lines}
+        <text x="${svgW/2}" y="${svgH-8}" text-anchor="middle">${fmt(widthM,2)} m</text>
+      </svg></div>`;
+}
+
+function buildIsoView(type,risersCount){
+    if(!["straight","l_shape","spiral"].includes(type)) return "";
+    const svgW=300,svgH=210;
+    let shapes="";
+
+    if(type==="spiral"){
+        const cx=150,cy=115,rOuter=72,rInner=16,tilt=0.4;
+        shapes+=`<ellipse cx="${cx}" cy="${cy}" rx="${rOuter}" ry="${(rOuter*tilt).toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        shapes+=`<ellipse cx="${cx}" cy="${cy}" rx="${rInner}" ry="${(rInner*tilt).toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        const n=Math.max(6,Math.min(16,risersCount));
+        for(let i=0;i<n;i++){
+            const a=(i/n)*Math.PI*2;
+            const lift=i*1.6;
+            const x1=cx+Math.cos(a)*rInner, y1=cy+Math.sin(a)*rInner*tilt-lift;
+            const x2=cx+Math.cos(a)*rOuter, y2=cy+Math.sin(a)*rOuter*tilt-lift;
+            shapes+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="currentColor" stroke-width="1" opacity="0.55"/>`;
+        }
+    } else {
+        const n=Math.min(8,Math.max(3,risersCount-1));
+        const stepW=26, stepDx=16, stepDy=-13;
+        let x=44,y=176;
+        for(let i=0;i<n;i++){
+            shapes+=`<rect x="${x.toFixed(1)}" y="${(y-8).toFixed(1)}" width="${stepW}" height="8" fill="none" stroke="currentColor" stroke-width="1" opacity="0.85"/>`;
+            shapes+=`<line x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${x.toFixed(1)}" y2="${(y-8).toFixed(1)}" stroke="currentColor" stroke-width="1" opacity="0.5"/>`;
+            x+=stepDx; y+=stepDy;
+        }
+        if(type==="l_shape"){
+            shapes+=`<text x="150" y="198" text-anchor="middle" opacity="0.75">90°</text>`;
+        }
+    }
+
+    return `<div class="stair-diagram-wrap"><div class="diagram-label">${outText("isoView")}</div>
+      <svg class="stair-diagram" viewBox="0 0 ${svgW} ${svgH}" role="img" aria-label="${outText("isoView")}">${shapes}</svg></div>`;
+}
+
+function buildStairViews(type,geo,widthM,risers,totalHeightCm){
+    const runForSide = type==="spiral" ? Math.max(geo.diameter*Math.PI,0.01) : Math.max(geo.totalHorizontal,0.01);
+    const sideHtml=buildSideView(risers,runForSide,totalHeightCm/100);
+    const topHtml=buildTopView(type,geo,widthM);
+    const frontHtml=buildFrontView(widthM,totalHeightCm/100,risers);
+    const isoHtml=buildIsoView(type,risers);
+    return `<div class="stair-views-grid">${sideHtml}${topHtml}${frontHtml}${isoHtml}</div>`;
+}
+
 function stairCalc(){
     const total=getNumber("stairHeight");
     const targetH=getNumber("stepHeight");
@@ -1258,220 +1642,90 @@ function stairCalc(){
     const width=getNumber("stairWidth");
     const available=getNumber("availableRun");
     const landing=getNumber("landingLength");
+    const type=document.getElementById("stairType")?.value || "straight";
+    const spiralDiameter=getNumber("spiralDiameter");
+    const winderCount=getNumber("winderCount");
 
     if(!isPositive(total,targetH,targetB,width) ||
        (Number.isFinite(available)&&available<0) ||
        (Number.isFinite(landing)&&landing<0)){
         setResult("stairResult",outText("invalid"));
+        setResult("stairDiagrams","");
+        return;
+    }
+    if(type==="spiral" && !isPositive(spiralDiameter)){
+        setResult("stairResult",outText("invalid"));
+        setResult("stairDiagrams","");
+        return;
+    }
+    if(type==="winder" && !(Number.isFinite(winderCount) && winderCount>=1)){
+        setResult("stairResult",outText("invalid"));
+        setResult("stairDiagrams","");
         return;
     }
 
-    /* 1) Asosiy ergonomik hisob */
-    let best=null;
-    const minR=Math.max(2,Math.ceil(total/20));
-    const maxR=Math.max(minR,Math.floor(total/14));
-
-    for(let r=minR;r<=maxR;r++){
-        const h=total/r;
-        const b=targetB;
-        const comfort=2*h+b;
-        const angle=Math.atan2(h,b)*180/Math.PI;
-        const score=Math.abs(h-targetH)*3+
-                     Math.abs(comfort-62)+
-                     Math.abs(angle-33)*0.5;
-        if(!best || score<best.score){
-            best={r,h,b,comfort,angle,score};
-        }
-    }
-
+    const best=computeStairCore(total,targetH,targetB);
     const risers=best.r;
     const riserH=best.h;
     const tread=best.b;
-    const treads=Math.max(0,risers-1);
-    const straightRun=treads*tread/100;
-    const landingM=Number.isFinite(landing)?landing:0;
+    const comfort=best.comfort;
+    const angle=best.angle;
+    const widthM=width/100;
+    const landingLengthValue=(Number.isFinite(landing)&&landing>0)?landing:Math.max(widthM,0.9);
 
-    /* 2) SVG chizmalar */
-    const esc=s=>String(s).replace(/[&<>"']/g,m=>({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-    }[m]));
+    const riserOk=riserH>=15 && riserH<=20;
+    const treadOk=tread>=25 && tread<=32;
+    const comfortOk=comfort>=59 && comfort<=65;
+    const angleOk=angle>=25 && angle<=45;
 
-    function sideSvg(type){
-        const W=620,H=270,p=42;
-        const run=Math.max(straightRun,1);
-        const rise=Math.max(total/100,1);
-        const scale=Math.min((W-2*p)/run,(H-2*p)/rise);
-        const dx=(run*scale)/Math.max(treads,1);
-        const dy=(rise*scale)/Math.max(risers,1);
-        const x=p,y=H-p;
-        let d=`M ${x} ${y}`;
-        for(let i=0;i<treads;i++) d+=` h ${dx} v ${-dy}`;
-        d+=` h ${dx}`;
+    let warnings=[];
+    if(!riserOk) warnings.push(outText("stairWarnRiser"));
+    if(!treadOk) warnings.push(outText("stairWarnTread"));
+    if(!comfortOk) warnings.push(outText("stairWarnComfort"));
+    if(!angleOk) warnings.push(outText("stairWarnAngle"));
 
-        if(type==="straight"){
-            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
-                <path d="${d}" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
-                <line x1="${x}" y1="${y+18}" x2="${x+run*scale}" y2="${y+18}" stroke="currentColor" stroke-width="1" stroke-dasharray="5 5"/>
-                <text x="${x+run*scale/2}" y="${y+39}" text-anchor="middle">${fmt(run,2)} m</text>
-                <text x="${x-20}" y="${y-rise*scale/2}" text-anchor="middle" transform="rotate(-90 ${x-20} ${y-rise*scale/2})">${fmt(total/100,2)} m</text>
-            </svg>`;
-        }
-
-        if(type==="l"){
-            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
-                <path d="M100 210 H350 V120 H520" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
-                <path d="M100 190 H330 V100 H500" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="5 5"/>
-                <text x="310" y="245" text-anchor="middle">90° burilish</text>
-            </svg>`;
-        }
-
-        if(type==="u"){
-            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
-                <path d="M110 220 V80 H260 V220 H410 V80" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
-                <path d="M135 220 V105 H235 V220 H385 V105" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="5 5"/>
-                <text x="310" y="250" text-anchor="middle">180° burilish</text>
-            </svg>`;
-        }
-
-        if(type==="two"){
-            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
-                <path d="M100 220 H260 V150 H360 V80 H520" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
-                <rect x="260" y="135" width="100" height="30" fill="none" stroke="currentColor" stroke-width="2"/>
-                <text x="310" y="250" text-anchor="middle">2 marsh + maydoncha</text>
-            </svg>`;
-        }
-
-        if(type==="winder"){
-            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
-                <path d="M100 220 H320 L520 80" fill="none" stroke="currentColor" stroke-width="5"/>
-                <path d="M270 220 L320 185 M290 220 L350 180 M310 220 L380 175 M330 220 L410 165 M350 220 L440 155" stroke="currentColor" stroke-width="2"/>
-                <text x="310" y="250" text-anchor="middle">Winder burilish</text>
-            </svg>`;
-        }
-
-        return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
-            <ellipse cx="310" cy="145" rx="155" ry="75" fill="none" stroke="currentColor" stroke-width="3"/>
-            <ellipse cx="310" cy="145" rx="30" ry="15" fill="none" stroke="currentColor" stroke-width="2"/>
-            ${Array.from({length:14},(_,i)=>{
-                const a=i*Math.PI*2/14;
-                const x1=310+30*Math.cos(a), y1=145+15*Math.sin(a);
-                const x2=310+155*Math.cos(a), y2=145+75*Math.sin(a);
-                return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="currentColor" stroke-width="1"/>`;
-            }).join("")}
-            <text x="310" y="250" text-anchor="middle">Spiral zina — sxematik</text>
-        </svg>`;
+    const geo=buildStairGeometry(type,risers,tread,widthM,landingLengthValue,winderCount);
+    if(type==="spiral"){
+        geo.diameter=spiralDiameter/100;
+        geo.footprintX=geo.diameter;
+        geo.footprintY=geo.diameter;
     }
 
-    function topSvg(type){
-        const W=620,H=230;
-
-        if(type==="straight"){
-            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
-                <rect x="90" y="45" width="440" height="130" fill="none" stroke="currentColor" stroke-width="3"/>
-                ${Array.from({length:Math.min(treads,15)},(_,i)=>{
-                    const x=105+i*28;
-                    return `<line x1="${x}" y1="45" x2="${x}" y2="175" stroke="currentColor" stroke-width="1"/>`;
-                }).join("")}
-                <text x="310" y="205" text-anchor="middle">Eni: ${fmt(width,0)} cm</text>
-            </svg>`;
-        }
-
-        if(type==="l"){
-            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
-                <path d="M100 50 H500 V175 H300 V115 H100 Z" fill="none" stroke="currentColor" stroke-width="3"/>
-                <text x="310" y="205" text-anchor="middle">L-shakl · 90°</text>
-            </svg>`;
-        }
-
-        if(type==="u" || type==="two"){
-            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
-                <rect x="100" y="45" width="420" height="130" fill="none" stroke="currentColor" stroke-width="3"/>
-                <line x1="310" y1="45" x2="310" y2="175" stroke="currentColor" stroke-width="3"/>
-                <path d="M270 155 V65 M350 65 V155" stroke="currentColor" stroke-width="2"/>
-                <text x="310" y="205" text-anchor="middle">${type==="u"?"U-shakl · 180°":"Ikki marsh + maydoncha"}</text>
-            </svg>`;
-        }
-
-        if(type==="winder"){
-            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
-                <path d="M100 50 H360 L520 175 H260 Z" fill="none" stroke="currentColor" stroke-width="3"/>
-                <path d="M300 50 L360 110 M330 50 L390 110 M360 50 L420 110 M390 50 L450 110" stroke="currentColor" stroke-width="1"/>
-                <text x="310" y="205" text-anchor="middle">Winder · burilish</text>
-            </svg>`;
-        }
-
-        return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
-            <circle cx="310" cy="110" r="75" fill="none" stroke="currentColor" stroke-width="3"/>
-            <circle cx="310" cy="110" r="18" fill="none" stroke="currentColor" stroke-width="2"/>
-            ${Array.from({length:14},(_,i)=>{
-                const a=i*Math.PI*2/14;
-                return `<line x1="${310+18*Math.cos(a)}" y1="${110+18*Math.sin(a)}" x2="${310+75*Math.cos(a)}" y2="${110+75*Math.sin(a)}" stroke="currentColor" stroke-width="1"/>`;
-            }).join("")}
-            <text x="310" y="205" text-anchor="middle">Spiral · yuqoridan</text>
-        </svg>`;
+    if(type!=="spiral" && Number.isFinite(available) && available>0 && geo.totalHorizontal>available){
+        warnings.push(outText("stairWarnSpace"));
     }
 
-    function frontSvg(){
-        return `<svg viewBox="0 0 620 230" class="ac-stair-svg">
-            <rect x="105" y="45" width="410" height="130" fill="none" stroke="currentColor" stroke-width="3"/>
-            <line x1="310" y1="45" x2="310" y2="175" stroke="currentColor" stroke-width="1" stroke-dasharray="5 5"/>
-            <text x="310" y="205" text-anchor="middle">Zina eni: ${fmt(width,0)} cm</text>
-        </svg>`;
-    }
+    const warning=warnings.length
+        ? "<br><span class=\"result-warning\">⚠️ "+warnings.join("<br>⚠️ ")+"</span>"
+        : "<br><span class=\"result-ok\">✓ "+outText("stairGood")+"</span>";
 
-    const types=[
-        ["straight","To‘g‘ri zina","Bitta to‘g‘ri marsh"],
-        ["l","L-shakl","90° burilishli"],
-        ["u","U-shakl","180° burilishli"],
-        ["two","Ikki marshli","Oraliq maydonchali"],
-        ["winder","Winder","Burilishda maxsus pog‘onalar"],
-        ["spiral","Spiral","Aylana bo‘ylab"]
-    ];
+    const typeLabel=document.getElementById("stairType")?.selectedOptions[0]?.text || "";
+    const treadsTotal=Math.max(0,risers-1);
 
-    const cards=types.map(([id,name,desc])=>`
-        <div class="ac-stair-card">
-            <div class="ac-stair-card-title"><b>${name}</b><small>${desc}</small></div>
-            <div class="ac-stair-tabs">
-                <button type="button" onclick="acStairView(this,'${id}','side')">Yon</button>
-                <button type="button" onclick="acStairView(this,'${id}','top')">Yuqoridan</button>
-                <button type="button" onclick="acStairView(this,'${id}','front')">Old</button>
-            </div>
-            <div class="ac-stair-view">${sideSvg(id)}</div>
-        </div>
-    `).join("");
-
-    if(!document.getElementById("archcalc-stair-style")){
-        document.head.insertAdjacentHTML("beforeend",`<style id="archcalc-stair-style">
-            .ac-stair-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:18px}
-            .ac-stair-card{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--panel-2,#fff)}
-            .ac-stair-card-title{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px}
-            .ac-stair-card-title small{color:var(--muted);text-align:right}
-            .ac-stair-tabs{display:flex;gap:6px;margin-bottom:8px}
-            .ac-stair-tabs button{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:transparent;cursor:pointer}
-            .ac-stair-view{min-height:180px;border:1px solid var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-            .ac-stair-svg{width:100%;height:180px}
-        </style>`);
-    }
-
-    window.acStairView=function(btn,type,view){
-        const box=btn.closest(".ac-stair-card").querySelector(".ac-stair-view");
-        if(view==="side") box.innerHTML=sideSvg(type);
-        else if(view==="top") box.innerHTML=topSvg(type);
-        else box.innerHTML=frontSvg();
-    };
-
-    setResult("stairResult",
-        `<div><b>Hisoblangan asosiy o‘lchamlar</b><br>`+
-        outText("stairs")+" "+risers+" pcs<br>"+
-        outText("treads")+" "+treads+" pcs<br>"+
+    let html =
+        outText("stairTypeResult")+" "+typeLabel+"<br>"+
+        outText("stairs")+" "+risers+" pcs ("+outText("calculated")+")<br>"+
+        outText("treads")+" "+treadsTotal+" pcs<br>"+
         outText("stepHeight")+" "+fmt(riserH,1)+" cm<br>"+
         outText("stepDepthResult")+" "+fmt(tread,1)+" cm<br>"+
-        outText("run")+" "+fmt(straightRun,2)+" m<br>"+
         outText("stairWidthResult")+" "+fmt(width,0)+" cm<br>"+
-        outText("stairComfort")+" "+fmt(best.comfort,1)+" cm<br>"+
-        outText("stairAngle")+" "+fmt(best.angle,1)+"°</div>`+
-        `<div class="ac-stair-grid">${cards}</div>`
-    );
+        outText("stairComfort")+" "+fmt(comfort,1)+" cm<br>"+
+        outText("stairAngle")+" "+fmt(angle,1)+"° ("+outText("approximate")+")";
+
+    if(type==="spiral"){
+        html += "<br>"+outText("spiralDiameterResult")+" "+fmt(spiralDiameter,0)+" cm ("+outText("designDependent")+")";
+    } else {
+        html += "<br>"+outText("run")+" "+fmt(geo.totalHorizontal,2)+" m";
+        if(geo.turnDeg>0) html += "<br>"+outText("turnAngle")+" "+geo.turnDeg+"°";
+        if(geo.landingLen>0) html += "<br>"+outText("landingSize")+" "+fmt(geo.landingLen,2)+" × "+fmt(widthM,2)+" m ("+outText("designDependent")+")";
+        if(type==="winder") html += "<br>"+outText("winderCountResult")+" "+Math.max(1,Math.round(winderCount))+" ("+outText("designDependent")+")";
+        if(Number.isFinite(available) && available>0) html += "<br>"+outText("stairTotalRun")+" "+fmt(geo.totalHorizontal,2)+" m";
+    }
+
+    html += warning;
+
+    setResult("stairResult",html);
+    setResult("stairDiagrams",buildStairViews(type,geo,widthM,risers,total));
 }
 
 function currentLang(){
@@ -1482,27 +1736,36 @@ const outputTranslations = {
     uz:{
         invalid:"⚠️ Qiymatlarni to‘g‘ri kiriting.", invalidOpenings:"⚠️ Eshik/deraza maydoni devor maydonidan kichik bo‘lishi kerak.", invalidPaint:"⚠️ Maydon va qavatlar sonini kiriting. Kamida 1 litr qoplash yoki 1 banka qoplash qiymatini kiriting.",
         roomArea:"📐 Maydon:", roomVol:"📦 Hajm:", roomPer:"📏 Perimetr:", wallArea:"🧱 Sof devor maydoni:", base:"📦 Asosiy hisob:", reserve:"➕ Zaxira bilan:",
-        brickWallThickness:"📏 Devor qalinligi:", brickBase:"🧱 Hisoblangan g‘isht:", brickVolume:"🧱 G‘isht hajmi:", mortar:"🪨 Taxminiy qorishma:",
-        blockTypeResult:"🧱 Blok turi:", blockVolume:"📦 Devor hajmi:", concrete:"🪨 Beton hajmi:", conUnit:"📦 1 element hajmi:", conExact:"🎯 Aniq umumiy hajm:", cementKg:"🧱 Sement massasi:", cementBags:"🛍️ Sement:",
+        brickWallThickness:"📏 Devor qalinligi:", brickBase:"🧱 Hisoblangan g‘isht:", brickWallVolume:"📦 Devor hajmi:", brickUnitVolume:"🧱 1 dona g‘isht hajmi:",
+        blockTypeResult:"🧱 Blok turi:", blockWallVolume:"📦 Devor hajmi:", blockUnitVolume:"🧱 1 dona blok hajmi:", concrete:"🪨 Beton hajmi:", conUnit:"📦 1 element hajmi:", conExact:"🎯 Aniq umumiy hajm:", cementKg:"🧱 Sement massasi:", cementBags:"🛍️ Sement:",
         paintAreaResult:"🎨 Bo‘yaladigan maydon:", paintTotalArea:"🖌️ Qavatlar + zaxira bilan maydon:", paintLiters:"🧴 Kerakli bo‘yoq:", paintCans:"🪣 Kerakli banka:", paintByCanVolume:"🪣 Litr bo‘yicha banka:", paintCanLitersTotal:"🧴 Bankalar bo‘yicha jami:",
         floorArea:"🪵 Pol maydoni:", floorReserveArea:"📐 Zaxira bilan maydon:", floorPackages:"📦 Kerakli qadoq/rulon:", floorPieces:"🧩 Taxminiy dona:", floorTypeResult:"🏷️ Pol turi:",
-        stairs:"🪜 Zinalar soni:", treads:"🪜 Pog‘onalar soni:", stepHeight:"📏 Har bir zina balandligi:", stepDepthResult:"📏 Har bir zina chuqurligi:", run:"↔️ Gorizontal yurish:", stairTotalRun:"📐 Maydoncha bilan umumiy uzunlik:", stairWidthResult:"↔️ Zina eni:", stairComfort:"📐 Qulaylik (2h+b):", stairAngle:"📏 Qiyalik burchagi:", stairGood:"Asosiy geometriya tavsiya etilgan diapazonda.", stairWarnRiser:"zina balandligi 15–20 cm oralig‘idan tashqarida", stairWarnTread:"zina chuqurligi 25–32 cm oralig‘idan tashqarida", stairWarnComfort:"2h+b 59–65 cm diapazonidan tashqarida", stairWarnAngle:"qiyalik 25–45° diapazonidan tashqarida", stairWarnSpace:"mavjud gorizontal joy yetarli emas"
+        stairs:"🪜 Zinalar soni:", treads:"🪜 Pog‘onalar soni:", stepHeight:"📏 Har bir zina balandligi:", stepDepthResult:"📏 Har bir zina chuqurligi:", run:"↔️ Gorizontal yurish:", stairTotalRun:"📐 Maydoncha bilan umumiy uzunlik:", stairWidthResult:"↔️ Zina eni:", stairComfort:"📐 Qulaylik (2h+b):", stairAngle:"📏 Qiyalik burchagi:", stairGood:"Asosiy geometriya tavsiya etilgan diapazonda.", stairWarnRiser:"zina balandligi 15–20 cm oralig‘idan tashqarida", stairWarnTread:"zina chuqurligi 25–32 cm oralig‘idan tashqarida", stairWarnComfort:"2h+b 59–65 cm diapazonidan tashqarida", stairWarnAngle:"qiyalik 25–45° diapazonidan tashqarida", stairWarnSpace:"mavjud gorizontal joy yetarli emas",
+        stairTypeResult:"🏗️ Zina turi:", sideView:"Yon ko‘rinish", topView:"Tepadan ko‘rinish", frontView:"Old ko‘rinish", isoView:"Izometrik ko‘rinish",
+        calculated:"hisoblangan", approximate:"taxminiy", designDependent:"loyihaga bog‘liq",
+        turnAngle:"↩️ Burilish burchagi:", landingSize:"🟦 Maydoncha o‘lchami:", spiralDiameterResult:"🌀 Spiral diametri:", winderCountResult:"🔀 Burama pog‘onalar soni:"
     },
     ru:{
         invalid:"⚠️ Введите корректные значения.", invalidOpenings:"⚠️ Площадь дверей/окон должна быть меньше площади стены.", invalidPaint:"⚠️ Введите размеры и количество слоёв. Укажите покрытие на 1 литр или на 1 банку.",
         roomArea:"📐 Площадь:", roomVol:"📦 Объём:", roomPer:"📏 Периметр:", wallArea:"🧱 Чистая площадь стены:", base:"📦 Основной расчёт:", reserve:"➕ С запасом:",
-        brickWallThickness:"📏 Толщина стены:", brickBase:"🧱 Расчётный кирпич:", brickVolume:"🧱 Объём кирпича:", mortar:"🪨 Примерный раствор:", blockTypeResult:"🧱 Тип блока:", blockVolume:"📦 Объём стены:", concrete:"🪨 Объём бетона:", conUnit:"📦 Объём 1 элемента:", conExact:"🎯 Точный общий объём:", cementKg:"🧱 Масса цемента:", cementBags:"🛍️ Цемент:",
+        brickWallThickness:"📏 Толщина стены:", brickBase:"🧱 Расчётный кирпич:", brickWallVolume:"📦 Объём стены:", brickUnitVolume:"🧱 Объём 1 кирпича:", blockTypeResult:"🧱 Тип блока:", blockWallVolume:"📦 Объём стены:", blockUnitVolume:"🧱 Объём 1 блока:", concrete:"🪨 Объём бетона:", conUnit:"📦 Объём 1 элемента:", conExact:"🎯 Точный общий объём:", cementKg:"🧱 Масса цемента:", cementBags:"🛍️ Цемент:",
         paintAreaResult:"🎨 Площадь окраски:", paintTotalArea:"🖌️ Площадь с учётом слоёв и запаса:", paintLiters:"🧴 Необходимо краски:", paintCans:"🪣 Необходимо банок:", paintByCanVolume:"🪣 Банок по литражу:", paintCanLitersTotal:"🧴 Общий объём по банкам:",
         floorArea:"🪵 Площадь пола:", floorReserveArea:"📐 Площадь с запасом:", floorPackages:"📦 Необходимо упаковок/рулонов:", floorPieces:"🧩 Примерное количество штук:", floorTypeResult:"🏷️ Тип пола:",
-        stairs:"🪜 Количество ступеней:", treads:"🪜 Количество проступей:", stepHeight:"📏 Высота ступени:", stepDepthResult:"📏 Глубина ступени:", run:"↔️ Горизонтальный марш:", stairTotalRun:"📐 Общая длина с площадкой:", stairWidthResult:"↔️ Ширина лестницы:", stairComfort:"📐 Удобство (2h+b):", stairAngle:"📏 Угол наклона:", stairGood:"Основная геометрия в рекомендуемом диапазоне.", stairWarnRiser:"высота ступени вне диапазона 15–20 см", stairWarnTread:"глубина ступени вне диапазона 25–32 см", stairWarnComfort:"2h+b вне диапазона 59–65 см", stairWarnAngle:"угол вне диапазона 25–45°", stairWarnSpace:"недостаточно доступного горизонтального места"
+        stairs:"🪜 Количество ступеней:", treads:"🪜 Количество проступей:", stepHeight:"📏 Высота ступени:", stepDepthResult:"📏 Глубина ступени:", run:"↔️ Горизонтальный марш:", stairTotalRun:"📐 Общая длина с площадкой:", stairWidthResult:"↔️ Ширина лестницы:", stairComfort:"📐 Удобство (2h+b):", stairAngle:"📏 Угол наклона:", stairGood:"Основная геометрия в рекомендуемом диапазоне.", stairWarnRiser:"высота ступени вне диапазона 15–20 см", stairWarnTread:"глубина ступени вне диапазона 25–32 см", stairWarnComfort:"2h+b вне диапазона 59–65 см", stairWarnAngle:"угол вне диапазона 25–45°", stairWarnSpace:"недостаточно доступного горизонтального места",
+        stairTypeResult:"🏗️ Тип лестницы:", sideView:"Вид сбоку", topView:"Вид сверху", frontView:"Вид спереди", isoView:"Изометрический вид",
+        calculated:"рассчитано", approximate:"приблизительно", designDependent:"зависит от проекта",
+        turnAngle:"↩️ Угол поворота:", landingSize:"🟦 Размер площадки:", spiralDiameterResult:"🌀 Диаметр спирали:", winderCountResult:"🔀 Количество забежных ступеней:"
     },
     en:{
         invalid:"⚠️ Enter valid values.", invalidOpenings:"⚠️ Door/window area must be smaller than wall area.", invalidPaint:"⚠️ Enter dimensions and coats. Provide coverage per liter or per can.",
         roomArea:"📐 Area:", roomVol:"📦 Volume:", roomPer:"📏 Perimeter:", wallArea:"🧱 Net wall area:", base:"📦 Base calculation:", reserve:"➕ With reserve:",
-        brickWallThickness:"📏 Wall thickness:", brickBase:"🧱 Calculated bricks:", brickVolume:"🧱 Brick volume:", mortar:"🪨 Estimated mortar:", blockTypeResult:"🧱 Block type:", blockVolume:"📦 Wall volume:", concrete:"🪨 Concrete volume:", conUnit:"📦 Volume per element:", conExact:"🎯 Exact total volume:", cementKg:"🧱 Cement mass:", cementBags:"🛍️ Cement:",
+        brickWallThickness:"📏 Wall thickness:", brickBase:"🧱 Calculated bricks:", brickWallVolume:"📦 Wall volume:", brickUnitVolume:"🧱 Volume of 1 brick:", blockTypeResult:"🧱 Block type:", blockWallVolume:"📦 Wall volume:", blockUnitVolume:"🧱 Volume of 1 block:", concrete:"🪨 Concrete volume:", conUnit:"📦 Volume per element:", conExact:"🎯 Exact total volume:", cementKg:"🧱 Cement mass:", cementBags:"🛍️ Cement:",
         paintAreaResult:"🎨 Paint area:", paintTotalArea:"🖌️ Area with coats and reserve:", paintLiters:"🧴 Required paint:", paintCans:"🪣 Required cans:", paintByCanVolume:"🪣 Cans by liters:", paintCanLitersTotal:"🧴 Total volume by cans:",
         floorArea:"🪵 Floor area:", floorReserveArea:"📐 Area with reserve:", floorPackages:"📦 Required packs/rolls:", floorPieces:"🧩 Approx. pieces:", floorTypeResult:"🏷️ Floor type:",
-        stairs:"🪜 Number of risers:", treads:"🪜 Number of treads:", stepHeight:"📏 Riser height:", stepDepthResult:"📏 Tread depth:", run:"↔️ Horizontal run:", stairTotalRun:"📐 Total length with landing:", stairWidthResult:"↔️ Stair width:", stairComfort:"📐 Comfort (2h+b):", stairAngle:"📏 Stair angle:", stairGood:"Core geometry is within the recommended range.", stairWarnRiser:"riser height is outside 15–20 cm", stairWarnTread:"tread depth is outside 25–32 cm", stairWarnComfort:"2h+b is outside 59–65 cm", stairWarnAngle:"angle is outside 25–45°", stairWarnSpace:"available horizontal space is insufficient"
+        stairs:"🪜 Number of risers:", treads:"🪜 Number of treads:", stepHeight:"📏 Riser height:", stepDepthResult:"📏 Tread depth:", run:"↔️ Horizontal run:", stairTotalRun:"📐 Total length with landing:", stairWidthResult:"↔️ Stair width:", stairComfort:"📐 Comfort (2h+b):", stairAngle:"📏 Stair angle:", stairGood:"Core geometry is within the recommended range.", stairWarnRiser:"riser height is outside 15–20 cm", stairWarnTread:"tread depth is outside 25–32 cm", stairWarnComfort:"2h+b is outside 59–65 cm", stairWarnAngle:"angle is outside 25–45°", stairWarnSpace:"available horizontal space is insufficient",
+        stairTypeResult:"🏗️ Stair type:", sideView:"Side view", topView:"Top view", frontView:"Front view", isoView:"Isometric view",
+        calculated:"calculated", approximate:"approximate", designDependent:"design-dependent",
+        turnAngle:"↩️ Turn angle:", landingSize:"🟦 Landing size:", spiralDiameterResult:"🌀 Spiral diameter:", winderCountResult:"🔀 Number of winder treads:"
     }
 };
 
@@ -1522,34 +1785,37 @@ const archCalcFullTranslations = {
   uz: {
     dashboard:"Bosh sahifa", calculators:"KALKULYATORLAR", workspace:"Ish maydoni", eyebrow:"Arxitektura / Qurilish", heroTitle:"Aniqlik bilan hisoblang.", heroDesc:"Arxitektura va qurilish hisoblari uchun toza, aniq va amaliy ish maydoni.", system:"TIZIM", toolCount:"8 ta hisoblash vositasi", calcTools:"Hisoblash vositalari",
     room_title:"Xona kalkulyatori", room_desc:"Maydon, hajm va perimetr", brick_title:"G‘isht kalkulyatori", brick_desc:"G‘isht urish qalinligi va miqdori", block_title:"Blok kalkulyatori", block_desc:"Blok turi va miqdorini hisoblash", concrete_title:"Beton kalkulyatori", concrete_desc:"Aniq hajm va sement qoplarini hisoblash", paint_title:"Bo‘yoq kalkulyatori", paint_desc:"Litr yoki banka bo‘yicha bo‘yoq hisoblash", floor_title:"Pol kalkulyatori", floor_desc:"Pol turiga qarab material miqdorini hisoblash", stair_title:"Zina kalkulyatori", stair_desc:"Zina geometriyasi va qulaylik tekshiruvi",
-    room_l:"Uzunlik (m)", room_w:"Kenglik (m)", room_h:"Balandlik (m)", wall_l:"Devor uzunligi (m)", wall_h:"Devor balandligi (m)", brick_type:"G‘isht o‘lchami", brick_thickness:"G‘isht urish qalinligi", brick_l:"G‘isht uzunligi (cm)", brick_w:"G‘isht eni (cm)", brick_h:"G‘isht balandligi (cm)", mortar_joint:"Qorishma chok qalinligi (mm)", brick_openings:"Eshik/deraza maydoni (m²)", brick_reserve:"Zaxira (%)",
-    block_type:"Blok turi", block_l:"Blok uzunligi (cm)", block_w:"Blok eni/qalinligi (cm)", block_h:"Blok balandligi (cm)", block_joint:"Yelim/qorishma chok (mm)", block_openings:"Eshik/deraza maydoni (m²)", reserve:"Zaxira (%)",
+    room_l:"Uzunlik (m)", room_w:"Kenglik (m)", room_h:"Balandlik (m)", wall_l:"Devor uzunligi (m)", wall_h:"Devor balandligi (m)", brick_type:"G‘isht o‘lchami", brick_thickness:"G‘isht urish qalinligi", brick_l:"G‘isht uzunligi (cm)", brick_w:"G‘isht eni (cm)", brick_h:"G‘isht balandligi (cm)", brick_openings:"Eshik/deraza maydoni (m²)", brick_reserve:"Zaxira (%)",
+    block_type:"Blok turi", block_l:"Blok uzunligi (cm)", block_w:"Blok eni/qalinligi (cm)", block_h:"Blok balandligi (cm)", block_openings:"Eshik/deraza maydoni (m²)", reserve:"Zaxira (%)",
     con_l:"Uzunlik (m)", con_w:"Kenglik (m)", con_h:"Qalinlik (cm)", con_qty:"Bir xil elementlar soni", cementPerM3:"1 m³ beton uchun sement (kg)", cementBag:"1 qop sement (kg)",
     paint_w:"Bo‘yaladigan maydon eni (m)", paint_h:"Bo‘yaladigan maydon bo‘yi (m)", paint_coats:"Qavatlar soni", paint_liter_cover:"1 litr bo‘yoq qoplaydigan maydon (m²)", paint_can_cover:"1 banka bo‘yoq qoplaydigan maydon (m²)", paint_can_liters:"1 banka hajmi (L) — ixtiyoriy",
-    floor_type:"Pol turi", floor_l:"Xona uzunligi (m)", floor_w:"Xona kengligi (m)", floor_package:"1 qadoq/rulon qoplaydigan maydon (m²)", floor_piece:"1 dona mahsulot maydoni (m²) — ixtiyoriy",
-    stair_height:"Qavatlar orasidagi umumiy balandlik (cm)", step_height:"Maqsadli zina balandligi (cm)", step_depth:"Maqsadli zina chuqurligi (cm)", stair_width:"Zina eni (cm)", available_run:"Mavjud gorizontal joy (m) — ixtiyoriy", landing:"Yuqori maydoncha uzunligi (m) — ixtiyoriy",
+    floor_type:"Pol turi", floor_l:"Xona uzunligi (m)", floor_w:"Xona kengligi (m)", floor_package:"1 qadoq/rulon qoplaydigan maydon (m²) — majburiy", floor_piece:"1 dona mahsulot maydoni (m²) — ixtiyoriy",
+    stair_type:"Zina turi", stair_straight:"To‘g‘ri zina", stair_l:"L-shakldagi zina (90°)", stair_u:"U-shakldagi zina (180°)", stair_two_flight:"Maydonchali ikki marshli zina", stair_winder:"Burama pog‘onali (winder) zina", stair_spiral:"Spiral (vintli) zina", spiral_diameter:"Spiral zina diametri (cm)", winder_count:"Burilishdagi burama pog‘onalar soni",
+    stair_height:"Qavatlar orasidagi umumiy balandlik (cm)", step_height:"Maqsadli zina balandligi (cm)", step_depth:"Maqsadli zina chuqurligi (cm)", stair_width:"Zina eni (cm)", available_run:"Mavjud gorizontal joy (m) — ixtiyoriy", landing:"Maydoncha uzunligi (m) — ixtiyoriy",
     calc_room:"Hisoblash", calc_brick:"G‘ishtni hisoblash", calc_block:"Blokni hisoblash", calc_concrete:"Betonni hisoblash", calc_paint:"Bo‘yoqni hisoblash", calc_floor:"Polni hisoblash", calc_stair:"Zinani hisoblash", result_empty:"Natija shu yerda chiqadi.", nav_room:"Xona", nav_brick:"G‘isht", nav_block:"Blok", nav_concrete:"Beton", nav_paint:"Bo‘yoq", nav_floor:"Pol", nav_stairs:"Zina", footer:"ARCHCALC · ARXITEKTURA VA QURILISH · 2026"
   },
   ru: {
     dashboard:"Главная", calculators:"КАЛЬКУЛЯТОРЫ", workspace:"Рабочая область", eyebrow:"Архитектура / Строительство", heroTitle:"Расчёты с точностью.", heroDesc:"Чистое и практичное рабочее пространство для архитектурных и строительных расчётов.", system:"СИСТЕМА", toolCount:"8 инструментов", calcTools:"Инструменты расчёта",
     room_title:"Калькулятор помещения", room_desc:"Площадь, объём и периметр", brick_title:"Калькулятор кирпича", brick_desc:"Толщина кладки и количество кирпича", block_title:"Калькулятор блоков", block_desc:"Тип блока и количество", concrete_title:"Калькулятор бетона", concrete_desc:"Точный объём и мешки цемента", paint_title:"Калькулятор краски", paint_desc:"Расчёт краски по литрам или банкам", floor_title:"Калькулятор пола", floor_desc:"Количество материала по типу пола", stair_title:"Калькулятор лестницы", stair_desc:"Геометрия и проверка удобства",
-    room_l:"Длина (м)", room_w:"Ширина (м)", room_h:"Высота (м)", wall_l:"Длина стены (м)", wall_h:"Высота стены (м)", brick_type:"Размер кирпича", brick_thickness:"Толщина кладки", brick_l:"Длина кирпича (см)", brick_w:"Ширина кирпича (см)", brick_h:"Высота кирпича (см)", mortar_joint:"Толщина шва раствора (мм)", brick_openings:"Площадь дверей/окон (м²)", brick_reserve:"Запас (%)",
-    block_type:"Тип блока", block_l:"Длина блока (см)", block_w:"Ширина/толщина блока (см)", block_h:"Высота блока (см)", block_joint:"Шов клея/раствора (мм)", block_openings:"Площадь дверей/окон (м²)", reserve:"Запас (%)",
+    room_l:"Длина (м)", room_w:"Ширина (м)", room_h:"Высота (м)", wall_l:"Длина стены (м)", wall_h:"Высота стены (м)", brick_type:"Размер кирпича", brick_thickness:"Толщина кладки", brick_l:"Длина кирпича (см)", brick_w:"Ширина кирпича (см)", brick_h:"Высота кирпича (см)", brick_openings:"Площадь дверей/окон (м²)", brick_reserve:"Запас (%)",
+    block_type:"Тип блока", block_l:"Длина блока (см)", block_w:"Ширина/толщина блока (см)", block_h:"Высота блока (см)", block_openings:"Площадь дверей/окон (м²)", reserve:"Запас (%)",
     con_l:"Длина (м)", con_w:"Ширина (м)", con_h:"Толщина (см)", con_qty:"Количество одинаковых элементов", cementPerM3:"Цемент на 1 м³ бетона (кг)", cementBag:"Вес 1 мешка цемента (кг)",
     paint_w:"Ширина окрашиваемой площади (м)", paint_h:"Высота окрашиваемой площади (м)", paint_coats:"Количество слоёв", paint_liter_cover:"Площадь покрытия 1 литром (м²)", paint_can_cover:"Площадь покрытия 1 банкой (м²)", paint_can_liters:"Объём 1 банки (л) — необязательно",
-    floor_type:"Тип пола", floor_l:"Длина комнаты (м)", floor_w:"Ширина комнаты (м)", floor_package:"Площадь 1 упаковки/рулона (м²)", floor_piece:"Площадь 1 единицы (м²) — необязательно",
-    stair_height:"Общая высота между этажами (см)", step_height:"Целевая высота ступени (см)", step_depth:"Целевая глубина ступени (см)", stair_width:"Ширина лестницы (см)", available_run:"Доступная горизонтальная длина (м) — необязательно", landing:"Длина верхней площадки (м) — необязательно",
+    floor_type:"Тип пола", floor_l:"Длина комнаты (м)", floor_w:"Ширина комнаты (м)", floor_package:"Площадь 1 упаковки/рулона (м²) — обязательно", floor_piece:"Площадь 1 единицы (м²) — необязательно",
+    stair_type:"Тип лестницы", stair_straight:"Прямая лестница", stair_l:"Г-образная лестница (90°)", stair_u:"П-образная лестница (180°)", stair_two_flight:"Двухмаршевая лестница с площадкой", stair_winder:"Лестница с забежными ступенями", stair_spiral:"Винтовая (спиральная) лестница", spiral_diameter:"Диаметр винтовой лестницы (см)", winder_count:"Количество забежных ступеней на повороте",
+    stair_height:"Общая высота между этажами (см)", step_height:"Целевая высота ступени (см)", step_depth:"Целевая глубина ступени (см)", stair_width:"Ширина лестницы (см)", available_run:"Доступная горизонтальная длина (м) — необязательно", landing:"Длина площадки (м) — необязательно",
     calc_room:"Рассчитать", calc_brick:"Рассчитать кирпич", calc_block:"Рассчитать блоки", calc_concrete:"Рассчитать бетон", calc_paint:"Рассчитать краску", calc_floor:"Рассчитать пол", calc_stair:"Рассчитать лестницу", result_empty:"Результат появится здесь.", nav_room:"Помещение", nav_brick:"Кирпич", nav_block:"Блок", nav_concrete:"Бетон", nav_paint:"Краска", nav_floor:"Пол", nav_stairs:"Лестница", footer:"ARCHCALC · АРХИТЕКТУРА И СТРОИТЕЛЬСТВО · 2026"
   },
   en: {
     dashboard:"Dashboard", calculators:"CALCULATORS", workspace:"Workspace", eyebrow:"Architecture / Construction", heroTitle:"Calculate with precision.", heroDesc:"A focused workspace for practical architectural and construction calculations.", system:"SYSTEM", toolCount:"7 calculation tools", calcTools:"Calculation tools",
     room_title:"Room calculator", room_desc:"Area, volume and perimeter", brick_title:"Brick calculator", brick_desc:"Masonry thickness and brick quantity", block_title:"Block calculator", block_desc:"Block type and quantity", concrete_title:"Concrete calculator", concrete_desc:"Accurate volume and cement bag estimate", paint_title:"Paint calculator", paint_desc:"Paint quantity by liters or cans", floor_title:"Floor calculator", floor_desc:"Material quantity by floor type", stair_title:"Stairs calculator", stair_desc:"Stair geometry and comfort check",
-    room_l:"Length (m)", room_w:"Width (m)", room_h:"Height (m)", wall_l:"Wall length (m)", wall_h:"Wall height (m)", brick_type:"Brick size", brick_thickness:"Masonry thickness", brick_l:"Brick length (cm)", brick_w:"Brick width (cm)", brick_h:"Brick height (cm)", mortar_joint:"Mortar joint thickness (mm)", brick_openings:"Door/window area (m²)", brick_reserve:"Reserve (%)",
-    block_type:"Block type", block_l:"Block length (cm)", block_w:"Block width/thickness (cm)", block_h:"Block height (cm)", block_joint:"Adhesive/mortar joint (mm)", block_openings:"Door/window area (m²)", reserve:"Reserve (%)",
+    room_l:"Length (m)", room_w:"Width (m)", room_h:"Height (m)", wall_l:"Wall length (m)", wall_h:"Wall height (m)", brick_type:"Brick size", brick_thickness:"Masonry thickness", brick_l:"Brick length (cm)", brick_w:"Brick width (cm)", brick_h:"Brick height (cm)", brick_openings:"Door/window area (m²)", brick_reserve:"Reserve (%)",
+    block_type:"Block type", block_l:"Block length (cm)", block_w:"Block width/thickness (cm)", block_h:"Block height (cm)", block_openings:"Door/window area (m²)", reserve:"Reserve (%)",
     con_l:"Length (m)", con_w:"Width (m)", con_h:"Thickness (cm)", con_qty:"Number of identical elements", cementPerM3:"Cement per 1 m³ concrete (kg)", cementBag:"Cement bag weight (kg)",
     paint_w:"Paint area width (m)", paint_h:"Paint area height (m)", paint_coats:"Number of coats", paint_liter_cover:"Area covered by 1 liter (m²)", paint_can_cover:"Area covered by 1 can (m²)", paint_can_liters:"Can volume (L) — optional",
-    floor_type:"Floor type", floor_l:"Room length (m)", floor_w:"Room width (m)", floor_package:"Area covered by 1 pack/roll (m²)", floor_piece:"Area per piece (m²) — optional",
-    stair_height:"Total floor-to-floor height (cm)", step_height:"Target riser height (cm)", step_depth:"Target tread depth (cm)", stair_width:"Stair width (cm)", available_run:"Available horizontal space (m) — optional", landing:"Upper landing length (m) — optional",
+    floor_type:"Floor type", floor_l:"Room length (m)", floor_w:"Room width (m)", floor_package:"Area covered by 1 pack/roll (m²) — required", floor_piece:"Area per piece (m²) — optional",
+    stair_type:"Stair type", stair_straight:"Straight stair", stair_l:"L-shaped stair (90°)", stair_u:"U-shaped stair (180°)", stair_two_flight:"Two-flight stair with landing", stair_winder:"Winder stair", stair_spiral:"Spiral stair", spiral_diameter:"Spiral stair diameter (cm)", winder_count:"Number of winder treads at the turn",
+    stair_height:"Total floor-to-floor height (cm)", step_height:"Target riser height (cm)", step_depth:"Target tread depth (cm)", stair_width:"Stair width (cm)", available_run:"Available horizontal space (m) — optional", landing:"Landing length (m) — optional",
     calc_room:"Calculate", calc_brick:"Calculate bricks", calc_block:"Calculate blocks", calc_concrete:"Calculate concrete", calc_paint:"Calculate paint", calc_floor:"Calculate floor", calc_stair:"Calculate stairs", result_empty:"Result will appear here.", nav_room:"Room", nav_brick:"Brick", nav_block:"Block", nav_concrete:"Concrete", nav_paint:"Paint", nav_floor:"Floor", nav_stairs:"Stairs", footer:"ARCHCALC · ARCHITECTURE & CONSTRUCTION · 2026"
   }
 };
@@ -1604,8 +1870,140 @@ document.addEventListener("DOMContentLoaded", () => {
     applyBrickPreset();
     applyBlockPreset();
     applyFloorPreset();
+    onStairTypeChange();
 });
 
+</script>
+
+
+<!-- ARCHCALC: FIRST-VISIT DISCLAIMER -->
+<style id="archcalc-disclaimer-style">
+    .archcalc-disclaimer-backdrop{
+        position:fixed;
+        inset:0;
+        z-index:99999;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:20px;
+        background:rgba(0,0,0,.58);
+        backdrop-filter:blur(3px);
+        -webkit-backdrop-filter:blur(3px);
+    }
+    .archcalc-disclaimer-backdrop[hidden]{display:none!important}
+    .archcalc-disclaimer{
+        width:min(520px,100%);
+        box-sizing:border-box;
+        border:1px solid rgba(255,255,255,.12);
+        border-radius:18px;
+        padding:24px;
+        background:#17191d;
+        color:#f5f7fa;
+        box-shadow:0 22px 70px rgba(0,0,0,.42);
+        font-family:inherit;
+    }
+    body.light .archcalc-disclaimer{
+        background:#ffffff;
+        color:#17191d;
+        border-color:rgba(0,0,0,.10);
+    }
+    .archcalc-disclaimer-badge{
+        display:inline-flex;
+        align-items:center;
+        gap:7px;
+        margin-bottom:12px;
+        padding:6px 10px;
+        border-radius:999px;
+        background:rgba(245,158,11,.12);
+        color:#f59e0b;
+        font-size:12px;
+        font-weight:700;
+    }
+    .archcalc-disclaimer h2{
+        margin:0 0 12px;
+        font-size:20px;
+        line-height:1.25;
+    }
+    .archcalc-disclaimer p{
+        margin:0 0 18px;
+        font-size:14px;
+        line-height:1.65;
+        opacity:.9;
+    }
+    .archcalc-disclaimer-note{
+        margin-top:-4px!important;
+        font-size:12px!important;
+        opacity:.65!important;
+    }
+    .archcalc-disclaimer-btn{
+        width:100%;
+        border:0;
+        border-radius:11px;
+        padding:12px 16px;
+        font:inherit;
+        font-size:14px;
+        font-weight:700;
+        cursor:pointer;
+        color:#fff;
+        background:#2563eb;
+        transition:transform .15s ease,opacity .15s ease;
+    }
+    .archcalc-disclaimer-btn:hover{opacity:.92;transform:translateY(-1px)}
+    .archcalc-disclaimer-btn:active{transform:translateY(0)}
+    .archcalc-disclaimer-btn:focus-visible{outline:2px solid #60a5fa;outline-offset:3px}
+</style>
+
+<div id="archcalc-disclaimer" class="archcalc-disclaimer-backdrop" hidden aria-hidden="true">
+    <section class="archcalc-disclaimer" role="dialog" aria-modal="true" aria-labelledby="archcalc-disclaimer-title">
+        <div class="archcalc-disclaimer-badge">⚠️ Ogohlantirish</div>
+        <h2 id="archcalc-disclaimer-title">Hisob-kitoblardan foydalanishdan oldin</h2>
+        <p>
+            Ushbu sayt odamlarning ishini yengillashtirish maqsadida yaratilgan.
+            Biroq sayt orqali amalga oshiriladigan hisob-kitoblar professional mutaxassis
+            tomonidan bajarilgan aniq hisob-kitoblarning o‘rnini bosa olmaydi.
+            Saytda ko‘rsatilgan hisob-kitoblarda xatoliklar bo‘lishi mumkin.
+            Ushbu hisob-kitoblardan foydalanish natijasida yuzaga keladigan xatolar yoki
+            zararlar uchun sayt ma’muriyati javobgarlikni o‘z zimmasiga olmaydi.
+        </p>
+        <p class="archcalc-disclaimer-note">
+            Davom etish orqali siz ushbu ogohlantirishni o‘qib chiqqaningizni va uning
+            shartlariga roziligingizni tasdiqlaysiz.
+        </p>
+        <button id="archcalc-disclaimer-accept" class="archcalc-disclaimer-btn" type="button">
+            ✓ Men buni o‘qib chiqdim va roziman
+        </button>
+    </section>
+</div>
+
+<script id="archcalc-disclaimer-script">
+(function(){
+    const STORAGE_KEY = "archcalc-disclaimer-accepted";
+
+    function showArchCalcDisclaimer(){
+        const modal=document.getElementById("archcalc-disclaimer");
+        if(!modal || localStorage.getItem(STORAGE_KEY)==="1") return;
+        modal.hidden=false;
+        modal.setAttribute("aria-hidden","false");
+        document.body.style.overflow="hidden";
+        const button=document.getElementById("archcalc-disclaimer-accept");
+        if(button) setTimeout(()=>button.focus(),50);
+    }
+
+    function acceptArchCalcDisclaimer(){
+        const modal=document.getElementById("archcalc-disclaimer");
+        if(!modal) return;
+        localStorage.setItem(STORAGE_KEY,"1");
+        modal.hidden=true;
+        modal.setAttribute("aria-hidden","true");
+        document.body.style.overflow="";
+    }
+
+    document.addEventListener("DOMContentLoaded",function(){
+        showArchCalcDisclaimer();
+        const button=document.getElementById("archcalc-disclaimer-accept");
+        if(button) button.addEventListener("click",acceptArchCalcDisclaimer);
+    });
+})();
 </script>
 
 </body>
