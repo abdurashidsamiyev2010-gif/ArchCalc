@@ -1252,43 +1252,225 @@ function floorCalc(){
 
 /* ZINA */
 function stairCalc(){
-    const total=getNumber("stairHeight"), targetH=getNumber("stepHeight"), targetB=getNumber("stepDepth"), width=getNumber("stairWidth");
-    const available=getNumber("availableRun"), landing=getNumber("landingLength");
-    if(!isPositive(total,targetH,targetB,width) || (Number.isFinite(available)&&available<0) || (Number.isFinite(landing)&&landing<0)){ setResult("stairResult",outText("invalid")); return; }
+    const total=getNumber("stairHeight");
+    const targetH=getNumber("stepHeight");
+    const targetB=getNumber("stepDepth");
+    const width=getNumber("stairWidth");
+    const available=getNumber("availableRun");
+    const landing=getNumber("landingLength");
+
+    if(!isPositive(total,targetH,targetB,width) ||
+       (Number.isFinite(available)&&available<0) ||
+       (Number.isFinite(landing)&&landing<0)){
+        setResult("stairResult",outText("invalid"));
+        return;
+    }
+
+    /* 1) Asosiy ergonomik hisob */
     let best=null;
-    const minR=Math.max(1,Math.floor(total/20));
-    const maxR=Math.max(minR+1,Math.ceil(total/15)+2);
+    const minR=Math.max(2,Math.ceil(total/20));
+    const maxR=Math.max(minR,Math.floor(total/14));
+
     for(let r=minR;r<=maxR;r++){
         const h=total/r;
         const b=targetB;
         const comfort=2*h+b;
         const angle=Math.atan2(h,b)*180/Math.PI;
-        const score=Math.abs(h-targetH)*3 + Math.abs(comfort-62) + Math.abs(angle-33)*0.5;
-        if(!best || score<best.score) best={r,h,b,comfort,angle,score};
+        const score=Math.abs(h-targetH)*3+
+                     Math.abs(comfort-62)+
+                     Math.abs(angle-33)*0.5;
+        if(!best || score<best.score){
+            best={r,h,b,comfort,angle,score};
+        }
     }
-    const risers=best.r, riserH=best.h, tread=best.b, treads=Math.max(0,risers-1), run=treads*tread/100;
-    const totalHorizontal=(Number.isFinite(landing)?landing:0)+run;
-    const slopeArea=run*(width/100);
-    const comfort=best.comfort, angle=best.angle;
-    const riserOk=riserH>=15 && riserH<=20, treadOk=tread>=25 && tread<=32, comfortOk=comfort>=59 && comfort<=65, angleOk=angle>=25 && angle<=45;
-    let warnings=[];
-    if(!riserOk) warnings.push(outText("stairWarnRiser"));
-    if(!treadOk) warnings.push(outText("stairWarnTread"));
-    if(!comfortOk) warnings.push(outText("stairWarnComfort"));
-    if(!angleOk) warnings.push(outText("stairWarnAngle"));
-    if(Number.isFinite(available) && totalHorizontal>available) warnings.push(outText("stairWarnSpace"));
-    const warning=warnings.length?"<br><span class=\"result-warning\">⚠️ "+warnings.join("<br>⚠️ ")+"</span>":"<br><span class=\"result-ok\">✓ "+outText("stairGood")+"</span>";
+
+    const risers=best.r;
+    const riserH=best.h;
+    const tread=best.b;
+    const treads=Math.max(0,risers-1);
+    const straightRun=treads*tread/100;
+    const landingM=Number.isFinite(landing)?landing:0;
+
+    /* 2) SVG chizmalar */
+    const esc=s=>String(s).replace(/[&<>"']/g,m=>({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[m]));
+
+    function sideSvg(type){
+        const W=620,H=270,p=42;
+        const run=Math.max(straightRun,1);
+        const rise=Math.max(total/100,1);
+        const scale=Math.min((W-2*p)/run,(H-2*p)/rise);
+        const dx=(run*scale)/Math.max(treads,1);
+        const dy=(rise*scale)/Math.max(risers,1);
+        const x=p,y=H-p;
+        let d=`M ${x} ${y}`;
+        for(let i=0;i<treads;i++) d+=` h ${dx} v ${-dy}`;
+        d+=` h ${dx}`;
+
+        if(type==="straight"){
+            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
+                <path d="${d}" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+                <line x1="${x}" y1="${y+18}" x2="${x+run*scale}" y2="${y+18}" stroke="currentColor" stroke-width="1" stroke-dasharray="5 5"/>
+                <text x="${x+run*scale/2}" y="${y+39}" text-anchor="middle">${fmt(run,2)} m</text>
+                <text x="${x-20}" y="${y-rise*scale/2}" text-anchor="middle" transform="rotate(-90 ${x-20} ${y-rise*scale/2})">${fmt(total/100,2)} m</text>
+            </svg>`;
+        }
+
+        if(type==="l"){
+            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
+                <path d="M100 210 H350 V120 H520" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
+                <path d="M100 190 H330 V100 H500" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="5 5"/>
+                <text x="310" y="245" text-anchor="middle">90° burilish</text>
+            </svg>`;
+        }
+
+        if(type==="u"){
+            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
+                <path d="M110 220 V80 H260 V220 H410 V80" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
+                <path d="M135 220 V105 H235 V220 H385 V105" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="5 5"/>
+                <text x="310" y="250" text-anchor="middle">180° burilish</text>
+            </svg>`;
+        }
+
+        if(type==="two"){
+            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
+                <path d="M100 220 H260 V150 H360 V80 H520" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
+                <rect x="260" y="135" width="100" height="30" fill="none" stroke="currentColor" stroke-width="2"/>
+                <text x="310" y="250" text-anchor="middle">2 marsh + maydoncha</text>
+            </svg>`;
+        }
+
+        if(type==="winder"){
+            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
+                <path d="M100 220 H320 L520 80" fill="none" stroke="currentColor" stroke-width="5"/>
+                <path d="M270 220 L320 185 M290 220 L350 180 M310 220 L380 175 M330 220 L410 165 M350 220 L440 155" stroke="currentColor" stroke-width="2"/>
+                <text x="310" y="250" text-anchor="middle">Winder burilish</text>
+            </svg>`;
+        }
+
+        return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
+            <ellipse cx="310" cy="145" rx="155" ry="75" fill="none" stroke="currentColor" stroke-width="3"/>
+            <ellipse cx="310" cy="145" rx="30" ry="15" fill="none" stroke="currentColor" stroke-width="2"/>
+            ${Array.from({length:14},(_,i)=>{
+                const a=i*Math.PI*2/14;
+                const x1=310+30*Math.cos(a), y1=145+15*Math.sin(a);
+                const x2=310+155*Math.cos(a), y2=145+75*Math.sin(a);
+                return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="currentColor" stroke-width="1"/>`;
+            }).join("")}
+            <text x="310" y="250" text-anchor="middle">Spiral zina — sxematik</text>
+        </svg>`;
+    }
+
+    function topSvg(type){
+        const W=620,H=230;
+
+        if(type==="straight"){
+            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
+                <rect x="90" y="45" width="440" height="130" fill="none" stroke="currentColor" stroke-width="3"/>
+                ${Array.from({length:Math.min(treads,15)},(_,i)=>{
+                    const x=105+i*28;
+                    return `<line x1="${x}" y1="45" x2="${x}" y2="175" stroke="currentColor" stroke-width="1"/>`;
+                }).join("")}
+                <text x="310" y="205" text-anchor="middle">Eni: ${fmt(width,0)} cm</text>
+            </svg>`;
+        }
+
+        if(type==="l"){
+            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
+                <path d="M100 50 H500 V175 H300 V115 H100 Z" fill="none" stroke="currentColor" stroke-width="3"/>
+                <text x="310" y="205" text-anchor="middle">L-shakl · 90°</text>
+            </svg>`;
+        }
+
+        if(type==="u" || type==="two"){
+            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
+                <rect x="100" y="45" width="420" height="130" fill="none" stroke="currentColor" stroke-width="3"/>
+                <line x1="310" y1="45" x2="310" y2="175" stroke="currentColor" stroke-width="3"/>
+                <path d="M270 155 V65 M350 65 V155" stroke="currentColor" stroke-width="2"/>
+                <text x="310" y="205" text-anchor="middle">${type==="u"?"U-shakl · 180°":"Ikki marsh + maydoncha"}</text>
+            </svg>`;
+        }
+
+        if(type==="winder"){
+            return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
+                <path d="M100 50 H360 L520 175 H260 Z" fill="none" stroke="currentColor" stroke-width="3"/>
+                <path d="M300 50 L360 110 M330 50 L390 110 M360 50 L420 110 M390 50 L450 110" stroke="currentColor" stroke-width="1"/>
+                <text x="310" y="205" text-anchor="middle">Winder · burilish</text>
+            </svg>`;
+        }
+
+        return `<svg viewBox="0 0 ${W} ${H}" class="ac-stair-svg">
+            <circle cx="310" cy="110" r="75" fill="none" stroke="currentColor" stroke-width="3"/>
+            <circle cx="310" cy="110" r="18" fill="none" stroke="currentColor" stroke-width="2"/>
+            ${Array.from({length:14},(_,i)=>{
+                const a=i*Math.PI*2/14;
+                return `<line x1="${310+18*Math.cos(a)}" y1="${110+18*Math.sin(a)}" x2="${310+75*Math.cos(a)}" y2="${110+75*Math.sin(a)}" stroke="currentColor" stroke-width="1"/>`;
+            }).join("")}
+            <text x="310" y="205" text-anchor="middle">Spiral · yuqoridan</text>
+        </svg>`;
+    }
+
+    function frontSvg(){
+        return `<svg viewBox="0 0 620 230" class="ac-stair-svg">
+            <rect x="105" y="45" width="410" height="130" fill="none" stroke="currentColor" stroke-width="3"/>
+            <line x1="310" y1="45" x2="310" y2="175" stroke="currentColor" stroke-width="1" stroke-dasharray="5 5"/>
+            <text x="310" y="205" text-anchor="middle">Zina eni: ${fmt(width,0)} cm</text>
+        </svg>`;
+    }
+
+    const types=[
+        ["straight","To‘g‘ri zina","Bitta to‘g‘ri marsh"],
+        ["l","L-shakl","90° burilishli"],
+        ["u","U-shakl","180° burilishli"],
+        ["two","Ikki marshli","Oraliq maydonchali"],
+        ["winder","Winder","Burilishda maxsus pog‘onalar"],
+        ["spiral","Spiral","Aylana bo‘ylab"]
+    ];
+
+    const cards=types.map(([id,name,desc])=>`
+        <div class="ac-stair-card">
+            <div class="ac-stair-card-title"><b>${name}</b><small>${desc}</small></div>
+            <div class="ac-stair-tabs">
+                <button type="button" onclick="acStairView(this,'${id}','side')">Yon</button>
+                <button type="button" onclick="acStairView(this,'${id}','top')">Yuqoridan</button>
+                <button type="button" onclick="acStairView(this,'${id}','front')">Old</button>
+            </div>
+            <div class="ac-stair-view">${sideSvg(id)}</div>
+        </div>
+    `).join("");
+
+    if(!document.getElementById("archcalc-stair-style")){
+        document.head.insertAdjacentHTML("beforeend",`<style id="archcalc-stair-style">
+            .ac-stair-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:18px}
+            .ac-stair-card{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--panel-2,#fff)}
+            .ac-stair-card-title{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px}
+            .ac-stair-card-title small{color:var(--muted);text-align:right}
+            .ac-stair-tabs{display:flex;gap:6px;margin-bottom:8px}
+            .ac-stair-tabs button{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:transparent;cursor:pointer}
+            .ac-stair-view{min-height:180px;border:1px solid var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+            .ac-stair-svg{width:100%;height:180px}
+        </style>`);
+    }
+
+    window.acStairView=function(btn,type,view){
+        const box=btn.closest(".ac-stair-card").querySelector(".ac-stair-view");
+        if(view==="side") box.innerHTML=sideSvg(type);
+        else if(view==="top") box.innerHTML=topSvg(type);
+        else box.innerHTML=frontSvg();
+    };
+
     setResult("stairResult",
+        `<div><b>Hisoblangan asosiy o‘lchamlar</b><br>`+
         outText("stairs")+" "+risers+" pcs<br>"+
         outText("treads")+" "+treads+" pcs<br>"+
         outText("stepHeight")+" "+fmt(riserH,1)+" cm<br>"+
         outText("stepDepthResult")+" "+fmt(tread,1)+" cm<br>"+
-        outText("run")+" "+fmt(run,2)+" m<br>"+
-        outText("stairTotalRun")+" "+fmt(totalHorizontal,2)+" m<br>"+
+        outText("run")+" "+fmt(straightRun,2)+" m<br>"+
         outText("stairWidthResult")+" "+fmt(width,0)+" cm<br>"+
-        outText("stairComfort")+" "+fmt(comfort,1)+" cm<br>"+
-        outText("stairAngle")+" "+fmt(angle,1)+"°"+
-        warning
+        outText("stairComfort")+" "+fmt(best.comfort,1)+" cm<br>"+
+        outText("stairAngle")+" "+fmt(best.angle,1)+"°</div>`+
+        `<div class="ac-stair-grid">${cards}</div>`
     );
 }
 
