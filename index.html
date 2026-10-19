@@ -816,6 +816,10 @@ body.light .section-title{
 .auth-switch button.active{border-color:var(--accent);color:var(--accent)}
 #authError{color:var(--danger);min-height:18px;font-size:12px}
 #authNotice{font-size:11px;opacity:.72}
+.auth-divider{display:flex;align-items:center;gap:10px;margin:16px 0 4px;color:var(--muted);font-size:11px}
+.auth-divider:before,.auth-divider:after{content:"";height:1px;flex:1;background:var(--line)}
+.auth-google{width:100%;margin-top:10px;background:var(--panel-2);color:var(--text);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:10px}
+.auth-google:disabled{opacity:.6;cursor:wait}
 #accountName{font-size:12px;color:var(--muted);padding:0 8px}
 @media(max-width:760px){#accountName{display:none}.auth-card{padding:22px}}
 </style>
@@ -2019,7 +2023,9 @@ document.addEventListener("DOMContentLoaded", () => {
       <div id="authError" role="alert"></div>
       <button class="auth-primary" id="authSubmit" type="button" onclick="archCalcSubmitAuth()">Kirish</button>
     </form>
-    <p id="authNotice">Hisob va kirish holati faqat shu brauzer qurilmasida saqlanadi. Bu serverli, himoyalangan autentifikatsiya emas.</p>
+    <div class="auth-divider">yoki</div>
+    <button class="auth-google" id="authGoogleBtn" type="button" onclick="archCalcGoogleSignIn()"><span aria-hidden="true" style="font-size:17px;font-weight:800">G</span> Google orqali kirish</button>
+    <p id="authNotice">Google orqali kirish Firebase hisobingizdan foydalanadi. Foydalanuvchi nomi/parol usuli esa hozircha faqat shu brauzerda saqlanadi.</p>
   </section>
 </div>
 
@@ -2075,9 +2081,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let session = "";
     try { session = localStorage.getItem(SESSION_KEY) || ""; } catch (e) {}
     const all = readUsers();
-    const loggedIn = !!(session && Object.prototype.hasOwnProperty.call(all, session));
+    const localLoggedIn = !!(session && Object.prototype.hasOwnProperty.call(all, session));
+    const firebaseUser = window.archCalcFirebaseUser || null;
+    const loggedIn = !!(firebaseUser || localLoggedIn);
     modal.hidden = loggedIn;
-    $("accountName").textContent = loggedIn ? (all[session].display || session) : "";
+    $("accountName").textContent = firebaseUser ? (firebaseUser.displayName || firebaseUser.email || "Google foydalanuvchisi") : (localLoggedIn ? (all[session].display || session) : "");
     $("logoutBtn").hidden = !loggedIn;
   }
 
@@ -2139,14 +2147,68 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.archCalcLogout = function(){
     try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
+    if (window.archCalcFirebaseSignOut) window.archCalcFirebaseSignOut();
     $("authPassword").value = "";
     window.archCalcSetAuthMode("login");
     showAuth();
   };
 
+  window.archCalcRefreshAuthUI = showAuth;
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", showAuth);
   else showAuth();
 })();
+</script>
+
+<script type="module" id="archcalc-firebase-auth">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCYrssDBqrp4qiul3S6IXiZeYoHSqfC42k",
+    authDomain: "archcalc-9dbfc.firebaseapp.com",
+    projectId: "archcalc-9dbfc",
+    storageBucket: "archcalc-9dbfc.firebasestorage.app",
+    messagingSenderId: "992749602317",
+    appId: "1:992749602317:web:8eaddffe93f4bddbaab744",
+    measurementId: "G-9LHC2RHGQ9"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: "select_account" });
+  const googleButton = document.getElementById("authGoogleBtn");
+  const errorBox = document.getElementById("authError");
+
+  window.archCalcGoogleSignIn = async function () {
+    if (googleButton) { googleButton.disabled = true; googleButton.textContent = "Google hisobiga ulanmoqda…"; }
+    if (errorBox) errorBox.textContent = "";
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      const messages = {
+        "auth/unauthorized-domain": "Bu sayt domeni Firebase’da ruxsat etilmagan. Firebase Authentication → Settings → Authorized domains bo‘limiga localhost yoki sayt domenini qo‘shing.",
+        "auth/popup-blocked": "Brauzer Google kirish oynasini blokladi. Popup’ga ruxsat bering va qayta urinib ko‘ring.",
+        "auth/operation-not-allowed": "Firebase’da Google sign-in yoqilmagan. Authentication → Sign-in method → Google ni yoqing.",
+        "auth/network-request-failed": "Tarmoq xatosi. Internet aloqasini tekshirib qayta urinib ko‘ring."
+      };
+      if (errorBox) errorBox.textContent = messages[error.code] || ("Google orqali kirib bo‘lmadi: " + (error.message || error.code));
+    } finally {
+      if (googleButton) { googleButton.disabled = false; googleButton.innerHTML = '<span aria-hidden="true" style="font-size:17px;font-weight:800">G</span> Google orqali kirish'; }
+    }
+  };
+
+  window.archCalcFirebaseSignOut = async function () {
+    try { await signOut(auth); }
+    catch (error) { console.error("ArchCalc Firebase sign-out error:", error); }
+  };
+
+  onAuthStateChanged(auth, (user) => {
+    window.archCalcFirebaseUser = user || null;
+    if (window.archCalcRefreshAuthUI) window.archCalcRefreshAuthUI();
+  }, (error) => {
+    if (errorBox) errorBox.textContent = "Firebase autentifikatsiya xatosi: " + error.message;
+  });
 </script>
 
 </body>
