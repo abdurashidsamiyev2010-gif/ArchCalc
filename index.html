@@ -827,7 +827,7 @@ body.light .section-title{
 </style>
 
 </head>
-<body>
+<body class="ac2-flow-locked">
 
 <div class="app">
 
@@ -856,6 +856,15 @@ body.light .section-title{
         <button onclick="go('paint')"><span class="side-num">05</span> <span data-i18n="nav_paint">Paint</span></button>
         <button onclick="go('floor')"><span class="side-num">06</span> <span data-i18n="nav_floor">Floor</span></button>
         <button onclick="go('stair')"><span class="side-num">07</span> <span data-i18n="nav_stairs">Stairs</span></button>
+        <button onclick="go('plaster')"><span class="side-num">08</span> <span data-i18n="nav_plaster">Suvoq</span></button>
+        <button onclick="go('adhesive')"><span class="side-num">09</span> <span data-i18n="nav_adhesive">Plitka yelimi</span></button>
+        <button onclick="go('roof')"><span class="side-num">10</span> <span data-i18n="nav_roof">Tom</span></button>
+        <button onclick="go('rebar')"><span class="side-num">11</span> <span data-i18n="nav_rebar">Armatura</span></button>
+        <button onclick="go('excavation')"><span class="side-num">12</span> Qazish</button>
+        <button onclick="go('insulation')"><span class="side-num">13</span> Izolyatsiya</button>
+        <button onclick="go('wallpaper')"><span class="side-num">14</span> Oboy</button>
+        <button onclick="go('tile')"><span class="side-num">15</span> Pol plitkasi</button>
+        <button onclick="go('gravel')"><span class="side-num">16</span> Shag‘al / qum</button>
     </div>
 
     <div class="side-bottom">
@@ -887,9 +896,24 @@ body.light .section-title{
         <button onclick="go('paint')"><span data-i18n="nav_paint">Paint</span></button>
         <button onclick="go('floor')"><span data-i18n="nav_floor">Floor</span></button>
         <button onclick="go('stair')"><span data-i18n="nav_stairs">Stairs</span></button>
+        <button onclick="go('plaster')"><span data-i18n="nav_plaster">Suvoq</span></button>
+        <button onclick="go('adhesive')"><span data-i18n="nav_adhesive">Plitka yelimi</span></button>
+        <button onclick="go('roof')"><span data-i18n="nav_roof">Tom</span></button>
+        <button onclick="go('rebar')"><span data-i18n="nav_rebar">Armatura</span></button>
+        <button onclick="go('excavation')">Qazish</button><button onclick="go('insulation')">Izolyatsiya</button><button onclick="go('wallpaper')">Oboy</button><button onclick="go('tile')">Pol plitkasi</button><button onclick="go('gravel')">Shag‘al / qum</button>
     </div>
 
     <section class="workspace">
+
+        <section class="ac2-flow-gate" id="ac2-flow-gate" aria-labelledby="ac2-flow-title">
+            <div class="ac2-gate-kicker">ARCHCALC · PROJECT WORKFLOW</div>
+            <h1 id="ac2-flow-title">Avval loyihangizni tanlang</h1>
+            <p class="ac2-gate-intro">Hisob-kitoblar loyiha ichida olib boriladi. Har bir hisoblangan material miqdori smetaga avtomatik qo‘shiladi.</p>
+            <div class="ac2-gate-actions"><button class="ac2-primary" type="button" onclick="archCalcCreateFlowProject()">＋ Yangi loyiha yaratish</button></div>
+            <div class="ac2-gate-list-head"><h2>Loyihalar ro‘yxati</h2><span class="ac2-pill" id="ac2-gate-project-count">0 ta</span></div>
+            <div class="ac2-flow-project-list" id="ac2-flow-project-list"><div class="ac2-empty"><span>▧</span><strong>Hali loyihalar yo‘q</strong><p>Birinchi loyihangizni yaratish uchun yuqoridagi tugmani bosing.</p></div></div>
+            <p class="ac2-gate-footnote">Loyiha va smeta ma’lumotlari hozircha ushbu brauzerda saqlanadi.</p>
+        </section>
 
         <div class="hero">
             <div>
@@ -900,7 +924,7 @@ body.light .section-title{
 
             <div class="hero-meta">
                 <div class="meta-label" data-i18n="system">SYSTEM</div>
-                <div class="meta-value" data-i18n="toolCount">7 calculation tools + smeta</div>
+                <div class="meta-value" data-i18n="toolCount">16 calculation tools + smeta</div>
             </div>
         </div>
 
@@ -923,7 +947,7 @@ body.light .section-title{
                 </div>
             </div>
             <div class="ac2-stat-grid">
-                <article class="ac2-stat"><span>Hisoblash vositalari</span><strong>7</strong><small>Arxitektura va qurilish</small></article>
+                <article class="ac2-stat"><span>Hisoblash vositalari</span><strong>16</strong><small>Arxitektura va qurilish</small></article>
                 <article class="ac2-stat"><span>Saqlangan loyihalar</span><strong id="ac2-project-count">0</strong><small>Ushbu brauzerda</small></article>
                 <article class="ac2-stat"><span>Oxirgi smeta</span><strong id="ac2-last-total">—</strong><small id="ac2-last-name">Hali smeta yo‘q</small></article>
             </div>
@@ -953,9 +977,10 @@ body.light .section-title{
             </div>
         </section>
 
-        <div class="section-head">
+        <div class="ac2-workflow-bar" id="ac2-workflow-bar"><div><strong id="ac2-active-project-label">Faol loyiha tanlanmagan</strong><br><span>Hisoblangan miqdorlar smetaga avtomatik qo‘shiladi.</span></div><div class="ac2-head-actions"><button class="ac2-secondary" type="button" onclick="archCalcOpenWorkspace()">Loyihalar</button><button class="ac2-primary" type="button" onclick="archCalcOpenEstimate()">Smetani ko‘rish</button><button class="ac2-secondary" type="button" onclick="archCalcSaveProject()">Loyihani saqlash</button></div></div>
+        <div class="section-head" id="ac2-calculations-heading">
             <div class="section-title" data-i18n="calcTools">Calculation tools</div>
-            <div class="section-count">01 — 07</div>
+            <div class="section-count">01 — 16</div>
         </div>
 
         <div class="container">
@@ -1194,6 +1219,44 @@ Natija shu yerda chiqadi.
 <div class="result" id="stairResult">Natija shu yerda chiqadi.</div>
 <div class="result" id="stairDiagrams"></div></div></div>
 
+<!-- SUVOQ -->
+<div class="card" id="plaster"><div class="card-top"><span class="card-index">08</span><span class="card-type">PLASTER</span></div><h2 class="card-title" data-i18n="plaster_title">Suvoq kalkulyatori</h2><p class="card-desc" data-i18n="plaster_desc">Devor suvoqi hajmi va taxminiy qorishma</p><div class="card-form">
+<div class="field"><label><span data-i18n="plaster_area">Suvaladigan maydon (m²)</span></label><input id="plasterArea" type="number" min="0" step="any" placeholder="80"></div>
+<div class="field"><label><span data-i18n="plaster_thickness">Suvoq qalinligi (mm)</span></label><input id="plasterThickness" type="number" min="0" step="any" value="15"></div>
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label><input id="plasterReserve" type="number" min="0" max="100" step="any" value="10"></div>
+<button class="calc" onclick="plasterCalc()"><span data-i18n="calc_plaster">Suvoqni hisoblash</span></button><div class="result" id="plasterResult">Natija shu yerda chiqadi.</div></div></div>
+
+<!-- PLITKA YELIMI -->
+<div class="card" id="adhesive"><div class="card-top"><span class="card-index">09</span><span class="card-type">TILE ADHESIVE</span></div><h2 class="card-title" data-i18n="adhesive_title">Plitka yelimi kalkulyatori</h2><p class="card-desc" data-i18n="adhesive_desc">Maydon va sarf me’yori bo‘yicha qoplar soni</p><div class="card-form">
+<div class="field"><label><span data-i18n="adhesive_area">Plitka maydoni (m²)</span></label><input id="adhesiveArea" type="number" min="0" step="any" placeholder="35"></div>
+<div class="field"><label><span data-i18n="adhesive_consumption">1 m² uchun sarf (kg)</span></label><input id="adhesiveConsumption" type="number" min="0" step="any" value="4"></div>
+<div class="field"><label><span data-i18n="adhesive_bag">1 qop og‘irligi (kg)</span></label><input id="adhesiveBag" type="number" min="0" step="any" value="25"></div>
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label><input id="adhesiveReserve" type="number" min="0" max="100" step="any" value="10"></div>
+<button class="calc" onclick="adhesiveCalc()"><span data-i18n="calc_adhesive">Yelimni hisoblash</span></button><div class="result" id="adhesiveResult">Natija shu yerda chiqadi.</div></div></div>
+
+<!-- TOM -->
+<div class="card" id="roof"><div class="card-top"><span class="card-index">10</span><span class="card-type">ROOF</span></div><h2 class="card-title" data-i18n="roof_title">Tom materiali kalkulyatori</h2><p class="card-desc" data-i18n="roof_desc">Tom maydoni, qiyalik koeffitsiyenti va zaxira</p><div class="card-form">
+<div class="field"><label><span data-i18n="roof_length">Tom uzunligi (m)</span></label><input id="roofLength" type="number" min="0" step="any" placeholder="10"></div>
+<div class="field"><label><span data-i18n="roof_width">Tomning gorizontal eni (m)</span></label><input id="roofWidth" type="number" min="0" step="any" placeholder="6"></div>
+<div class="field"><label><span data-i18n="roof_slope">Qiyalik koeffitsiyenti</span></label><input id="roofSlope" type="number" min="1" step="any" value="1.15"></div>
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label><input id="roofReserve" type="number" min="0" max="100" step="any" value="10"></div>
+<button class="calc" onclick="roofCalc()"><span data-i18n="calc_roof">Tom maydonini hisoblash</span></button><div class="result" id="roofResult">Natija shu yerda chiqadi.</div></div></div>
+
+<!-- ARMATURA -->
+<div class="card" id="rebar"><div class="card-top"><span class="card-index">11</span><span class="card-type">REBAR</span></div><h2 class="card-title" data-i18n="rebar_title">Armatura kalkulyatori</h2><p class="card-desc" data-i18n="rebar_desc">Umumiy uzunlik va metr og‘irligi bo‘yicha kg hisoblash</p><div class="card-form">
+<div class="field"><label><span data-i18n="rebar_length">Bitta sterjen uzunligi (m)</span></label><input id="rebarLength" type="number" min="0" step="any" placeholder="6"></div>
+<div class="field"><label><span data-i18n="rebar_count">Sterjenlar soni (dona)</span></label><input id="rebarCount" type="number" min="0" step="1" placeholder="40"></div>
+<div class="field"><label><span data-i18n="rebar_weight">1 metr og‘irligi (kg/m)</span></label><input id="rebarWeight" type="number" min="0" step="any" value="0.888"></div>
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label><input id="rebarReserve" type="number" min="0" max="100" step="any" value="5"></div>
+<button class="calc" onclick="rebarCalc()"><span data-i18n="calc_rebar">Armaturani hisoblash</span></button><div class="result" id="rebarResult">Natija shu yerda chiqadi.</div></div></div>
+
+<!-- QO‘SHIMCHA 5 TA KALKULYATOR -->
+<div class="card" id="excavation"><div class="card-top"><span class="card-index">12</span><span class="card-type">EXCAVATION</span></div><h2 class="card-title">Tuproq qazish kalkulyatori</h2><p class="card-desc">Uzunlik, kenglik va chuqurlikdan qazish hajmi</p><div class="card-form"><div class="field"><label>Uzunlik (m)</label><input id="excavationL" type="number" min="0" step="any" placeholder="10"></div><div class="field"><label>Kenglik (m)</label><input id="excavationW" type="number" min="0" step="any" placeholder="0.6"></div><div class="field"><label>Chuqurlik (m)</label><input id="excavationD" type="number" min="0" step="any" placeholder="1.2"></div><div class="field"><label>Zaxira (%)</label><input id="excavationReserve" type="number" min="0" max="100" value="5"></div><button class="calc" onclick="excavationCalc()">Qazish hajmini hisoblash</button><div class="result" id="excavationResult">Natija shu yerda chiqadi.</div></div></div>
+<div class="card" id="insulation"><div class="card-top"><span class="card-index">13</span><span class="card-type">INSULATION</span></div><h2 class="card-title">Issiqlik izolyatsiyasi</h2><p class="card-desc">Devor yuzasi, eshik-deraza va zaxira</p><div class="card-form"><div class="field"><label>Devor uzunligi (m)</label><input id="insulationL" type="number" min="0" step="any" placeholder="12"></div><div class="field"><label>Devor balandligi (m)</label><input id="insulationH" type="number" min="0" step="any" placeholder="3"></div><div class="field"><label>Eshik/derazalar jami (m²)</label><input id="insulationOpenings" type="number" min="0" step="any" value="2"></div><div class="field"><label>Zaxira (%)</label><input id="insulationReserve" type="number" min="0" max="100" value="10"></div><button class="calc" onclick="insulationCalc()">Izolyatsiyani hisoblash</button><div class="result" id="insulationResult">Natija shu yerda chiqadi.</div></div></div>
+<div class="card" id="wallpaper"><div class="card-top"><span class="card-index">14</span><span class="card-type">WALLPAPER</span></div><h2 class="card-title">Oboy kalkulyatori</h2><p class="card-desc">Devor maydonidan rulon sonini hisoblash</p><div class="card-form"><div class="field"><label>Devorlar jami uzunligi (m)</label><input id="wallpaperPerimeter" type="number" min="0" step="any" placeholder="18"></div><div class="field"><label>Balandlik (m)</label><input id="wallpaperH" type="number" min="0" step="any" placeholder="2.8"></div><div class="field"><label>Ochilishlar maydoni (m²)</label><input id="wallpaperOpenings" type="number" min="0" step="any" value="3"></div><div class="field"><label>1 rulon qoplaydigan maydon (m²)</label><input id="wallpaperCoverage" type="number" min="0" step="any" value="5.3"></div><div class="field"><label>Zaxira (%)</label><input id="wallpaperReserve" type="number" min="0" max="100" value="10"></div><button class="calc" onclick="wallpaperCalc()">Oboyni hisoblash</button><div class="result" id="wallpaperResult">Natija shu yerda chiqadi.</div></div></div>
+<div class="card" id="tile"><div class="card-top"><span class="card-index">15</span><span class="card-type">TILE</span></div><h2 class="card-title">Pol plitkasi kalkulyatori</h2><p class="card-desc">Maydon va qadoq qamroviga ko‘ra qadoqlar soni</p><div class="card-form"><div class="field"><label>Uzunlik (m)</label><input id="tileL" type="number" min="0" step="any" placeholder="5"></div><div class="field"><label>Kenglik (m)</label><input id="tileW" type="number" min="0" step="any" placeholder="4"></div><div class="field"><label>1 qadoq qoplaydigan maydon (m²)</label><input id="tileCoverage" type="number" min="0" step="any" value="1.44"></div><div class="field"><label>Zaxira (%)</label><input id="tileReserve" type="number" min="0" max="100" value="10"></div><button class="calc" onclick="tileCalc()">Plitkani hisoblash</button><div class="result" id="tileResult">Natija shu yerda chiqadi.</div></div></div>
+<div class="card" id="gravel"><div class="card-top"><span class="card-index">16</span><span class="card-type">SAND / GRAVEL</span></div><h2 class="card-title">Shag‘al / qum kalkulyatori</h2><p class="card-desc">Hajm, zichlik va zaxiradan og‘irlikni hisoblash</p><div class="card-form"><div class="field"><label>Uzunlik (m)</label><input id="gravelL" type="number" min="0" step="any" placeholder="10"></div><div class="field"><label>Kenglik (m)</label><input id="gravelW" type="number" min="0" step="any" placeholder="3"></div><div class="field"><label>Qatlam qalinligi (cm)</label><input id="gravelT" type="number" min="0" step="any" placeholder="15"></div><div class="field"><label>Zichlik (kg/m³)</label><input id="gravelDensity" type="number" min="0" step="any" value="1600"></div><div class="field"><label>Zaxira (%)</label><input id="gravelReserve" type="number" min="0" max="100" value="10"></div><button class="calc" onclick="gravelCalc()">Shag‘al / qumni hisoblash</button><div class="result" id="gravelResult">Natija shu yerda chiqadi.</div></div></div>
+
 </div>
 
     </section>
@@ -1228,10 +1291,9 @@ function getNumber(id){
 function setResult(id, htmlText){
     const el = document.getElementById(id);
     if (el) el.innerHTML = htmlText;
-    // Successful calculations are added to the user's history by the Firebase module.
-    if (el && typeof window.archCalcRecordCalculation === "function" && !/invalid|noto‘g‘ri|xato/i.test(String(htmlText))) {
-        window.archCalcRecordCalculation(id, htmlText);
-    }
+    const successful = el && !/invalid|noto‘g‘ri|xato/i.test(String(htmlText));
+    if (successful && typeof window.archCalcRecordCalculation === "function") window.archCalcRecordCalculation(id, htmlText);
+    if (successful && typeof window.archCalcOnCalculation === "function") window.archCalcOnCalculation(id);
 }
 
 function isPositive(...values){
@@ -1264,6 +1326,7 @@ function roomCalc(){
     const volume = area*h;
     const perimeter = 2*(l+w);
 
+    window.archCalcCalcMeta = window.archCalcCalcMeta || {}; window.archCalcCalcMeta.roomResult = {name:"Xona maydoni", qty:area, unit:"m²"};
     setResult("roomResult",
         outText("roomArea")+" "+fmt(area)+" m²<br>"+
         outText("roomVol")+" "+fmt(volume)+" m³<br>"+
@@ -1337,6 +1400,7 @@ function brickCalc(){
     const bricksWithoutReserve = Math.ceil(exactBricks);
     const bricksWithReserve = Math.ceil(exactBricks * (1 + reserve / 100));
 
+    window.archCalcCalcMeta = window.archCalcCalcMeta || {}; window.archCalcCalcMeta.brickResult = {name:"G‘isht", qty:bricksWithReserve, unit:"dona"};
     setResult("brickResult",
         outText("wallArea") + " " + fmt(netArea) + " m²<br>" +
         outText("brickWallThickness") + " " + fmt(wallThickness * 1000, 0) + " mm<br>" +
@@ -1392,6 +1456,7 @@ function blockCalc(){
     const baseCount=area/moduleArea;
     const total=Math.ceil(baseCount*(1+reserve/100));
 
+    window.archCalcCalcMeta = window.archCalcCalcMeta || {}; window.archCalcCalcMeta.blockResult = {name:"Blok", qty:total, unit:"dona"};
     setResult("blockResult",
         outText("wallArea")+" "+fmt(area)+" m²<br>"+
         outText("blockTypeResult")+" "+document.getElementById("blockType").selectedOptions[0].text+"<br>"+
@@ -1418,6 +1483,7 @@ function concreteCalc(){
     const bags=cementKg/bag;
     const wholeBags=Math.ceil(bags);
 
+    window.archCalcCalcMeta = window.archCalcCalcMeta || {}; window.archCalcCalcMeta.conResult = {name:"Beton", qty:totalVolume, unit:"m³"};
     setResult("conResult",
         outText("conUnit")+" "+fmt(unitVolume,3)+" m³<br>"+
         outText("conExact")+" "+fmt(exactVolume,3)+" m³<br>"+
@@ -1446,6 +1512,9 @@ function paintCalc(){
     if(literCover>0 && canLiters>0) html+=outText("paintByCanVolume")+" "+fmt((reserveArea/literCover)/canLiters,2)+" banka (liter bo‘yicha)<br>";
     if(canCover>0 && canLiters>0) html+=outText("paintCanLitersTotal")+" "+fmt((reserveArea/canCover)*canLiters,2)+" L";
 
+    const paintQty = literCover>0 ? reserveArea/literCover : Math.ceil(reserveArea/canCover);
+    const paintUnit = literCover>0 ? "litr" : "banka";
+    window.archCalcCalcMeta = window.archCalcCalcMeta || {}; window.archCalcCalcMeta.paintResult = {name:"Bo‘yoq", qty:paintQty, unit:paintUnit};
     setResult("paintResult",html);
 }
 
@@ -1484,8 +1553,22 @@ function floorCalc(){
     }
 
     html+="<br>"+outText("floorTypeResult")+" "+document.getElementById("floorType").selectedOptions[0].text;
+    window.archCalcCalcMeta = window.archCalcCalcMeta || {}; window.archCalcCalcMeta.floorResult = {name:"Pol materiali — "+document.getElementById("floorType").selectedOptions[0].text, qty:Math.ceil(packages), unit:"qadoq"};
     setResult("floorResult",html);
 }
+
+/* Qo‘shimcha qurilish kalkulyatorlari */
+function plasterCalc(){const area=getNumber("plasterArea"),thick=getNumber("plasterThickness"),reserve=getNumber("plasterReserve");if(!isPositive(area,thick)||!validPercent(reserve)){setResult("plasterResult",outText("invalid"));return}const volume=area*(thick/1000)*(1+reserve/100);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.plasterResult={name:"Suvoq qorishmasi",qty:volume,unit:"m³"};setResult("plasterResult",`Maydon: ${fmt(area)} m²<br>Qalinlik: ${fmt(thick,1)} mm<br>Zaxira bilan suvoq hajmi: ${fmt(volume,3)} m³`)}
+function adhesiveCalc(){const area=getNumber("adhesiveArea"),cons=getNumber("adhesiveConsumption"),bag=getNumber("adhesiveBag"),reserve=getNumber("adhesiveReserve");if(!isPositive(area,cons,bag)||!validPercent(reserve)){setResult("adhesiveResult",outText("invalid"));return}const kg=area*cons*(1+reserve/100),bags=Math.ceil(kg/bag);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.adhesiveResult={name:"Plitka yelimi",qty:bags,unit:"qop"};setResult("adhesiveResult",`Maydon: ${fmt(area)} m²<br>Yelim miqdori zaxira bilan: ${fmt(kg,2)} kg<br>Qoplar soni: ${bags} dona (${fmt(bag,0)} kg/qop)`)}
+function roofCalc(){const l=getNumber("roofLength"),w=getNumber("roofWidth"),slope=getNumber("roofSlope"),reserve=getNumber("roofReserve");if(!isPositive(l,w,slope)||slope<1||!validPercent(reserve)){setResult("roofResult",outText("invalid"));return}const base=l*w*slope,area=base*(1+reserve/100);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.roofResult={name:"Tom qoplamasi",qty:area,unit:"m²"};setResult("roofResult",`Gorizontal asos maydoni: ${fmt(l*w,2)} m²<br>Qiyalik hisobga olingan maydon: ${fmt(base,2)} m²<br>Zaxira bilan material: ${fmt(area,2)} m²`)}
+function rebarCalc(){const l=getNumber("rebarLength"),count=getNumber("rebarCount"),weight=getNumber("rebarWeight"),reserve=getNumber("rebarReserve");if(!isPositive(l,count,weight)||!validPercent(reserve)||!Number.isInteger(count)){setResult("rebarResult",outText("invalid"));return}const totalLength=l*count,kg=totalLength*weight*(1+reserve/100);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.rebarResult={name:"Armatura",qty:kg,unit:"kg"};setResult("rebarResult",`Umumiy uzunlik: ${fmt(totalLength,2)} m<br>Zaxirasiz og‘irlik: ${fmt(totalLength*weight,2)} kg<br>Zaxira bilan og‘irlik: ${fmt(kg,2)} kg`)}
+
+/* Qo‘shimcha hisoblash vositalari — natijalar avtomatik smetaga ulanadi. */
+function excavationCalc(){const l=getNumber("excavationL"),w=getNumber("excavationW"),d=getNumber("excavationD"),r=getNumber("excavationReserve");if(!isPositive(l,w,d)||!validPercent(r)){setResult("excavationResult",outText("invalid"));return}const base=l*w*d,total=base*(1+r/100);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.excavationResult={name:"Tuproq qazish",qty:total,unit:"m³"};setResult("excavationResult",`Asosiy hajm: ${fmt(base,3)} m³<br>Zaxira bilan qazish hajmi: ${fmt(total,3)} m³`)}
+function insulationCalc(){const l=getNumber("insulationL"),h=getNumber("insulationH"),o=getNumber("insulationOpenings"),r=getNumber("insulationReserve");if(!isPositive(l,h)||!Number.isFinite(o)||o<0||o>=l*h||!validPercent(r)){setResult("insulationResult",outText("invalid"));return}const base=l*h-o,total=base*(1+r/100);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.insulationResult={name:"Issiqlik izolyatsiyasi",qty:total,unit:"m²"};setResult("insulationResult",`Sof devor maydoni: ${fmt(base,2)} m²<br>Zaxira bilan izolyatsiya: ${fmt(total,2)} m²`)}
+function wallpaperCalc(){const p=getNumber("wallpaperPerimeter"),h=getNumber("wallpaperH"),o=getNumber("wallpaperOpenings"),c=getNumber("wallpaperCoverage"),r=getNumber("wallpaperReserve");if(!isPositive(p,h,c)||!Number.isFinite(o)||o<0||o>=p*h||!validPercent(r)){setResult("wallpaperResult",outText("invalid"));return}const area=(p*h-o)*(1+r/100),rolls=Math.ceil(area/c);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.wallpaperResult={name:"Oboy",qty:rolls,unit:"rulon"};setResult("wallpaperResult",`Zaxira bilan devor maydoni: ${fmt(area,2)} m²<br>Kerakli oboy: ${rolls} rulon (har biri ${fmt(c,2)} m²)`)}
+function tileCalc(){const l=getNumber("tileL"),w=getNumber("tileW"),c=getNumber("tileCoverage"),r=getNumber("tileReserve");if(!isPositive(l,w,c)||!validPercent(r)){setResult("tileResult",outText("invalid"));return}const area=l*w,total=area*(1+r/100),packs=Math.ceil(total/c);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.tileResult={name:"Pol plitkasi",qty:packs,unit:"qadoq"};setResult("tileResult",`Pol maydoni: ${fmt(area,2)} m²<br>Zaxira bilan: ${fmt(total,2)} m²<br>Kerakli plitka: ${packs} qadoq`)}
+function gravelCalc(){const l=getNumber("gravelL"),w=getNumber("gravelW"),t=getNumber("gravelT"),d=getNumber("gravelDensity"),r=getNumber("gravelReserve");if(!isPositive(l,w,t,d)||!validPercent(r)){setResult("gravelResult",outText("invalid"));return}const volume=l*w*(t/100)*(1+r/100),kg=volume*d;window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.gravelResult={name:"Shag‘al / qum",qty:kg/1000,unit:"tonna"};setResult("gravelResult",`Hajm zaxira bilan: ${fmt(volume,3)} m³<br>Taxminiy og‘irlik: ${fmt(kg/1000,3)} tonna (${fmt(kg,0)} kg)`)}
 
 /* ZINA — bir nechta zina turi va dinamik SVG chizmalar bilan */
 
@@ -1811,6 +1894,7 @@ function stairCalc(){
 
     html += warning;
 
+    window.archCalcCalcMeta = window.archCalcCalcMeta || {}; window.archCalcCalcMeta.stairResult = {name:"Zina qurilishi", qty:1, unit:"ish"};
     setResult("stairResult",html);
     setResult("stairDiagrams",buildStairViews(type,geo,widthM,risers,total));
 }
@@ -1870,7 +1954,7 @@ function outText(key){
 
 const archCalcFullTranslations = {
   uz: {
-    dashboard:"Bosh sahifa", calculators:"KALKULYATORLAR", workspace:"Ish maydoni", eyebrow:"Arxitektura / Qurilish", heroTitle:"Aniqlik bilan hisoblang.", heroDesc:"Arxitektura va qurilish hisoblari uchun toza, aniq va amaliy ish maydoni.", system:"TIZIM", toolCount:"8 ta hisoblash vositasi", calcTools:"Hisoblash vositalari",
+    dashboard:"Bosh sahifa", calculators:"KALKULYATORLAR", workspace:"Ish maydoni", eyebrow:"Arxitektura / Qurilish", heroTitle:"Aniqlik bilan hisoblang.", heroDesc:"Arxitektura va qurilish hisoblari uchun toza, aniq va amaliy ish maydoni.", system:"TIZIM", toolCount:"11 ta hisoblash vositasi", calcTools:"Hisoblash vositalari",
     room_title:"Xona kalkulyatori", room_desc:"Maydon, hajm va perimetr", brick_title:"G‘isht kalkulyatori", brick_desc:"G‘isht urish qalinligi va miqdori", block_title:"Blok kalkulyatori", block_desc:"Blok turi va miqdorini hisoblash", concrete_title:"Beton kalkulyatori", concrete_desc:"Aniq hajm va sement qoplarini hisoblash", paint_title:"Bo‘yoq kalkulyatori", paint_desc:"Litr yoki banka bo‘yicha bo‘yoq hisoblash", floor_title:"Pol kalkulyatori", floor_desc:"Pol turiga qarab material miqdorini hisoblash", stair_title:"Zina kalkulyatori", stair_desc:"Zina geometriyasi va qulaylik tekshiruvi",
     room_l:"Uzunlik (m)", room_w:"Kenglik (m)", room_h:"Balandlik (m)", wall_l:"Devor uzunligi (m)", wall_h:"Devor balandligi (m)", brick_type:"G‘isht o‘lchami", brick_thickness:"G‘isht urish qalinligi", brick_l:"G‘isht uzunligi (cm)", brick_w:"G‘isht eni (cm)", brick_h:"G‘isht balandligi (cm)", brick_openings:"Eshik/deraza maydoni (m²)", brick_reserve:"Zaxira (%)",
     block_type:"Blok turi", block_l:"Blok uzunligi (cm)", block_w:"Blok eni/qalinligi (cm)", block_h:"Blok balandligi (cm)", block_openings:"Eshik/deraza maydoni (m²)", reserve:"Zaxira (%)",
@@ -1879,10 +1963,10 @@ const archCalcFullTranslations = {
     floor_type:"Pol turi", floor_l:"Xona uzunligi (m)", floor_w:"Xona kengligi (m)", floor_package:"1 qadoq/rulon qoplaydigan maydon (m²) — majburiy", floor_piece:"1 dona mahsulot maydoni (m²) — ixtiyoriy",
     stair_type:"Zina turi", stair_straight:"To‘g‘ri zina", stair_l:"L-shakldagi zina (90°)", stair_u:"U-shakldagi zina (180°)", stair_two_flight:"Maydonchali ikki marshli zina", stair_winder:"Burama pog‘onali (winder) zina", stair_spiral:"Spiral (vintli) zina", spiral_diameter:"Spiral zina diametri (cm)", winder_count:"Burilishdagi burama pog‘onalar soni",
     stair_height:"Qavatlar orasidagi umumiy balandlik (cm)", step_height:"Maqsadli zina balandligi (cm)", step_depth:"Maqsadli zina chuqurligi (cm)", stair_width:"Zina eni (cm)", available_run:"Mavjud gorizontal joy (m) — ixtiyoriy", landing:"Maydoncha uzunligi (m) — ixtiyoriy",
-    calc_room:"Hisoblash", calc_brick:"G‘ishtni hisoblash", calc_block:"Blokni hisoblash", calc_concrete:"Betonni hisoblash", calc_paint:"Bo‘yoqni hisoblash", calc_floor:"Polni hisoblash", calc_stair:"Zinani hisoblash", result_empty:"Natija shu yerda chiqadi.", nav_room:"Xona", nav_brick:"G‘isht", nav_block:"Blok", nav_concrete:"Beton", nav_paint:"Bo‘yoq", nav_floor:"Pol", nav_stairs:"Zina", footer:"ARCHCALC · ARXITEKTURA VA QURILISH · 2026"
+    plaster_title:"Suvoq kalkulyatori", plaster_desc:"Devor suvoqi hajmi va taxminiy qorishma", adhesive_title:"Plitka yelimi kalkulyatori", adhesive_desc:"Sarf me’yori va qoplar soni", roof_title:"Tom materiali kalkulyatori", roof_desc:"Tom maydoni va qoplama zaxirasi", rebar_title:"Armatura kalkulyatori", rebar_desc:"Armatura og‘irligi va uzunligi", plaster_area:"Suvaladigan maydon (m²)", plaster_thickness:"Suvoq qalinligi (mm)", adhesive_area:"Plitka maydoni (m²)", adhesive_consumption:"1 m² uchun sarf (kg)", adhesive_bag:"1 qop og‘irligi (kg)", roof_length:"Tom uzunligi (m)", roof_width:"Tomning gorizontal eni (m)", roof_slope:"Qiyalik koeffitsiyenti", rebar_length:"Bitta sterjen uzunligi (m)", rebar_count:"Sterjenlar soni (dona)", rebar_weight:"1 metr og‘irligi (kg/m)", calc_plaster:"Suvoqni hisoblash", calc_adhesive:"Yelimni hisoblash", calc_roof:"Tom maydonini hisoblash", calc_rebar:"Armaturani hisoblash", nav_plaster:"Suvoq", nav_adhesive:"Plitka yelimi", nav_roof:"Tom", nav_rebar:"Armatura", calc_room:"Hisoblash", calc_brick:"G‘ishtni hisoblash", calc_block:"Blokni hisoblash", calc_concrete:"Betonni hisoblash", calc_paint:"Bo‘yoqni hisoblash", calc_floor:"Polni hisoblash", calc_stair:"Zinani hisoblash", result_empty:"Natija shu yerda chiqadi.", nav_room:"Xona", nav_brick:"G‘isht", nav_block:"Blok", nav_concrete:"Beton", nav_paint:"Bo‘yoq", nav_floor:"Pol", nav_stairs:"Zina", footer:"ARCHCALC · ARXITEKTURA VA QURILISH · 2026"
   },
   ru: {
-    dashboard:"Главная", calculators:"КАЛЬКУЛЯТОРЫ", workspace:"Рабочая область", eyebrow:"Архитектура / Строительство", heroTitle:"Расчёты с точностью.", heroDesc:"Чистое и практичное рабочее пространство для архитектурных и строительных расчётов.", system:"СИСТЕМА", toolCount:"8 инструментов", calcTools:"Инструменты расчёта",
+    dashboard:"Главная", calculators:"КАЛЬКУЛЯТОРЫ", workspace:"Рабочая область", eyebrow:"Архитектура / Строительство", heroTitle:"Расчёты с точностью.", heroDesc:"Чистое и практичное рабочее пространство для архитектурных и строительных расчётов.", system:"СИСТЕМА", toolCount:"11 инструментов", calcTools:"Инструменты расчёта",
     room_title:"Калькулятор помещения", room_desc:"Площадь, объём и периметр", brick_title:"Калькулятор кирпича", brick_desc:"Толщина кладки и количество кирпича", block_title:"Калькулятор блоков", block_desc:"Тип блока и количество", concrete_title:"Калькулятор бетона", concrete_desc:"Точный объём и мешки цемента", paint_title:"Калькулятор краски", paint_desc:"Расчёт краски по литрам или банкам", floor_title:"Калькулятор пола", floor_desc:"Количество материала по типу пола", stair_title:"Калькулятор лестницы", stair_desc:"Геометрия и проверка удобства",
     room_l:"Длина (м)", room_w:"Ширина (м)", room_h:"Высота (м)", wall_l:"Длина стены (м)", wall_h:"Высота стены (м)", brick_type:"Размер кирпича", brick_thickness:"Толщина кладки", brick_l:"Длина кирпича (см)", brick_w:"Ширина кирпича (см)", brick_h:"Высота кирпича (см)", brick_openings:"Площадь дверей/окон (м²)", brick_reserve:"Запас (%)",
     block_type:"Тип блока", block_l:"Длина блока (см)", block_w:"Ширина/толщина блока (см)", block_h:"Высота блока (см)", block_openings:"Площадь дверей/окон (м²)", reserve:"Запас (%)",
@@ -1891,10 +1975,10 @@ const archCalcFullTranslations = {
     floor_type:"Тип пола", floor_l:"Длина комнаты (м)", floor_w:"Ширина комнаты (м)", floor_package:"Площадь 1 упаковки/рулона (м²) — обязательно", floor_piece:"Площадь 1 единицы (м²) — необязательно",
     stair_type:"Тип лестницы", stair_straight:"Прямая лестница", stair_l:"Г-образная лестница (90°)", stair_u:"П-образная лестница (180°)", stair_two_flight:"Двухмаршевая лестница с площадкой", stair_winder:"Лестница с забежными ступенями", stair_spiral:"Винтовая (спиральная) лестница", spiral_diameter:"Диаметр винтовой лестницы (см)", winder_count:"Количество забежных ступеней на повороте",
     stair_height:"Общая высота между этажами (см)", step_height:"Целевая высота ступени (см)", step_depth:"Целевая глубина ступени (см)", stair_width:"Ширина лестницы (см)", available_run:"Доступная горизонтальная длина (м) — необязательно", landing:"Длина площадки (м) — необязательно",
-    calc_room:"Рассчитать", calc_brick:"Рассчитать кирпич", calc_block:"Рассчитать блоки", calc_concrete:"Рассчитать бетон", calc_paint:"Рассчитать краску", calc_floor:"Рассчитать пол", calc_stair:"Рассчитать лестницу", result_empty:"Результат появится здесь.", nav_room:"Помещение", nav_brick:"Кирпич", nav_block:"Блок", nav_concrete:"Бетон", nav_paint:"Краска", nav_floor:"Пол", nav_stairs:"Лестница", footer:"ARCHCALC · АРХИТЕКТУРА И СТРОИТЕЛЬСТВО · 2026"
+    plaster_title:"Калькулятор штукатурки", plaster_desc:"Объём штукатурки стен", adhesive_title:"Калькулятор плиточного клея", adhesive_desc:"Расход и количество мешков", roof_title:"Калькулятор кровли", roof_desc:"Площадь крыши с запасом", rebar_title:"Калькулятор арматуры", rebar_desc:"Длина и вес арматуры", plaster_area:"Площадь оштукатуривания (м²)", plaster_thickness:"Толщина штукатурки (мм)", adhesive_area:"Площадь плитки (м²)", adhesive_consumption:"Расход на 1 м² (кг)", adhesive_bag:"Вес одного мешка (кг)", roof_length:"Длина крыши (м)", roof_width:"Горизонтальная ширина крыши (м)", roof_slope:"Коэффициент уклона", rebar_length:"Длина одного стержня (м)", rebar_count:"Количество стержней", rebar_weight:"Вес 1 метра (кг/м)", calc_plaster:"Рассчитать штукатурку", calc_adhesive:"Рассчитать клей", calc_roof:"Рассчитать площадь крыши", calc_rebar:"Рассчитать арматуру", nav_plaster:"Штукатурка", nav_adhesive:"Плиточный клей", nav_roof:"Кровля", nav_rebar:"Арматура", calc_room:"Рассчитать", calc_brick:"Рассчитать кирпич", calc_block:"Рассчитать блоки", calc_concrete:"Рассчитать бетон", calc_paint:"Рассчитать краску", calc_floor:"Рассчитать пол", calc_stair:"Рассчитать лестницу", result_empty:"Результат появится здесь.", nav_room:"Помещение", nav_brick:"Кирпич", nav_block:"Блок", nav_concrete:"Бетон", nav_paint:"Краска", nav_floor:"Пол", nav_stairs:"Лестница", footer:"ARCHCALC · АРХИТЕКТУРА И СТРОИТЕЛЬСТВО · 2026"
   },
   en: {
-    dashboard:"Dashboard", calculators:"CALCULATORS", workspace:"Workspace", eyebrow:"Architecture / Construction", heroTitle:"Calculate with precision.", heroDesc:"A focused workspace for practical architectural and construction calculations.", system:"SYSTEM", toolCount:"7 calculation tools", calcTools:"Calculation tools",
+    dashboard:"Dashboard", calculators:"CALCULATORS", workspace:"Workspace", eyebrow:"Architecture / Construction", heroTitle:"Calculate with precision.", heroDesc:"A focused workspace for practical architectural and construction calculations.", system:"SYSTEM", toolCount:"11 calculation tools", calcTools:"Calculation tools",
     room_title:"Room calculator", room_desc:"Area, volume and perimeter", brick_title:"Brick calculator", brick_desc:"Masonry thickness and brick quantity", block_title:"Block calculator", block_desc:"Block type and quantity", concrete_title:"Concrete calculator", concrete_desc:"Accurate volume and cement bag estimate", paint_title:"Paint calculator", paint_desc:"Paint quantity by liters or cans", floor_title:"Floor calculator", floor_desc:"Material quantity by floor type", stair_title:"Stairs calculator", stair_desc:"Stair geometry and comfort check",
     room_l:"Length (m)", room_w:"Width (m)", room_h:"Height (m)", wall_l:"Wall length (m)", wall_h:"Wall height (m)", brick_type:"Brick size", brick_thickness:"Masonry thickness", brick_l:"Brick length (cm)", brick_w:"Brick width (cm)", brick_h:"Brick height (cm)", brick_openings:"Door/window area (m²)", brick_reserve:"Reserve (%)",
     block_type:"Block type", block_l:"Block length (cm)", block_w:"Block width/thickness (cm)", block_h:"Block height (cm)", block_openings:"Door/window area (m²)", reserve:"Reserve (%)",
@@ -1903,7 +1987,7 @@ const archCalcFullTranslations = {
     floor_type:"Floor type", floor_l:"Room length (m)", floor_w:"Room width (m)", floor_package:"Area covered by 1 pack/roll (m²) — required", floor_piece:"Area per piece (m²) — optional",
     stair_type:"Stair type", stair_straight:"Straight stair", stair_l:"L-shaped stair (90°)", stair_u:"U-shaped stair (180°)", stair_two_flight:"Two-flight stair with landing", stair_winder:"Winder stair", stair_spiral:"Spiral stair", spiral_diameter:"Spiral stair diameter (cm)", winder_count:"Number of winder treads at the turn",
     stair_height:"Total floor-to-floor height (cm)", step_height:"Target riser height (cm)", step_depth:"Target tread depth (cm)", stair_width:"Stair width (cm)", available_run:"Available horizontal space (m) — optional", landing:"Landing length (m) — optional",
-    calc_room:"Calculate", calc_brick:"Calculate bricks", calc_block:"Calculate blocks", calc_concrete:"Calculate concrete", calc_paint:"Calculate paint", calc_floor:"Calculate floor", calc_stair:"Calculate stairs", result_empty:"Result will appear here.", nav_room:"Room", nav_brick:"Brick", nav_block:"Block", nav_concrete:"Concrete", nav_paint:"Paint", nav_floor:"Floor", nav_stairs:"Stairs", footer:"ARCHCALC · ARCHITECTURE & CONSTRUCTION · 2026"
+    plaster_title:"Plaster calculator", plaster_desc:"Wall plaster volume estimate", adhesive_title:"Tile adhesive calculator", adhesive_desc:"Consumption rate and bag count", roof_title:"Roofing calculator", roof_desc:"Roof area with slope and reserve", rebar_title:"Rebar calculator", rebar_desc:"Total reinforcement length and weight", plaster_area:"Plastering area (m²)", plaster_thickness:"Plaster thickness (mm)", adhesive_area:"Tiling area (m²)", adhesive_consumption:"Consumption per m² (kg)", adhesive_bag:"Bag weight (kg)", roof_length:"Roof length (m)", roof_width:"Horizontal roof width (m)", roof_slope:"Slope factor", rebar_length:"Length per bar (m)", rebar_count:"Number of bars", rebar_weight:"Weight per meter (kg/m)", calc_plaster:"Calculate plaster", calc_adhesive:"Calculate adhesive", calc_roof:"Calculate roof area", calc_rebar:"Calculate rebar", nav_plaster:"Plaster", nav_adhesive:"Tile adhesive", nav_roof:"Roof", nav_rebar:"Rebar", calc_room:"Calculate", calc_brick:"Calculate bricks", calc_block:"Calculate blocks", calc_concrete:"Calculate concrete", calc_paint:"Calculate paint", calc_floor:"Calculate floor", calc_stair:"Calculate stairs", result_empty:"Result will appear here.", nav_room:"Room", nav_brick:"Brick", nav_block:"Block", nav_concrete:"Concrete", nav_paint:"Paint", nav_floor:"Floor", nav_stairs:"Stairs", footer:"ARCHCALC · ARCHITECTURE & CONSTRUCTION · 2026"
   }
 };
 const archCalcTranslations = Object.fromEntries(Object.keys(archCalcFullTranslations).map(lang => [lang, {...archCalcFullTranslations[lang]}]));
@@ -2240,8 +2324,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const errorBox = document.getElementById("authError");
   const historyList = document.getElementById("archcalc-history-list");
   const historyStatus = document.getElementById("archcalc-history-status");
-  const calcNames = { roomResult:"Xona hisobi", brickResult:"G‘isht hisobi", blockResult:"Blok hisobi", conResult:"Beton hisobi", paintResult:"Bo‘yoq hisobi", floorResult:"Pol hisobi", stairResult:"Zina hisobi" };
-  const calcSections = { roomResult:"room", brickResult:"brick", blockResult:"block", conResult:"concrete", paintResult:"paint", floorResult:"floor", stairResult:"stair" };
+  const calcNames = { roomResult:"Xona hisobi", brickResult:"G‘isht hisobi", blockResult:"Blok hisobi", conResult:"Beton hisobi", paintResult:"Bo‘yoq hisobi", floorResult:"Pol hisobi", stairResult:"Zina hisobi", plasterResult:"Suvoq hisobi", adhesiveResult:"Plitka yelimi", roofResult:"Tom qoplamasi", rebarResult:"Armatura", excavationResult:"Tuproq qazish", insulationResult:"Issiqlik izolyatsiyasi", wallpaperResult:"Oboy", tileResult:"Pol plitkasi", gravelResult:"Shag‘al / qum" };
+  const calcSections = { roomResult:"room", brickResult:"brick", blockResult:"block", conResult:"concrete", paintResult:"paint", floorResult:"floor", stairResult:"stair", plasterResult:"plaster", adhesiveResult:"adhesive", roofResult:"roof", rebarResult:"rebar", excavationResult:"excavation", insulationResult:"insulation", wallpaperResult:"wallpaper", tileResult:"tile", gravelResult:"gravel" };
   let historyUserId = null;
   let lastSaveAt = 0;
 
@@ -2402,6 +2486,39 @@ body.blueprint{--bg:#071827;--bg-soft:#0a2235;--panel:#0b2030;--panel-2:#102b3e;
 @media(max-width:650px){.ac2-overview{padding:20px;border-radius:17px}.ac2-stat-grid{grid-template-columns:1fr 1fr}.ac2-stat:last-child{grid-column:span 2}.ac2-workspace{padding:15px}.ac2-panel{padding:13px}.ac2-section-head{align-items:flex-start;flex-direction:column}.ac2-head-actions{justify-content:flex-start}.ac2-table{min-width:600px}.ac2-reserve-label{margin-left:0}.ac2-estimator-actions{align-items:flex-start}.ac2-total-row{align-items:flex-start;flex-direction:column}.ac2-total-row strong{text-align:left}.topbar{padding:0 14px}.top-actions{gap:5px}.top-btn{padding:0 8px;font-size:11px}}
 @media print{.sidebar,.topbar,.mobile-nav,.ac2-hero-actions,.ac2-head-actions,.ac2-estimator-actions,.ac2-project-actions,.ac2-storage-note,.section-head{display:none!important}.app{display:block}.workspace{padding:0;max-width:none}.ac2-overview{box-shadow:none}.ac2-workspace{border:0;padding:0}.ac2-work-grid{grid-template-columns:1fr}.ac2-panel{break-inside:avoid}.ac2-project-list{max-height:none}}
 </style>
+<style>
+/* Guided project-first workflow */
+body.ac2-flow-locked .workspace > .hero,
+body.ac2-flow-locked .workspace > .history-panel,
+body.ac2-flow-locked .workspace > .ac2-overview,
+body.ac2-flow-locked .workspace > .ac2-workspace,
+body.ac2-flow-locked .workspace > .section-head,
+body.ac2-flow-locked .workspace > .container, body.ac2-flow-locked .ac2-workflow-bar { display:none !important; }
+body:not(.ac2-flow-locked) .ac2-flow-gate{display:none !important;}
+.ac2-flow-gate{max-width:1050px;margin:28px auto 48px;padding:clamp(22px,4vw,44px);border:1px solid var(--line);border-radius:26px;background:radial-gradient(circle at 90% 0%,rgba(49,198,177,.12),transparent 30rem),var(--panel);box-shadow:0 24px 70px rgba(0,0,0,.12)}
+.ac2-gate-kicker{font-size:10px;font-weight:850;letter-spacing:.18em;color:var(--ac2-teal);margin-bottom:14px}
+.ac2-flow-gate h1{font-size:clamp(28px,4vw,44px);letter-spacing:-.045em;margin:0 0 10px;color:var(--text)}
+.ac2-gate-intro{max-width:650px;color:var(--muted);font-size:14px;line-height:1.7;margin:0 0 24px}
+.ac2-gate-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px}
+.ac2-gate-list-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:22px;margin-bottom:15px}
+.ac2-gate-list-head h2{font-size:17px;margin:0;color:var(--text)}
+.ac2-flow-project-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.ac2-flow-project{padding:18px;border:1px solid var(--line);border-radius:15px;background:var(--panel-2);display:flex;flex-direction:column;gap:9px;min-width:0}
+.ac2-flow-project h3{font-size:15px;overflow-wrap:anywhere;margin:0;color:var(--text)}
+.ac2-flow-project p{font-size:12px;color:var(--muted);margin:0;line-height:1.5}
+.ac2-flow-project .amount{font-size:20px;font-weight:850;color:var(--ac2-teal)}
+.ac2-flow-project button{align-self:flex-start;margin-top:5px}
+.ac2-gate-footnote{font-size:11px;color:var(--muted);margin:22px 0 0}
+.ac2-calc-pricebox{display:grid;grid-template-columns:minmax(0,1fr) minmax(130px,.6fr);gap:12px;align-items:end;padding:13px;margin:0 0 14px;border:1px solid var(--ac2-line);border-radius:12px;background:rgba(49,198,177,.055)}
+.ac2-calc-pricebox label{display:grid;gap:6px;font-size:11px;color:var(--muted);font-weight:700}
+.ac2-calc-pricebox input{width:100%;min-width:0;padding:10px 11px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit}
+.ac2-calc-pricebox small{grid-column:1/-1;color:var(--muted);font-size:10px;line-height:1.5}
+.ac2-auto-estimate-status{font-size:11px;color:var(--ac2-teal);margin-top:8px;line-height:1.5}
+.ac2-workflow-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 22px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.ac2-workflow-bar strong{font-size:12px;color:var(--text)}
+.ac2-workflow-bar span{font-size:11px;color:var(--muted)}
+@media(max-width:600px){.ac2-calc-pricebox{grid-template-columns:1fr}.ac2-flow-gate{margin:12px auto 28px;padding:20px;border-radius:18px}}
+</style>
 <script id="archcalc-2-workspace">
 (function(){
   const STORAGE_KEY='archcalc-projects-v2';
@@ -2410,26 +2527,28 @@ body.blueprint{--bg:#071827;--bg-soft:#0a2235;--panel:#0b2030;--panel-2:#102b3e;
   const money=n=>fmt(n)+' so‘m';
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function readProjects(){try{const p=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');return Array.isArray(p)?p:[]}catch{return []}}
-  function writeProjects(p){localStorage.setItem(STORAGE_KEY,JSON.stringify(p));renderProjects()}
+  function writeProjects(p){localStorage.setItem(STORAGE_KEY,JSON.stringify(p));renderProjects();if(window.archCalcRenderFlowGate)window.archCalcRenderFlowGate()}
   function addRow(item={name:'',qty:1,unit:'dona',price:0}){
     const body=document.getElementById('ac2-estimate-rows');if(!body)return;
-    const id=++rowCounter;const tr=document.createElement('tr');tr.dataset.rowId=String(id);
-    tr.innerHTML=`<td><input aria-label="Material nomi" class="ac2-material-name" maxlength="100" placeholder="Masalan: Beton M300" value="${esc(item.name)}"></td><td><input aria-label="Miqdor" class="ac2-material-qty" type="number" min="0" step="any" value="${Number(item.qty)||0}"></td><td><select aria-label="Birlik" class="ac2-material-unit">${['dona','m','m²','m³','kg','qop','litr','ish'].map(u=>`<option ${item.unit===u?'selected':''}>${u}</option>`).join('')}</select></td><td><input aria-label="Birlik narxi" class="ac2-material-price" type="number" min="0" step="any" value="${Number(item.price)||0}"></td><td class="ac2-row-sum">0 so‘m</td><td><button class="ac2-remove-row" type="button" aria-label="Qatorni o‘chirish">×</button></td>`;
+    const id=++rowCounter;const tr=document.createElement('tr');tr.dataset.rowId=String(id);if(item.sourceKey)tr.dataset.sourceKey=item.sourceKey;
+    tr.innerHTML=`<td><input aria-label="Material nomi" class="ac2-material-name" maxlength="100" placeholder="Masalan: Beton M300" value="${esc(item.name)}"></td><td><input aria-label="Miqdor" class="ac2-material-qty" type="number" min="0" step="any" value="${Number(item.qty)||0}"></td><td><select aria-label="Birlik" class="ac2-material-unit">${['dona','m','m²','m³','kg','tonna','qop','qadoq','rulon','litr','banka','ish'].map(u=>`<option ${item.unit===u?'selected':''}>${u}</option>`).join('')}</select></td><td><input aria-label="Birlik narxi" class="ac2-material-price" type="number" min="0" step="any" value="${Number(item.price)||0}"></td><td class="ac2-row-sum">0 so‘m</td><td><button class="ac2-remove-row" type="button" aria-label="Qatorni o‘chirish">×</button></td>`;
     body.appendChild(tr);tr.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',renderTotal));tr.querySelector('.ac2-remove-row').addEventListener('click',()=>{tr.remove();renderTotal()});renderTotal();
   }
-  function getRows(){return [...document.querySelectorAll('#ac2-estimate-rows tr')].map(tr=>({name:tr.querySelector('.ac2-material-name').value.trim(),qty:Math.max(0,Number(tr.querySelector('.ac2-material-qty').value)||0),unit:tr.querySelector('.ac2-material-unit').value,price:Math.max(0,Number(tr.querySelector('.ac2-material-price').value)||0)}))}
+  function getRows(){return [...document.querySelectorAll('#ac2-estimate-rows tr')].map(tr=>({name:tr.querySelector('.ac2-material-name').value.trim(),qty:Math.max(0,Number(tr.querySelector('.ac2-material-qty').value)||0),unit:tr.querySelector('.ac2-material-unit').value,price:Math.max(0,Number(tr.querySelector('.ac2-material-price').value)||0),sourceKey:tr.dataset.sourceKey||''}))}
   function totals(){const rows=getRows();const subtotal=rows.reduce((sum,r)=>sum+r.qty*r.price,0);const reserve=Math.min(100,Math.max(0,Number(document.getElementById('ac2-reserve')?.value)||0));return {rows,subtotal,reserve,total:subtotal*(1+reserve/100)}}
   function renderTotal(){const t=totals();document.querySelectorAll('#ac2-estimate-rows tr').forEach((tr,i)=>{const r=t.rows[i];const cell=tr.querySelector('.ac2-row-sum');if(cell)cell.textContent=money(r.qty*r.price)});const total=document.getElementById('ac2-estimate-total');if(total)total.textContent=money(t.total);const note=document.getElementById('ac2-total-note');if(note)note.textContent=`Materiallar: ${money(t.subtotal)} · Zaxira: ${t.reserve}%`;}
   function renderProjects(){const projects=readProjects();const list=document.getElementById('ac2-project-list');if(!list)return;const count=document.getElementById('ac2-project-count');const badge=document.getElementById('ac2-project-badge');if(count)count.textContent=String(projects.length);if(badge)badge.textContent=projects.length+' ta';const lastTotal=document.getElementById('ac2-last-total'),lastName=document.getElementById('ac2-last-name');if(projects[0]){if(lastTotal)lastTotal.textContent=money(projects[0].total);if(lastName)lastName.textContent=projects[0].name}else{if(lastTotal)lastTotal.textContent='—';if(lastName)lastName.textContent='Hali smeta yo‘q'}
     if(!projects.length){list.innerHTML='<div class="ac2-empty"><span>▧</span><strong>Hali loyiha yo‘q</strong><p>Birinchi smetangizni saqlang — shu yerda paydo bo‘ladi.</p></div>';return}
     list.innerHTML='';projects.forEach(p=>{const card=document.createElement('article');card.className='ac2-project-item';const date=new Date(p.updatedAt||p.createdAt||Date.now()).toLocaleDateString('uz-UZ');card.innerHTML=`<div class="ac2-project-item-top"><strong>${esc(p.name)}</strong><span class="ac2-pill">${esc(date)}</span></div><p>${p.rows.length} ta material / ish qatori</p><p class="ac2-project-item-total">${money(p.total)}</p><div class="ac2-project-actions"><button type="button" data-action="open">Ochish</button><button type="button" data-action="csv">CSV</button><button type="button" data-action="delete" class="delete">O‘chirish</button></div>`;card.querySelector('[data-action="open"]').addEventListener('click',()=>loadProject(p.id));card.querySelector('[data-action="csv"]').addEventListener('click',()=>exportOne(p));card.querySelector('[data-action="delete"]').addEventListener('click',()=>{if(confirm('“'+p.name+'” loyihasini o‘chirmoqchimisiz?'))writeProjects(readProjects().filter(x=>x.id!==p.id))});list.appendChild(card)})
   }
+  window.archCalcRefreshProjects=renderProjects;
   function currentEstimate(){const t=totals();return {name:document.getElementById('ac2-project-name')?.value.trim()||'Nomsiz loyiha',rows:t.rows.filter(r=>r.name||r.qty||r.price),subtotal:t.subtotal,reserve:t.reserve,total:t.total}}
-  window.archCalcAddEstimateRow=()=>addRow();
+  window.archCalcAddEstimateRow=(item)=>addRow(item||{});
   window.archCalcRenderEstimateTotal=renderTotal;
   window.archCalcResetEstimate=()=>{if(!confirm('Smeta maydonlarini tozalaymizmi?'))return;document.getElementById('ac2-project-name').value='';document.getElementById('ac2-estimate-rows').innerHTML='';document.getElementById('ac2-reserve').value='5';addRow({name:'Beton',qty:1,unit:'m³',price:0});addRow({name:'G‘isht',qty:1,unit:'dona',price:0});addRow({name:'Ish haqi',qty:1,unit:'ish',price:0});renderTotal()};
-  window.archCalcSaveProject=()=>{const p=currentEstimate();if(!p.rows.length){alert('Saqlashdan oldin kamida bitta material yoki ish qatorini kiriting.');return}const existing=readProjects();const name=p.name.trim()||'Nomsiz loyiha';const found=existing.find(x=>x.name.toLowerCase()===name.toLowerCase());const record={...p,id:found?.id||('ac2-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)),createdAt:found?.createdAt||Date.now(),updatedAt:Date.now()};writeProjects([record,...existing.filter(x=>x.id!==record.id)]);alert('Loyiha saqlandi. Eslatma: hozircha ushbu brauzerda saqlanadi.');};
-  function loadProject(id){const p=readProjects().find(x=>x.id===id);if(!p)return;document.getElementById('ac2-project-name').value=p.name;document.getElementById('ac2-reserve').value=p.reserve??5;document.getElementById('ac2-estimate-rows').innerHTML='';(p.rows||[]).forEach(addRow);renderTotal();window.archCalcOpenEstimate();}
+  window.archCalcSaveProject=()=>{const p=currentEstimate();const existing=readProjects();const name=p.name.trim()||'Nomsiz loyiha';const found=existing.find(x=>x.id===window.archCalcActiveProjectId)||existing.find(x=>x.name.toLowerCase()===name.toLowerCase());const record={...p,name,id:found?.id||('ac2-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)),createdAt:found?.createdAt||Date.now(),updatedAt:Date.now()};window.archCalcActiveProjectId=record.id;writeProjects([record,...existing.filter(x=>x.id!==record.id)]);if(window.archCalcRenderFlowGate)window.archCalcRenderFlowGate();const label=document.getElementById('ac2-active-project-label');if(label)label.textContent='Faol loyiha: '+name;alert('Loyiha saqlandi. Hozircha ushbu brauzerda saqlanadi.');};
+  function loadProject(id){const p=readProjects().find(x=>x.id===id);if(!p)return;window.archCalcActiveProjectId=p.id;document.getElementById('ac2-project-name').value=p.name;document.getElementById('ac2-reserve').value=p.reserve??5;document.getElementById('ac2-estimate-rows').innerHTML='';(p.rows||[]).forEach(addRow);renderTotal();if(window.archCalcStartWorkspace)window.archCalcStartWorkspace(p.name);else window.archCalcOpenEstimate();}
+  window.archCalcLoadProject=loadProject;
   window.archCalcOpenWorkspace=()=>{const el=document.getElementById('ac2-project-workspace');if(el){el.scrollIntoView({behavior:'smooth',block:'start'});el.classList.add('ac2-focus');setTimeout(()=>el.classList.remove('ac2-focus'),900)}};
   window.archCalcOpenEstimate=()=>{const el=document.getElementById('ac2-estimator');if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.getElementById('ac2-project-name')?.focus({preventScroll:true})}};
   function download(filename,content,type){const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
@@ -2441,6 +2560,39 @@ body.blueprint{--bg:#071827;--bg-soft:#0a2235;--panel:#0b2030;--panel-2:#102b3e;
   const originalApplyTheme=window.applyTheme;
   window.applyTheme=function(theme){document.body.classList.remove('light','blueprint');if(theme==='light')document.body.classList.add('light');if(theme==='blueprint')document.body.classList.add('blueprint');localStorage.setItem('archcalc-theme',theme);const b=document.getElementById('themeBtn');if(b){b.textContent=theme==='light'?'☀':theme==='blueprint'?'▦':'☾';b.title=theme==='dark'?'Graphite theme':theme==='light'?'Light theme':'Blueprint theme';b.setAttribute('aria-label',b.title)}};
   document.addEventListener('DOMContentLoaded',()=>{if(!document.querySelector('#ac2-estimate-rows tr')){addRow({name:'Beton',qty:1,unit:'m³',price:0});addRow({name:'G‘isht',qty:1,unit:'dona',price:0});addRow({name:'Ish haqi',qty:1,unit:'ish',price:0})}renderProjects();renderTotal();const theme=localStorage.getItem('archcalc-theme')||'dark';window.applyTheme(theme);});
+})();
+</script>
+<script id="archcalc-guided-project-flow">
+(function(){
+  const resultMap={roomResult:'room',brickResult:'brick',blockResult:'block',conResult:'concrete',paintResult:'paint',floorResult:'floor',stairResult:'stair',plasterResult:'plaster',adhesiveResult:'adhesive',roofResult:'roof',rebarResult:'rebar',excavationResult:'excavation',insulationResult:'insulation',wallpaperResult:'wallpaper',tileResult:'tile',gravelResult:'gravel'};
+  const labels={roomResult:'Xona maydoni',brickResult:'G‘isht',blockResult:'Blok',conResult:'Beton',paintResult:'Bo‘yoq',floorResult:'Pol materiali',stairResult:'Zina qurilishi',plasterResult:'Suvoq qorishmasi',adhesiveResult:'Plitka yelimi',roofResult:'Tom qoplamasi',rebarResult:'Armatura',excavationResult:'Qazish ishlari',insulationResult:'Issiqlik izolyatsiyasi',wallpaperResult:'Oboy',tileResult:'Pol plitkasi',gravelResult:'Shag‘al / qum'};
+  function projectStore(){try{const v=JSON.parse(localStorage.getItem('archcalc-projects-v2')||'[]');return Array.isArray(v)?v:[]}catch(e){return []}}
+  function fmtMoney(n){return new Intl.NumberFormat('uz-UZ',{maximumFractionDigits:2}).format(Number(n)||0)+' so‘m'}
+  function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function flowCard(p){const d=new Date(p.updatedAt||p.createdAt||Date.now()).toLocaleDateString('uz-UZ');return `<article class="ac2-flow-project"><h3>${esc(p.name||'Nomsiz loyiha')}</h3><p>${(p.rows||[]).length} ta material / ish qatori · ${esc(d)}</p><div class="amount">${fmtMoney(p.total||0)}</div><button class="ac2-primary" type="button" data-open-project="${esc(p.id)}">Loyihani ochish →</button></article>`}
+  function renderGate(){const list=document.getElementById('ac2-flow-project-list');if(!list)return;const projects=projectStore();const count=document.getElementById('ac2-gate-project-count');if(count)count.textContent=projects.length+' ta';list.innerHTML=projects.length?projects.map(flowCard).join(''):'<div class="ac2-empty"><span>▧</span><strong>Hali loyihalar yo‘q</strong><p>Birinchi loyihangizni yaratish uchun yuqoridagi tugmani bosing.</p></div>';list.querySelectorAll('[data-open-project]').forEach(btn=>btn.addEventListener('click',()=>{const id=btn.getAttribute('data-open-project');window.archCalcOpenFlowProject(id)}))}
+  window.archCalcRenderFlowGate=renderGate;
+  window.archCalcCreateFlowProject=function(){const name=prompt('Yangi loyiha nomini kiriting:','Mening yangi loyiham');if(!name||!name.trim())return;const projects=projectStore();const id='ac2-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);const p={id,name:name.trim(),rows:[],subtotal:0,reserve:5,total:0,createdAt:Date.now(),updatedAt:Date.now()};localStorage.setItem('archcalc-projects-v2',JSON.stringify([p,...projects]));window.archCalcOpenFlowProject(id)};
+  window.archCalcOpenFlowProject=function(id){const p=projectStore().find(x=>x.id===id);if(!p)return;window.archCalcActiveProjectId=id;document.body.classList.remove('ac2-flow-locked');if(typeof window.archCalcLoadProject==='function')window.archCalcLoadProject(id);else{document.getElementById('ac2-project-name').value=p.name;document.getElementById('ac2-estimate-rows').innerHTML='';(p.rows||[]).forEach(r=>window.archCalcAddEstimateRow(r));window.archCalcRenderEstimateTotal();window.archCalcStartWorkspace(p.name)}renderGate()};
+  window.archCalcStartWorkspace=function(name){document.body.classList.remove('ac2-flow-locked');const label=document.getElementById('ac2-active-project-label');if(label)label.textContent='Faol loyiha: '+(name||document.getElementById('ac2-project-name')?.value||'Loyiha');const target=document.getElementById('ac2-calculations-heading');if(target)target.scrollIntoView({behavior:'smooth',block:'start'});};
+  window.archCalcOpenWorkspace=function(){document.body.classList.add('ac2-flow-locked');window.archCalcActiveProjectId=null;renderGate();const gate=document.getElementById('ac2-flow-gate');if(gate)gate.scrollIntoView({behavior:'smooth',block:'start'})};
+  // expose the existing internal loader to the flow screen
+  document.addEventListener('DOMContentLoaded',()=>{
+    const originalAdd=window.archCalcAddEstimateRow;
+    document.querySelectorAll('.card[id]').forEach(card=>{const result=card.querySelector('.result[id$="Result"]');if(!result)return;const resultId=result.id;const box=document.createElement('div');box.className='ac2-calc-pricebox';box.innerHTML=`<label>Bir birlik narxi (so‘m)<input type="number" min="0" step="any" id="ac2-price-${resultId}" value="0" inputmode="decimal" placeholder="Masalan: 25000"></label><label>Hisoblash turi<input type="text" readonly value="${esc(labels[resultId]||card.querySelector('.card-title')?.textContent||'Material')}"></label><small>Hisoblash tugmasini bosganingizda miqdor va birlik narxi smetaga avtomatik qo‘shiladi. Narxni keyin ham o‘zgartirishingiz mumkin.</small>`;const calcBtn=card.querySelector('button.calc');if(calcBtn)calcBtn.parentNode.insertBefore(box,calcBtn);const status=document.createElement('div');status.className='ac2-auto-estimate-status';status.id='ac2-status-'+resultId;result.insertAdjacentElement('afterend',status)});
+    // Add a price widget per calculator and keep existing estimate rows in sync when a price changes.
+    document.querySelectorAll('#ac2-estimate-rows input, #ac2-estimate-rows select, #ac2-reserve').forEach(input=>input.addEventListener('change',persistActiveEstimate));
+    document.querySelectorAll('.ac2-calc-pricebox input[type="number"]').forEach(input=>input.addEventListener('change',()=>{const resultId=input.id.replace('ac2-price-','');const tr=document.querySelector(`#ac2-estimate-rows tr[data-source-key="${resultId}"]`);if(tr){const price=tr.querySelector('.ac2-material-price');if(price){price.value=Math.max(0,Number(input.value)||0);price.dispatchEvent(new Event('input',{bubbles:true}));persistActiveEstimate();}}}));
+    renderGate();
+  });
+  const originalGo=window.go; window.go=function(id){if(!window.archCalcActiveProjectId){window.archCalcOpenWorkspace();return}if(originalGo)originalGo(id)};
+  function persistActiveEstimate(){const id=window.archCalcActiveProjectId;if(!id)return;const projects=projectStore();const i=projects.findIndex(p=>p.id===id);if(i<0)return;const rows=[...document.querySelectorAll('#ac2-estimate-rows tr')].map(tr=>({name:tr.querySelector('.ac2-material-name')?.value.trim()||'',qty:Math.max(0,Number(tr.querySelector('.ac2-material-qty')?.value)||0),unit:tr.querySelector('.ac2-material-unit')?.value||'dona',price:Math.max(0,Number(tr.querySelector('.ac2-material-price')?.value)||0),sourceKey:tr.dataset.sourceKey||''})).filter(r=>r.name||r.qty||r.price);const subtotal=rows.reduce((a,r)=>a+r.qty*r.price,0);const reserve=Math.min(100,Math.max(0,Number(document.getElementById('ac2-reserve')?.value)||0));projects[i]={...projects[i],name:document.getElementById('ac2-project-name')?.value.trim()||projects[i].name,rows,subtotal,reserve,total:subtotal*(1+reserve/100),updatedAt:Date.now()};localStorage.setItem('archcalc-projects-v2',JSON.stringify(projects));window.archCalcRefreshProjects?.();renderGate();}
+  window.archCalcOnCalculation=function(resultId){const meta=window.archCalcCalcMeta?.[resultId];if(!meta)return;const activeId=window.archCalcActiveProjectId;const projects=projectStore();const project=projects.find(p=>p.id===activeId);if(!project){const status=document.getElementById('ac2-status-'+resultId);if(status)status.textContent='Avval loyiha yarating yoki ro‘yxatdan loyihani oching.';return}
+    const price=Math.max(0,Number(document.getElementById('ac2-price-'+resultId)?.value)||0);const body=document.getElementById('ac2-estimate-rows');let tr=body?.querySelector(`tr[data-source-key="${resultId}"]`);
+    if(tr){tr.querySelector('.ac2-material-name').value=meta.name;tr.querySelector('.ac2-material-qty').value=Number(meta.qty)||0;tr.querySelector('.ac2-material-unit').value=meta.unit;tr.querySelector('.ac2-material-price').value=price;tr.querySelector('.ac2-material-price').dispatchEvent(new Event('input',{bubbles:true}));}
+    else if(typeof window.archCalcAddEstimateRow==='function'){window.archCalcAddEstimateRow({name:meta.name,qty:meta.qty,unit:meta.unit,price,sourceKey:resultId});tr=body?.lastElementChild;}
+    window.archCalcRenderEstimateTotal?.();persistActiveEstimate();const status=document.getElementById('ac2-status-'+resultId);if(status)status.textContent=`✓ Smetaga qo‘shildi: ${Number(meta.qty).toLocaleString('uz-UZ',{maximumFractionDigits:2})} ${meta.unit} × ${fmtMoney(price)} = ${fmtMoney((Number(meta.qty)||0)*price)}. Smeta jami yuqorida yangilandi.`;
+  };
 })();
 </script>
 </body>

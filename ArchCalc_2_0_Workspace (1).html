@@ -1,0 +1,2599 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="./images/archcalc-logo.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08090c">
+<title>ArchCalc — Professional Architecture & Engineering Calculator</title>
+<style>
+
+:root{
+    --bg:#08090c;
+    --bg-soft:#0d0f13;
+    --panel:#101218;
+    --panel-2:#14171e;
+    --panel-hover:#171a22;
+    --line:rgba(214,168,79,.34);
+    --line-strong:rgba(214,168,79,.68);
+    --text:#f4f5f7;
+    --muted:#8d939f;
+    --dim:#5e6470;
+    --accent:#d6a84f;
+    --accent-soft:rgba(214,168,79,.12);
+    --success:#8fd6a4;
+    --danger:#ef9a9a;
+    --radius:18px;
+}
+
+*{box-sizing:border-box}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    transition:background .3s ease,color .3s ease;
+    margin:0;
+    min-height:100vh;
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    color:var(--text);
+    background:
+        radial-gradient(circle at 75% 0%,rgba(214,168,79,.055),transparent 28rem),
+        radial-gradient(circle at 10% 80%,rgba(255,255,255,.025),transparent 25rem),
+        var(--bg);
+    letter-spacing:-.01em;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.16;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:42px 42px;
+    mask-image:linear-gradient(to bottom,black,transparent 85%);
+}
+
+button,input,select{
+    font:inherit;
+}
+
+button{
+    border:0;
+}
+
+.app{
+    display:grid;
+    grid-template-columns:248px minmax(0,1fr);
+    min-height:100vh;
+}
+
+.sidebar{
+    position:sticky;
+    top:0;
+    height:100vh;
+    min-height:0;
+    padding:20px 16px;
+    border-right:1px solid rgba(214,168,79,.42);
+    background:rgba(9,10,13,.78);
+    backdrop-filter:blur(24px);
+    z-index:20;
+    overflow:hidden;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:4px 10px 22px;
+    flex-shrink:0;
+}
+
+.brand-mark{
+    width:30px;
+    height:30px;
+    display:grid;
+    place-items:center;
+    border:1px solid rgba(214,168,79,.45);
+    border-radius:9px;
+    color:var(--accent);
+    background:var(--accent-soft);
+    font-weight:800;
+}
+
+.brand-name{
+    font-size:15px;
+    font-weight:800;
+    letter-spacing:.12em;
+}
+
+.brand-sub{
+    color:var(--dim);
+    font-size:9px;
+    letter-spacing:.13em;
+    margin-top:3px;
+}
+
+.side-label{
+    padding:0 10px 7px;
+    color:#565c67;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.16em;
+    flex-shrink:0;
+}
+
+.side-nav{
+    display:grid;
+    gap:2px;
+    margin-bottom:16px;
+    flex-shrink:0;
+}
+
+.side-nav button{
+    width:100%;
+    height:34px;
+    padding:0 11px;
+    display:flex;
+    align-items:center;
+    gap:11px;
+    color:#8f95a0;
+    background:transparent;
+    border-radius:10px;
+    text-align:left;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.side-nav button:hover{
+    color:var(--text);
+    background:rgba(255,255,255,.045);
+}
+
+.side-nav button.active{
+    color:var(--text);
+    background:rgba(255,255,255,.065);
+    box-shadow:inset 2px 0 var(--accent);
+}
+
+.side-num{
+    width:21px;
+    color:#575d68;
+    font-size:9px;
+    font-variant-numeric:tabular-nums;
+}
+
+.side-nav button.active .side-num{
+    color:var(--accent);
+}
+.sidebar > .side-nav:nth-of-type(2){
+    max-height:calc(100vh - 285px);
+    overflow-y:auto;
+    padding-bottom:8px;
+    scrollbar-width:thin;
+    scrollbar-color:rgba(214,168,79,.28) transparent;
+}
+
+
+.side-bottom{
+    position:absolute;
+    left:16px;
+    right:16px;
+    bottom:20px;
+}
+
+.main{
+    min-width:0;
+}
+
+.topbar{
+    position:sticky;
+    top:0;
+    z-index:15;
+    height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 42px;
+    border-bottom:1px solid rgba(214,168,79,.34);
+    background:rgba(8,9,12,.72);
+    backdrop-filter:blur(24px);
+}
+
+.crumb{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.crumb strong{
+    color:var(--text);
+}
+
+.top-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.top-btn{
+    height:34px;
+    padding:0 12px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:rgba(255,255,255,.025);
+    color:#a7acb5;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.top-btn:hover{
+    color:var(--text);
+    border-color:var(--line-strong);
+    background:rgba(255,255,255,.06);
+}
+
+.workspace{
+    max-width:1380px;
+    margin:0 auto;
+    padding:58px 42px 80px;
+}
+
+.hero{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:30px;
+    margin-bottom:42px;
+}
+
+.eyebrow{
+    margin-bottom:13px;
+    color:var(--accent);
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+}
+
+.hero h1{
+    margin:0;
+    max-width:760px;
+    font-size:clamp(38px,5vw,64px);
+    line-height:.98;
+    font-weight:650;
+    letter-spacing:-.055em;
+}
+
+.hero p{
+    max-width:560px;
+    margin:18px 0 0;
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.7;
+}
+
+.hero-meta{
+    flex:0 0 auto;
+    min-width:180px;
+    padding:15px 17px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:rgba(255,255,255,.018);
+}
+
+.meta-label{
+    color:#5f6570;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.14em;
+}
+
+.meta-value{
+    margin-top:6px;
+    font-size:13px;
+    color:#c6cad1;
+}
+
+.section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:14px;
+}
+
+.section-title{
+    color:#737985;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+}
+
+.section-count{
+    color:#4f5560;
+    font-size:10px;
+}
+
+.container{
+    max-width:980px;
+    margin:0 auto;
+    padding:0;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:22px;
+}
+
+.card{
+    position:relative;
+    overflow:hidden;
+    padding:30px 32px;
+    border:1px solid rgba(214,168,79,.48);
+    border-radius:var(--radius);
+    background:
+        linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012) 55%),
+        var(--panel);
+    box-shadow:
+        0 16px 50px rgba(0,0,0,.22),
+        inset 0 0 0 1px rgba(214,168,79,.045),
+        0 0 18px rgba(214,168,79,.025);
+    transition:transform .25s ease,border-color .25s ease,background .25s ease;
+}
+
+.card::after{
+    content:"";
+    position:absolute;
+    width:160px;
+    height:160px;
+    right:-100px;
+    top:-100px;
+    border-radius:50%;
+    background:rgba(214,168,79,.08);
+    filter:blur(22px);
+    opacity:0;
+    transition:.3s ease;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(214,168,79,.82);
+    background:var(--panel-hover);
+}
+
+.card:hover::after{
+    opacity:1;
+}
+
+.card-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.card-index{
+    color:var(--accent);
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.12em;
+}
+
+.card-type{
+    color:#555b66;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.14em;
+}
+
+.card-title{
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    font-size:20px;
+    line-height:1.15;
+    font-weight:620;
+    letter-spacing:-.025em;
+}
+
+.card-desc{
+    margin:8px 0 22px;
+    color:#707681;
+    font-size:12px;
+    line-height:1.5;
+}
+
+
+
+/* =========================================================
+   PREMIUM FIELD SYSTEM — ARCHCALC
+   ========================================================= */
+
+.card-form{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    column-gap:18px;
+    row-gap:22px;
+    align-items:start;
+}
+
+.card-form .field{
+    min-width:0;
+}
+
+.card-form .field label{
+    display:block;
+    margin:0 0 8px;
+    color:#c8c0af;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.035em;
+    line-height:1.35;
+}
+
+.card-form .field input,
+.card-form .field select{
+    width:100%;
+    min-height:46px;
+    color:#f4f0e8;
+    background:rgba(255,255,255,.025);
+    border:1px solid rgba(214,168,79,.24);
+    border-radius:10px;
+    outline:none;
+    transition:
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+}
+
+.card-form .field input::placeholder{
+    color:#6f6b63;
+}
+
+.card-form .field input:hover,
+.card-form .field select:hover{
+    border-color:rgba(214,168,79,.42);
+    background:rgba(214,168,79,.035);
+}
+
+.card-form .field input:focus,
+.card-form .field select:focus{
+    border-color:#d6a84f;
+    background:rgba(214,168,79,.055);
+    box-shadow:
+        0 0 0 2px rgba(214,168,79,.09),
+        0 0 22px rgba(214,168,79,.07);
+}
+
+.card-form .field input:focus-visible,
+.card-form .field select:focus-visible{
+    outline:none;
+}
+
+.card-form .calc{
+    grid-column:1 / -1;
+    max-width:240px;
+    justify-self:start;
+    margin-top:2px;
+}
+
+.card-form .result{
+    grid-column:1 / -1;
+    border-color:rgba(214,168,79,.20);
+}
+
+/* Gold accent for important numeric values */
+.result-warning{
+    color:var(--danger);
+    font-size:11px;
+}
+
+.result-ok{
+    color:var(--success);
+    font-size:11px;
+}
+
+.field.field-wide{
+    grid-column:1 / -1;
+}
+
+.field[hidden]{
+    display:none;
+}
+
+.stair-diagram-wrap{
+    margin-bottom:14px;
+}
+
+.stair-diagram-wrap .diagram-label{
+    color:var(--accent);
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:6px;
+}
+
+.stair-diagram{
+    width:100%;
+    height:auto;
+    display:block;
+    color:var(--text);
+    background:rgba(255,255,255,.02);
+    border:1px solid var(--line);
+    border-radius:10px;
+}
+
+.stair-diagram text{
+    fill:currentColor;
+    font-size:12px;
+    font-family:inherit;
+}
+
+.stair-views-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+}
+
+@media(max-width:760px){
+    .stair-views-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+.card-form .field input[type="number"]{
+    font-variant-numeric:tabular-nums;
+}
+
+/* Select arrow / dropdown harmony */
+.card-form .field select{
+    color:#f4f0e8;
+}
+
+.card-form .field select option{
+    background:#101116;
+    color:#f4f0e8;
+}
+
+@media(max-width:1050px){
+    .hero{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+    .container{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:760px){
+    .app{
+        display:block;
+    }
+
+    .sidebar{
+        display:none;
+    }
+
+    .topbar{
+        height:62px;
+        padding:0 16px;
+    }
+
+    .workspace{
+        padding:34px 16px 60px;
+    }
+
+    .hero{
+        margin-bottom:30px;
+    }
+
+    .hero h1{
+        font-size:42px;
+    }
+
+    .hero-meta{
+        display:none;
+    }
+
+    .container{
+        grid-template-columns:1fr;
+    }
+
+    .mobile-nav{
+        display:flex;
+        position:sticky;
+        top:62px;
+        z-index:14;
+        overflow-x:auto;
+        gap:6px;
+        padding:9px 16px;
+        border-bottom:1px solid rgba(214,168,79,.34);
+        background:rgba(8,9,12,.86);
+        backdrop-filter:blur(20px);
+    }
+
+    .mobile-nav button{
+        flex:0 0 auto;
+        padding:8px 10px;
+        border:1px solid var(--line);
+        border-radius:8px;
+        background:rgba(255,255,255,.025);
+        color:#858b96;
+        font-size:10px;
+        cursor:pointer;
+    }
+
+    .card{
+        padding:24px 20px;
+    }
+
+    .card-form{
+        grid-template-columns:1fr;
+        gap:16px;
+    }
+
+    .card-form .calc{
+        max-width:none;
+    }
+
+    footer{
+        padding:0 16px 25px;
+    }
+}
+
+/* LIGHT THEME */
+body.light{
+    --bg:#f4f1ea;
+    --bg-soft:#eeeae1;
+    --panel:#fffdf8;
+    --panel-2:#f8f5ed;
+    --panel-hover:#fffaf0;
+    --line:rgba(154,112,35,.28);
+    --line-strong:rgba(154,112,35,.58);
+    --text:#171717;
+    --muted:#66615a;
+    --dim:#888076;
+    --accent:#a97818;
+    --accent-soft:rgba(169,120,24,.10);
+    background:
+        radial-gradient(circle at 75% 0%,rgba(169,120,24,.08),transparent 28rem),
+        var(--bg);
+}
+
+body.light::before{
+    opacity:.11;
+    background-image:
+        linear-gradient(rgba(80,65,35,.055) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(80,65,35,.055) 1px,transparent 1px);
+}
+
+body.light .sidebar{
+    background:rgba(250,248,242,.86);
+    border-right-color:rgba(154,112,35,.34);
+}
+
+body.light .topbar,
+body.light .mobile-nav{
+    background:rgba(250,248,242,.82);
+    border-bottom-color:rgba(154,112,35,.30);
+}
+
+body.light .card{
+    background:
+        linear-gradient(145deg,rgba(255,255,255,.82),rgba(255,250,239,.76)),
+        var(--panel);
+    box-shadow:
+        0 14px 40px rgba(74,59,30,.10),
+        inset 0 0 0 1px rgba(169,120,24,.045);
+}
+
+body.light input,
+body.light select,
+body.light .result{
+    background:#faf8f1;
+    color:#26231e;
+}
+
+body.light input::placeholder{
+    color:#aaa294;
+}
+
+body.light .side-nav button{
+    color:#716b62;
+}
+
+body.light .side-nav button:hover{
+    color:#24211d;
+    background:rgba(169,120,24,.07);
+}
+
+body.light .side-nav button.active{
+    color:#24211d;
+    background:rgba(169,120,24,.10);
+}
+
+body.light .top-btn{
+    color:#6d665d;
+    background:rgba(169,120,24,.035);
+}
+
+body.light .hero p,
+body.light .card-desc{
+    color:#777067;
+}
+
+body.light .section-title{
+    color:#81786d;
+}
+
+@media(max-width:1050px){
+    .container{
+        grid-template-columns:1fr;
+    }
+    .hero{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+}
+
+@media(max-width:760px){
+    .app{
+        display:block;
+    }
+    .sidebar{
+        display:none;
+    }
+    .topbar{
+        height:62px;
+        padding:0 16px;
+    }
+    .workspace{
+        padding:34px 16px 60px;
+    }
+    .hero{
+        margin-bottom:30px;
+    }
+    .hero h1{
+        font-size:42px;
+    }
+    .hero-meta{
+        display:none;
+    }
+    .container{
+        grid-template-columns:1fr;
+    }
+    .mobile-nav{
+        display:flex;
+        position:sticky;
+        top:62px;
+        z-index:14;
+        overflow-x:auto;
+        gap:6px;
+        padding:9px 16px;
+        border-bottom:1px solid rgba(214,168,79,.34);
+        background:rgba(8,9,12,.86);
+        backdrop-filter:blur(20px);
+    }
+    .mobile-nav button{
+        flex:0 0 auto;
+        padding:8px 10px;
+        border:1px solid var(--line);
+        border-radius:8px;
+        background:rgba(255,255,255,.025);
+        color:#858b96;
+        font-size:10px;
+        cursor:pointer;
+    }
+    footer{
+        padding:0 16px 25px;
+    }
+}
+
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+        scroll-behavior:auto!important;
+        transition:none!important;
+        animation:none!important;
+    }
+}
+
+</style>
+
+<style id="archcalc-auth-style">
+#archcalc-auth{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;padding:20px;background:rgba(4,6,10,.88);backdrop-filter:blur(12px)}
+#archcalc-auth[hidden]{display:none!important}
+.auth-card{width:min(420px,100%);padding:28px;border:1px solid var(--line-strong);border-radius:18px;background:var(--panel);color:var(--text);box-shadow:0 24px 80px #0008}
+.auth-card h2{margin:0 0 8px;font-size:25px}.auth-card p{color:var(--muted);font-size:13px;line-height:1.5}
+.auth-card label{display:block;margin:14px 0 6px;font-size:12px;color:var(--muted)}
+.auth-card input{width:100%;height:44px;padding:0 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg-soft);color:var(--text)}
+.auth-card button{cursor:pointer;border-radius:9px;padding:11px 14px;font-weight:700}
+.auth-primary{width:100%;margin-top:18px;background:var(--accent);color:#171717}
+.auth-switch{display:flex;gap:8px;margin:14px 0}.auth-switch button{flex:1;background:var(--panel-2);color:var(--text);border:1px solid var(--line)}
+.auth-switch button.active{border-color:var(--accent);color:var(--accent)}
+#authError{color:var(--danger);min-height:18px;font-size:12px}
+#authNotice{font-size:11px;opacity:.72}
+.auth-divider{display:flex;align-items:center;gap:10px;margin:16px 0 4px;color:var(--muted);font-size:11px}
+.auth-divider:before,.auth-divider:after{content:"";height:1px;flex:1;background:var(--line)}
+.auth-google{width:100%;margin-top:10px;background:var(--panel-2);color:var(--text);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:10px}
+.auth-google:disabled{opacity:.6;cursor:wait}
+#accountName{font-size:12px;color:var(--muted);padding:0 8px}
+.history-panel{display:none;margin:0 0 34px;padding:22px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}.history-panel.is-open{display:block}
+.history-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.history-heading h2{margin:5px 0;font-size:21px}.history-heading p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}.history-list{display:grid;gap:9px;margin-top:18px}.history-item{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:13px;border:1px solid var(--line);border-radius:10px;background:var(--bg-soft)}.history-item strong{display:block;font-size:13px;margin-bottom:4px}.history-item p{margin:0;color:var(--muted);font-size:12px;line-height:1.5;overflow-wrap:anywhere}.history-time{color:var(--muted);font-size:11px;white-space:nowrap}.history-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.history-actions button{font:inherit;font-size:11px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);cursor:pointer}.history-actions button:hover{filter:brightness(.96)}.history-actions .history-delete{color:#b42318}.history-empty{padding:16px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:12px}
+@media(max-width:760px){#accountName{display:none}.auth-card{padding:22px}.history-panel{padding:16px}.history-heading{align-items:flex-start}.history-item{display:block}.history-time{display:block;margin-top:8px}}
+</style>
+
+</head>
+<body class="ac2-flow-locked">
+
+<div class="app">
+
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-mark">A</div>
+        <div>
+            <div class="brand-name">ARCHCALC</div>
+            <div class="brand-sub">ARCHITECTURE TOOLS</div>
+        </div>
+    </div>
+
+    <div class="side-label">WORKSPACE</div>
+    <div class="side-nav">
+        <button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+            <span class="side-num">00</span> <span data-i18n="dashboard">Dashboard</span>
+        </button>
+    </div>
+
+    <div class="side-label" data-i18n="calculators">CALCULATORS</div>
+    <div class="side-nav">
+        <button onclick="go('room')"><span class="side-num">01</span> <span data-i18n="nav_room">Room</span></button>
+        <button onclick="go('brick')"><span class="side-num">02</span> <span data-i18n="nav_brick">Brick</span></button>
+        <button onclick="go('block')"><span class="side-num">03</span> <span data-i18n="nav_block">Block</span></button>
+        <button onclick="go('concrete')"><span class="side-num">04</span> <span data-i18n="nav_concrete">Concrete</span></button>
+        <button onclick="go('paint')"><span class="side-num">05</span> <span data-i18n="nav_paint">Paint</span></button>
+        <button onclick="go('floor')"><span class="side-num">06</span> <span data-i18n="nav_floor">Floor</span></button>
+        <button onclick="go('stair')"><span class="side-num">07</span> <span data-i18n="nav_stairs">Stairs</span></button>
+        <button onclick="go('plaster')"><span class="side-num">08</span> <span data-i18n="nav_plaster">Suvoq</span></button>
+        <button onclick="go('adhesive')"><span class="side-num">09</span> <span data-i18n="nav_adhesive">Plitka yelimi</span></button>
+        <button onclick="go('roof')"><span class="side-num">10</span> <span data-i18n="nav_roof">Tom</span></button>
+        <button onclick="go('rebar')"><span class="side-num">11</span> <span data-i18n="nav_rebar">Armatura</span></button>
+        <button onclick="go('excavation')"><span class="side-num">12</span> Qazish</button>
+        <button onclick="go('insulation')"><span class="side-num">13</span> Izolyatsiya</button>
+        <button onclick="go('wallpaper')"><span class="side-num">14</span> Oboy</button>
+        <button onclick="go('tile')"><span class="side-num">15</span> Pol plitkasi</button>
+        <button onclick="go('gravel')"><span class="side-num">16</span> Shag‘al / qum</button>
+    </div>
+
+    <div class="side-bottom">
+        <div class="side-nav">
+            
+        </div>
+    </div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div class="crumb"><strong>ArchCalc</strong> / <span id="crumbWorkspace" data-i18n="workspace">Workspace</span></div>
+        <div class="top-actions">
+            <button class="top-btn" id="languageBtn" type="button" onclick="toggleLanguage()">UZ</button>
+            <button class="top-btn" type="button" onclick="archCalcOpenWorkspace()">Loyihalar</button>
+            <button class="top-btn" id="archcalc-history-toggle" type="button" aria-expanded="false" aria-controls="archcalc-history-panel">Tarix</button>
+            <span id="accountName" aria-live="polite"></span>
+            <button class="top-btn" id="logoutBtn" type="button" onclick="archCalcLogout()">Chiqish</button>
+            <button class="top-btn" id="themeBtn" type="button" onclick="toggleTheme()" aria-label="Toggle theme" title="Graphite / Light / Blueprint">☾</button>
+        </div>
+    </header>
+
+    <div class="mobile-nav">
+        <button onclick="go('room')"><span data-i18n="nav_room">Room</span></button>
+        <button onclick="go('brick')"><span data-i18n="nav_brick">Brick</span></button>
+        <button onclick="go('block')"><span data-i18n="nav_block">Block</span></button>
+        <button onclick="go('concrete')"><span data-i18n="nav_concrete">Concrete</span></button>
+        <button onclick="go('paint')"><span data-i18n="nav_paint">Paint</span></button>
+        <button onclick="go('floor')"><span data-i18n="nav_floor">Floor</span></button>
+        <button onclick="go('stair')"><span data-i18n="nav_stairs">Stairs</span></button>
+        <button onclick="go('plaster')"><span data-i18n="nav_plaster">Suvoq</span></button>
+        <button onclick="go('adhesive')"><span data-i18n="nav_adhesive">Plitka yelimi</span></button>
+        <button onclick="go('roof')"><span data-i18n="nav_roof">Tom</span></button>
+        <button onclick="go('rebar')"><span data-i18n="nav_rebar">Armatura</span></button>
+        <button onclick="go('excavation')">Qazish</button><button onclick="go('insulation')">Izolyatsiya</button><button onclick="go('wallpaper')">Oboy</button><button onclick="go('tile')">Pol plitkasi</button><button onclick="go('gravel')">Shag‘al / qum</button>
+    </div>
+
+    <section class="workspace">
+
+        <section class="ac2-flow-gate" id="ac2-flow-gate" aria-labelledby="ac2-flow-title">
+            <div class="ac2-gate-kicker">ARCHCALC · PROJECT WORKFLOW</div>
+            <h1 id="ac2-flow-title">Avval loyihangizni tanlang</h1>
+            <p class="ac2-gate-intro">Hisob-kitoblar loyiha ichida olib boriladi. Har bir hisoblangan material miqdori smetaga avtomatik qo‘shiladi.</p>
+            <div class="ac2-gate-actions"><button class="ac2-primary" type="button" onclick="archCalcCreateFlowProject()">＋ Yangi loyiha yaratish</button></div>
+            <div class="ac2-gate-list-head"><h2>Loyihalar ro‘yxati</h2><span class="ac2-pill" id="ac2-gate-project-count">0 ta</span></div>
+            <div class="ac2-flow-project-list" id="ac2-flow-project-list"><div class="ac2-empty"><span>▧</span><strong>Hali loyihalar yo‘q</strong><p>Birinchi loyihangizni yaratish uchun yuqoridagi tugmani bosing.</p></div></div>
+            <p class="ac2-gate-footnote">Loyiha va smeta ma’lumotlari hozircha ushbu brauzerda saqlanadi.</p>
+        </section>
+
+        <div class="hero">
+            <div>
+                <div class="eyebrow" data-i18n="eyebrow">Architecture / Construction</div>
+                <h1 data-i18n="heroTitle">Calculate with precision.</h1>
+                <p data-i18n="heroDesc">A focused workspace for fast architectural and construction calculations — clean, precise and built for everyday work.</p>
+            </div>
+
+            <div class="hero-meta">
+                <div class="meta-label" data-i18n="system">SYSTEM</div>
+                <div class="meta-value" data-i18n="toolCount">16 calculation tools + smeta</div>
+            </div>
+        </div>
+
+        <section class="history-panel" id="archcalc-history-panel" aria-live="polite">
+            <div class="history-heading">
+                <div><div class="eyebrow">MY WORKSPACE</div><h2>Hisob-kitoblar tarixi</h2><p id="archcalc-history-status">Google hisobingizga kiring — hisob-kitoblaringiz bulutda saqlanadi.</p></div>
+                <button type="button" class="top-btn" id="archcalc-refresh-history">Yangilash</button>
+            </div>
+            <div id="archcalc-history-list" class="history-list"><div class="history-empty">Hali saqlangan hisob-kitoblar yo‘q.</div></div>
+        </section>
+
+        <section class="ac2-overview" aria-label="ArchCalc overview">
+            <div class="ac2-overview-copy">
+                <span class="ac2-kicker">ARCHCALC WORKSPACE</span>
+                <h2>Hisoblang. Rejalashtiring. Boshqaring.</h2>
+                <p>Kalkulyatorlar, materiallar smetasi va loyihalaringiz — bitta ish maydonida.</p>
+                <div class="ac2-hero-actions">
+                    <button class="ac2-primary" type="button" onclick="archCalcOpenEstimate()">＋ Yangi smeta</button>
+                    <button class="ac2-secondary" type="button" onclick="archCalcOpenWorkspace()">Loyihalarim</button>
+                </div>
+            </div>
+            <div class="ac2-stat-grid">
+                <article class="ac2-stat"><span>Hisoblash vositalari</span><strong>16</strong><small>Arxitektura va qurilish</small></article>
+                <article class="ac2-stat"><span>Saqlangan loyihalar</span><strong id="ac2-project-count">0</strong><small>Ushbu brauzerda</small></article>
+                <article class="ac2-stat"><span>Oxirgi smeta</span><strong id="ac2-last-total">—</strong><small id="ac2-last-name">Hali smeta yo‘q</small></article>
+            </div>
+        </section>
+
+        <section class="ac2-workspace" id="ac2-project-workspace">
+            <div class="ac2-section-head">
+                <div><span class="ac2-kicker">PROJECT DESK</span><h2>Loyihalar va smeta</h2><p>Loyiha xarajatlarini hisoblang, saqlang va eksport qiling.</p></div>
+                <div class="ac2-head-actions"><button class="ac2-secondary" type="button" onclick="archCalcExportCSV()">Eksport CSV</button><button class="ac2-secondary" type="button" onclick="window.print()">PDF / Chop etish</button></div>
+            </div>
+            <div class="ac2-work-grid">
+                <article class="ac2-panel ac2-estimator" id="ac2-estimator">
+                    <div class="ac2-panel-head"><div><span class="ac2-kicker">COST ESTIMATOR</span><h3>Materiallar smetasi</h3></div><span class="ac2-pill">Hisoblash</span></div>
+                    <label class="ac2-label" for="ac2-project-name">Loyiha nomi</label>
+                    <input class="ac2-input" id="ac2-project-name" maxlength="80" placeholder="Masalan: 2 xonali uy qurilishi" />
+                    <div class="ac2-table-wrap"><table class="ac2-table"><thead><tr><th>Material / ish</th><th>Miqdor</th><th>Birlik</th><th>Narx / birlik</th><th>Jami</th><th></th></tr></thead><tbody id="ac2-estimate-rows"></tbody></table></div>
+                    <div class="ac2-estimator-actions"><button class="ac2-secondary" type="button" onclick="archCalcAddEstimateRow()">＋ Qator qo‘shish</button><label class="ac2-reserve-label">Zaxira (%) <input id="ac2-reserve" class="ac2-small-input" type="number" min="0" max="100" step="1" value="5" oninput="archCalcRenderEstimateTotal()"></label></div>
+                    <div class="ac2-total-row"><div><span>Taxminiy umumiy qiymat</span><small id="ac2-total-note">Zaxira bilan hisoblanadi</small></div><strong id="ac2-estimate-total">0 so‘m</strong></div>
+                    <div class="ac2-estimator-actions"><button class="ac2-primary" type="button" onclick="archCalcSaveProject()">Loyihani saqlash</button><button class="ac2-secondary" type="button" onclick="archCalcResetEstimate()">Tozalash</button></div>
+                    <p class="ac2-note">Narxlarni o‘zingiz kiritasiz. Bu dastlabki smeta bo‘lib, real narxlar va ish hajmini tekshirish zarur.</p>
+                </article>
+                <article class="ac2-panel ac2-projects-panel">
+                    <div class="ac2-panel-head"><div><span class="ac2-kicker">SAVED WORK</span><h3>Saqlangan loyihalar</h3></div><span class="ac2-pill" id="ac2-project-badge">0 ta</span></div>
+                    <div id="ac2-project-list" class="ac2-project-list"><div class="ac2-empty"><span>▧</span><strong>Hali loyiha yo‘q</strong><p>Birinchi smetangizni saqlang — shu yerda paydo bo‘ladi.</p></div></div>
+                    <div class="ac2-storage-note"><span class="ac2-status-dot"></span> Hozircha ushbu brauzerda saqlanadi</div>
+                </article>
+            </div>
+        </section>
+
+        <div class="ac2-workflow-bar" id="ac2-workflow-bar"><div><strong id="ac2-active-project-label">Faol loyiha tanlanmagan</strong><br><span>Hisoblangan miqdorlar smetaga avtomatik qo‘shiladi.</span></div><div class="ac2-head-actions"><button class="ac2-secondary" type="button" onclick="archCalcOpenWorkspace()">Loyihalar</button><button class="ac2-primary" type="button" onclick="archCalcOpenEstimate()">Smetani ko‘rish</button><button class="ac2-secondary" type="button" onclick="archCalcSaveProject()">Loyihani saqlash</button></div></div>
+        <div class="section-head" id="ac2-calculations-heading">
+            <div class="section-title" data-i18n="calcTools">Calculation tools</div>
+            <div class="section-count">01 — 16</div>
+        </div>
+
+        <div class="container">
+
+<!-- XONA -->
+<div class="card" id="room"><div class="card-top"><span class="card-index">01</span><span class="card-type">ROOM</span></div><h2 class="card-title" data-i18n="room_title">Room calculator</h2><p class="card-desc" data-i18n="room_desc">Space, area and volume</p><div class="card-form">
+
+<div class="field"><label><span data-i18n="room_l">Uzunlik (m)</span></label>
+<input id="roomL" type="number" min="0" step="any" placeholder="5"></div>
+
+<div class="field"><label><span data-i18n="room_w">Kenglik (m)</span></label>
+<input id="roomW" type="number" min="0" step="any" placeholder="4"></div>
+
+<div class="field"><label><span data-i18n="room_h">Balandlik (m)</span></label>
+<input id="roomH" type="number" min="0" step="any" placeholder="2.8"></div>
+
+<button class="calc" onclick="roomCalc()"><span data-i18n="calc_room">Hisoblash</span></button>
+
+<div class="result" id="roomResult">
+Natija shu yerda chiqadi.
+</div></div></div>
+
+
+<!-- G‘ISHT -->
+<div class="card" id="brick"><div class="card-top"><span class="card-index">02</span><span class="card-type">BRICK</span></div><h2 class="card-title" data-i18n="brick_title">Brick calculator</h2><p class="card-desc" data-i18n="brick_desc">Wall brick estimation</p><div class="card-form">
+
+<div class="field"><label><span data-i18n="wall_l">Devor uzunligi (m)</span></label>
+<input id="wallL" type="number" min="0" step="any" placeholder="10"></div>
+
+<div class="field"><label><span data-i18n="wall_h">Devor balandligi (m)</span></label>
+<input id="wallH" type="number" min="0" step="any" placeholder="3"></div>
+
+<div class="field"><label><span data-i18n="brick_type">G‘isht o‘lchami</span></label>
+<select id="brickType" onchange="applyBrickPreset()">
+<option value="250x120x65">Oddiy g‘isht — 250×120×65 mm</option>
+<option value="250x120x88">Qalin g‘isht — 250×120×88 mm</option>
+<option value="custom">Maxsus o‘lcham</option>
+</select></div>
+
+<div class="field"><label><span data-i18n="brick_thickness">G‘isht urish qalinligi</span></label>
+<select id="brickThickness">
+        <option value="0.5">0.5 g‘isht — 120 mm</option>
+        <option value="1">1 g‘isht — 250 mm</option>
+        <option value="1.5">1.5 g‘isht — 380 mm</option>
+        <option value="2">2 g‘isht — 500 mm</option>
+    </select></div>
+
+<div class="field"><label><span data-i18n="brick_l">G‘isht uzunligi (cm)</span></label>
+<input id="brickL" type="number" min="0" step="any" value="25"></div>
+
+<div class="field"><label><span data-i18n="brick_w">G‘isht eni (cm)</span></label>
+<input id="brickW" type="number" min="0" step="any" value="12"></div>
+
+<div class="field"><label><span data-i18n="brick_h">G‘isht balandligi (cm)</span></label>
+<input id="brickH" type="number" min="0" step="any" value="6.5"></div>
+
+<div class="field"><label><span data-i18n="brick_openings">Eshik/deraza maydoni (m²)</span></label>
+<input id="brickOpenings" type="number" min="0" step="any" value="0"></div>
+
+<div class="field"><label><span data-i18n="brick_reserve">Zaxira (%)</span></label>
+<input id="brickReserve" type="number" value="5" min="0" max="100" step="0.1"></div>
+
+<button class="calc" onclick="brickCalc()"><span data-i18n="calc_brick">G‘ishtni hisoblash</span></button>
+
+<div class="result" id="brickResult">Natija shu yerda chiqadi.</div></div></div>
+
+<!-- BLOK -->
+<div class="card" id="block"><div class="card-top"><span class="card-index">03</span><span class="card-type">BLOCK</span></div><h2 class="card-title" data-i18n="block_title">Block calculator</h2><p class="card-desc" data-i18n="block_desc">Block quantity estimation</p><div class="card-form">
+
+<div class="field"><label><span data-i18n="block_type">Blok turi</span></label>
+<select id="blockType" onchange="applyBlockPreset()">
+<option value="aac">AAC / Gazobeton — 600×300×200 mm</option>
+<option value="foam">Penoblok — 600×300×200 mm</option>
+<option value="concrete">Beton blok — 400×200×200 mm</option>
+<option value="ceramic">Keramik blok — 380×250×219 mm</option>
+<option value="custom">Maxsus o‘lcham</option>
+</select></div>
+
+<div class="field"><label><span data-i18n="wall_l">Devor uzunligi (m)</span></label>
+<input id="blockWallL" type="number" min="0" step="any" placeholder="10"></div>
+
+<div class="field"><label><span data-i18n="wall_h">Devor balandligi (m)</span></label>
+<input id="blockWallH" type="number" min="0" step="any" placeholder="3"></div>
+
+<div class="field"><label><span data-i18n="block_l">Blok uzunligi (cm)</span></label>
+<input id="blockL" type="number" min="0" step="any" value="60"></div>
+
+<div class="field"><label><span data-i18n="block_w">Blok eni/qalinligi (cm)</span></label>
+<input id="blockW" type="number" min="0" step="any" value="30"></div>
+
+<div class="field"><label><span data-i18n="block_h">Blok balandligi (cm)</span></label>
+<input id="blockH" type="number" min="0" step="any" value="20"></div>
+
+<div class="field"><label><span data-i18n="block_joint">Yelim/qorishma chok (mm)</span></label>
+<input id="blockJoint" type="number" min="0" step="0.5" value="3"></div>
+
+<div class="field"><label><span data-i18n="block_openings">Eshik/deraza maydoni (m²)</span></label>
+<input id="blockOpenings" type="number" min="0" step="any" value="0"></div>
+
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
+<input id="blockReserve" type="number" value="5" min="0" max="100" step="0.1"></div>
+
+<button class="calc" onclick="blockCalc()"><span data-i18n="calc_block">Blokni hisoblash</span></button>
+
+<div class="result" id="blockResult">Natija shu yerda chiqadi.</div></div></div>
+
+<!-- BETON -->
+<div class="card" id="concrete"><div class="card-top"><span class="card-index">04</span><span class="card-type">CONCRETE</span></div><h2 class="card-title" data-i18n="concrete_title">Concrete calculator</h2><p class="card-desc" data-i18n="concrete_desc">Concrete volume and cement bag estimation</p><div class="card-form">
+
+<div class="field"><label><span data-i18n="con_l">Uzunlik (m)</span></label>
+<input id="conL" type="number" min="0" step="any" placeholder="10"></div>
+
+<div class="field"><label><span data-i18n="con_w">Kenglik (m)</span></label>
+<input id="conW" type="number" min="0" step="any" placeholder="2"></div>
+
+<div class="field"><label><span data-i18n="con_h">Qalinlik (cm)</span></label>
+<input id="conH" type="number" min="0" step="any" placeholder="15"></div>
+
+<div class="field"><label><span data-i18n="con_qty">Bir xil elementlar soni</span></label>
+<input id="conQty" type="number" min="1" step="1" value="1"></div>
+
+<div class="field"><label><span data-i18n="cementPerM3">1 m³ beton uchun sement (kg)</span></label>
+<input id="cementPerM3" type="number" min="0" step="1" value="300"></div>
+
+<div class="field"><label><span data-i18n="cementBag">1 qop sement (kg)</span></label>
+<input id="cementBag" type="number" min="0" step="0.5" value="50"></div>
+
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
+<input id="conReserve" type="number" value="5" min="0" max="100" step="0.1"></div>
+
+<button class="calc" onclick="concreteCalc()"><span data-i18n="calc_concrete">Betonni hisoblash</span></button>
+
+<div class="result" id="conResult">Natija shu yerda chiqadi.</div></div></div>
+
+<!-- BO‘YOQ -->
+<div class="card" id="paint"><div class="card-top"><span class="card-index">05</span><span class="card-type">PAINT</span></div><h2 class="card-title" data-i18n="paint_title">Paint calculator</h2><p class="card-desc" data-i18n="paint_desc">Paint quantity estimation</p><div class="card-form">
+
+<div class="field"><label><span data-i18n="paint_w">Bo‘yaladigan maydon eni (m)</span></label>
+<input id="paintW" type="number" min="0" step="any" placeholder="5"></div>
+
+<div class="field"><label><span data-i18n="paint_h">Bo‘yaladigan maydon bo‘yi (m)</span></label>
+<input id="paintH" type="number" min="0" step="any" placeholder="3"></div>
+
+<div class="field"><label><span data-i18n="paint_coats">Qavatlar soni</span></label>
+<input id="paintCoats" type="number" min="0" step="1" value="2"></div>
+
+<div class="field"><label><span data-i18n="paint_liter_cover">1 litr bo‘yoq qoplaydigan maydon (m²)</span></label>
+<input id="paintLiterCover" type="number" min="0" step="any" placeholder="10"></div>
+
+<div class="field"><label><span data-i18n="paint_can_cover">1 banka bo‘yoq qoplaydigan maydon (m²)</span></label>
+<input id="paintCanCover" type="number" min="0" step="any" placeholder="50"></div>
+
+<div class="field"><label><span data-i18n="paint_can_liters">1 banka hajmi (L) — ixtiyoriy</span></label>
+<input id="paintCanLiters" type="number" min="0" step="any" placeholder="5"></div>
+
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
+<input id="paintReserve" type="number" value="10" min="0" max="100" step="0.1"></div>
+
+<button class="calc" onclick="paintCalc()"><span data-i18n="calc_paint">Bo‘yoqni hisoblash</span></button>
+
+<div class="result" id="paintResult">Natija shu yerda chiqadi.</div></div></div>
+
+<!-- POL -->
+<div class="card" id="floor"><div class="card-top"><span class="card-index">06</span><span class="card-type">FLOOR</span></div><h2 class="card-title" data-i18n="floor_title">Floor calculator</h2><p class="card-desc" data-i18n="floor_desc">Floor material quantity by floor type</p><div class="card-form">
+
+<div class="field"><label><span data-i18n="floor_type">Pol turi</span></label>
+<select id="floorType" onchange="applyFloorPreset()">
+<option value="laminate">Laminat — 1 quti m² bo‘yicha</option>
+<option value="parquet">Parket — 1 quti m² bo‘yicha</option>
+<option value="vinyl">Vinil/LVT — 1 quti m² bo‘yicha</option>
+<option value="tile">Keramik plitka — 1 quti m² bo‘yicha</option>
+<option value="linoleum">Linoleum — 1 rulon m² bo‘yicha</option>
+<option value="carpet">Kovrolin — 1 rulon m² bo‘yicha</option>
+<option value="board">Pol taxtasi — 1 quti/paket m² bo‘yicha</option>
+<option value="custom">Maxsus material</option>
+</select></div>
+
+<div class="field"><label><span data-i18n="floor_l">Xona uzunligi (m)</span></label>
+<input id="floorL" type="number" min="0" step="any" placeholder="5"></div>
+
+<div class="field"><label><span data-i18n="floor_w">Xona kengligi (m)</span></label>
+<input id="floorW" type="number" min="0" step="any" placeholder="4"></div>
+
+<div class="field"><label><span data-i18n="floor_package">1 qadoq/rulon qoplaydigan maydon (m²) — majburiy</span></label>
+<input id="floorPackage" type="number" min="0" step="any" value="2.22" required></div>
+
+<div class="field"><label><span data-i18n="floor_piece">1 dona mahsulot maydoni (m²) — ixtiyoriy</span></label>
+<input id="floorPiece" type="number" min="0" step="any" placeholder="0.36"></div>
+
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label>
+<input id="floorReserve" type="number" value="10" min="0" max="100" step="0.1"></div>
+
+<button class="calc" onclick="floorCalc()"><span data-i18n="calc_floor">Polni hisoblash</span></button>
+
+<div class="result" id="floorResult">Natija shu yerda chiqadi.</div></div></div>
+
+<!-- ZINA -->
+<div class="card" id="stair"><div class="card-top"><span class="card-index">07</span><span class="card-type">STAIRS</span></div><h2 class="card-title" data-i18n="stair_title">Stairs calculator</h2><p class="card-desc" data-i18n="stair_desc">Detailed stair geometry and comfort check</p><div class="card-form">
+
+<div class="field field-wide"><label><span data-i18n="stair_type">Zina turi</span></label>
+<select id="stairType" onchange="onStairTypeChange()">
+<option value="straight" data-i18n="stair_straight">To‘g‘ri zina</option>
+<option value="l_shape" data-i18n="stair_l">L-shakldagi zina (90°)</option>
+<option value="u_shape" data-i18n="stair_u">U-shakldagi zina (180°)</option>
+<option value="two_flight" data-i18n="stair_two_flight">Maydonchali ikki marshli zina</option>
+<option value="winder" data-i18n="stair_winder">Burama pog‘onali (winder) zina</option>
+<option value="spiral" data-i18n="stair_spiral">Spiral (vintli) zina</option>
+</select></div>
+
+<div class="field"><label><span data-i18n="stair_height">Qavatlar orasidagi umumiy balandlik (cm)</span></label>
+<input id="stairHeight" type="number" min="0" step="any" placeholder="280"></div>
+
+<div class="field"><label><span data-i18n="step_height">Maqsadli zina balandligi (cm)</span></label>
+<input id="stepHeight" type="number" min="0" step="any" value="17"></div>
+
+<div class="field"><label><span data-i18n="step_depth">Maqsadli zina chuqurligi (cm)</span></label>
+<input id="stepDepth" type="number" min="0" step="any" value="28"></div>
+
+<div class="field"><label><span data-i18n="stair_width">Zina eni (cm)</span></label>
+<input id="stairWidth" type="number" min="0" step="any" value="100"></div>
+
+<div class="field"><label><span data-i18n="available_run">Mavjud gorizontal joy (m) — ixtiyoriy</span></label>
+<input id="availableRun" type="number" min="0" step="any" placeholder="4.5"></div>
+
+<div class="field" id="landingField"><label><span data-i18n="landing">Maydoncha uzunligi (m) — ixtiyoriy</span></label>
+<input id="landingLength" type="number" min="0" step="any" placeholder="1.0"></div>
+
+<div class="field" id="spiralField" hidden><label><span data-i18n="spiral_diameter">Spiral zina diametri (cm)</span></label>
+<input id="spiralDiameter" type="number" min="0" step="any" value="150"></div>
+
+<div class="field" id="winderField" hidden><label><span data-i18n="winder_count">Burilishdagi burama pog‘onalar soni</span></label>
+<input id="winderCount" type="number" min="1" step="1" value="3"></div>
+
+<button class="calc" onclick="stairCalc()"><span data-i18n="calc_stair">Zinani hisoblash</span></button>
+
+<div class="result" id="stairResult">Natija shu yerda chiqadi.</div>
+<div class="result" id="stairDiagrams"></div></div></div>
+
+<!-- SUVOQ -->
+<div class="card" id="plaster"><div class="card-top"><span class="card-index">08</span><span class="card-type">PLASTER</span></div><h2 class="card-title" data-i18n="plaster_title">Suvoq kalkulyatori</h2><p class="card-desc" data-i18n="plaster_desc">Devor suvoqi hajmi va taxminiy qorishma</p><div class="card-form">
+<div class="field"><label><span data-i18n="plaster_area">Suvaladigan maydon (m²)</span></label><input id="plasterArea" type="number" min="0" step="any" placeholder="80"></div>
+<div class="field"><label><span data-i18n="plaster_thickness">Suvoq qalinligi (mm)</span></label><input id="plasterThickness" type="number" min="0" step="any" value="15"></div>
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label><input id="plasterReserve" type="number" min="0" max="100" step="any" value="10"></div>
+<button class="calc" onclick="plasterCalc()"><span data-i18n="calc_plaster">Suvoqni hisoblash</span></button><div class="result" id="plasterResult">Natija shu yerda chiqadi.</div></div></div>
+
+<!-- PLITKA YELIMI -->
+<div class="card" id="adhesive"><div class="card-top"><span class="card-index">09</span><span class="card-type">TILE ADHESIVE</span></div><h2 class="card-title" data-i18n="adhesive_title">Plitka yelimi kalkulyatori</h2><p class="card-desc" data-i18n="adhesive_desc">Maydon va sarf me’yori bo‘yicha qoplar soni</p><div class="card-form">
+<div class="field"><label><span data-i18n="adhesive_area">Plitka maydoni (m²)</span></label><input id="adhesiveArea" type="number" min="0" step="any" placeholder="35"></div>
+<div class="field"><label><span data-i18n="adhesive_consumption">1 m² uchun sarf (kg)</span></label><input id="adhesiveConsumption" type="number" min="0" step="any" value="4"></div>
+<div class="field"><label><span data-i18n="adhesive_bag">1 qop og‘irligi (kg)</span></label><input id="adhesiveBag" type="number" min="0" step="any" value="25"></div>
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label><input id="adhesiveReserve" type="number" min="0" max="100" step="any" value="10"></div>
+<button class="calc" onclick="adhesiveCalc()"><span data-i18n="calc_adhesive">Yelimni hisoblash</span></button><div class="result" id="adhesiveResult">Natija shu yerda chiqadi.</div></div></div>
+
+<!-- TOM -->
+<div class="card" id="roof"><div class="card-top"><span class="card-index">10</span><span class="card-type">ROOF</span></div><h2 class="card-title" data-i18n="roof_title">Tom materiali kalkulyatori</h2><p class="card-desc" data-i18n="roof_desc">Tom maydoni, qiyalik koeffitsiyenti va zaxira</p><div class="card-form">
+<div class="field"><label><span data-i18n="roof_length">Tom uzunligi (m)</span></label><input id="roofLength" type="number" min="0" step="any" placeholder="10"></div>
+<div class="field"><label><span data-i18n="roof_width">Tomning gorizontal eni (m)</span></label><input id="roofWidth" type="number" min="0" step="any" placeholder="6"></div>
+<div class="field"><label><span data-i18n="roof_slope">Qiyalik koeffitsiyenti</span></label><input id="roofSlope" type="number" min="1" step="any" value="1.15"></div>
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label><input id="roofReserve" type="number" min="0" max="100" step="any" value="10"></div>
+<button class="calc" onclick="roofCalc()"><span data-i18n="calc_roof">Tom maydonini hisoblash</span></button><div class="result" id="roofResult">Natija shu yerda chiqadi.</div></div></div>
+
+<!-- ARMATURA -->
+<div class="card" id="rebar"><div class="card-top"><span class="card-index">11</span><span class="card-type">REBAR</span></div><h2 class="card-title" data-i18n="rebar_title">Armatura kalkulyatori</h2><p class="card-desc" data-i18n="rebar_desc">Umumiy uzunlik va metr og‘irligi bo‘yicha kg hisoblash</p><div class="card-form">
+<div class="field"><label><span data-i18n="rebar_length">Bitta sterjen uzunligi (m)</span></label><input id="rebarLength" type="number" min="0" step="any" placeholder="6"></div>
+<div class="field"><label><span data-i18n="rebar_count">Sterjenlar soni (dona)</span></label><input id="rebarCount" type="number" min="0" step="1" placeholder="40"></div>
+<div class="field"><label><span data-i18n="rebar_weight">1 metr og‘irligi (kg/m)</span></label><input id="rebarWeight" type="number" min="0" step="any" value="0.888"></div>
+<div class="field"><label><span data-i18n="reserve">Zaxira (%)</span></label><input id="rebarReserve" type="number" min="0" max="100" step="any" value="5"></div>
+<button class="calc" onclick="rebarCalc()"><span data-i18n="calc_rebar">Armaturani hisoblash</span></button><div class="result" id="rebarResult">Natija shu yerda chiqadi.</div></div></div>
+
+<!-- QO‘SHIMCHA 5 TA KALKULYATOR -->
+<div class="card" id="excavation"><div class="card-top"><span class="card-index">12</span><span class="card-type">EXCAVATION</span></div><h2 class="card-title">Tuproq qazish kalkulyatori</h2><p class="card-desc">Uzunlik, kenglik va chuqurlikdan qazish hajmi</p><div class="card-form"><div class="field"><label>Uzunlik (m)</label><input id="excavationL" type="number" min="0" step="any" placeholder="10"></div><div class="field"><label>Kenglik (m)</label><input id="excavationW" type="number" min="0" step="any" placeholder="0.6"></div><div class="field"><label>Chuqurlik (m)</label><input id="excavationD" type="number" min="0" step="any" placeholder="1.2"></div><div class="field"><label>Zaxira (%)</label><input id="excavationReserve" type="number" min="0" max="100" value="5"></div><button class="calc" onclick="excavationCalc()">Qazish hajmini hisoblash</button><div class="result" id="excavationResult">Natija shu yerda chiqadi.</div></div></div>
+<div class="card" id="insulation"><div class="card-top"><span class="card-index">13</span><span class="card-type">INSULATION</span></div><h2 class="card-title">Issiqlik izolyatsiyasi</h2><p class="card-desc">Devor yuzasi, eshik-deraza va zaxira</p><div class="card-form"><div class="field"><label>Devor uzunligi (m)</label><input id="insulationL" type="number" min="0" step="any" placeholder="12"></div><div class="field"><label>Devor balandligi (m)</label><input id="insulationH" type="number" min="0" step="any" placeholder="3"></div><div class="field"><label>Eshik/derazalar jami (m²)</label><input id="insulationOpenings" type="number" min="0" step="any" value="2"></div><div class="field"><label>Zaxira (%)</label><input id="insulationReserve" type="number" min="0" max="100" value="10"></div><button class="calc" onclick="insulationCalc()">Izolyatsiyani hisoblash</button><div class="result" id="insulationResult">Natija shu yerda chiqadi.</div></div></div>
+<div class="card" id="wallpaper"><div class="card-top"><span class="card-index">14</span><span class="card-type">WALLPAPER</span></div><h2 class="card-title">Oboy kalkulyatori</h2><p class="card-desc">Devor maydonidan rulon sonini hisoblash</p><div class="card-form"><div class="field"><label>Devorlar jami uzunligi (m)</label><input id="wallpaperPerimeter" type="number" min="0" step="any" placeholder="18"></div><div class="field"><label>Balandlik (m)</label><input id="wallpaperH" type="number" min="0" step="any" placeholder="2.8"></div><div class="field"><label>Ochilishlar maydoni (m²)</label><input id="wallpaperOpenings" type="number" min="0" step="any" value="3"></div><div class="field"><label>1 rulon qoplaydigan maydon (m²)</label><input id="wallpaperCoverage" type="number" min="0" step="any" value="5.3"></div><div class="field"><label>Zaxira (%)</label><input id="wallpaperReserve" type="number" min="0" max="100" value="10"></div><button class="calc" onclick="wallpaperCalc()">Oboyni hisoblash</button><div class="result" id="wallpaperResult">Natija shu yerda chiqadi.</div></div></div>
+<div class="card" id="tile"><div class="card-top"><span class="card-index">15</span><span class="card-type">TILE</span></div><h2 class="card-title">Pol plitkasi kalkulyatori</h2><p class="card-desc">Maydon va qadoq qamroviga ko‘ra qadoqlar soni</p><div class="card-form"><div class="field"><label>Uzunlik (m)</label><input id="tileL" type="number" min="0" step="any" placeholder="5"></div><div class="field"><label>Kenglik (m)</label><input id="tileW" type="number" min="0" step="any" placeholder="4"></div><div class="field"><label>1 qadoq qoplaydigan maydon (m²)</label><input id="tileCoverage" type="number" min="0" step="any" value="1.44"></div><div class="field"><label>Zaxira (%)</label><input id="tileReserve" type="number" min="0" max="100" value="10"></div><button class="calc" onclick="tileCalc()">Plitkani hisoblash</button><div class="result" id="tileResult">Natija shu yerda chiqadi.</div></div></div>
+<div class="card" id="gravel"><div class="card-top"><span class="card-index">16</span><span class="card-type">SAND / GRAVEL</span></div><h2 class="card-title">Shag‘al / qum kalkulyatori</h2><p class="card-desc">Hajm, zichlik va zaxiradan og‘irlikni hisoblash</p><div class="card-form"><div class="field"><label>Uzunlik (m)</label><input id="gravelL" type="number" min="0" step="any" placeholder="10"></div><div class="field"><label>Kenglik (m)</label><input id="gravelW" type="number" min="0" step="any" placeholder="3"></div><div class="field"><label>Qatlam qalinligi (cm)</label><input id="gravelT" type="number" min="0" step="any" placeholder="15"></div><div class="field"><label>Zichlik (kg/m³)</label><input id="gravelDensity" type="number" min="0" step="any" value="1600"></div><div class="field"><label>Zaxira (%)</label><input id="gravelReserve" type="number" min="0" max="100" value="10"></div><button class="calc" onclick="gravelCalc()">Shag‘al / qumni hisoblash</button><div class="result" id="gravelResult">Natija shu yerda chiqadi.</div></div></div>
+
+</div>
+
+    </section>
+
+    <footer data-i18n="footer">ARCHCALC · ARCHITECTURE & CONSTRUCTION · 2026</footer>
+
+</main>
+</div>
+
+<script>
+
+
+/* NAVIGATION */
+
+function go(id){
+    document.getElementById(id).scrollIntoView({
+        behavior:"smooth"
+    });
+}
+
+
+/* =========================================================
+   CALCULATOR ENGINE
+   ========================================================= */
+
+function getNumber(id){
+    const el = document.getElementById(id);
+    if (!el) return NaN;
+    return Number.parseFloat(el.value);
+}
+
+function setResult(id, htmlText){
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = htmlText;
+    const successful = el && !/invalid|noto‘g‘ri|xato/i.test(String(htmlText));
+    if (successful && typeof window.archCalcRecordCalculation === "function") window.archCalcRecordCalculation(id, htmlText);
+    if (successful && typeof window.archCalcOnCalculation === "function") window.archCalcOnCalculation(id);
+}
+
+function isPositive(...values){
+    return values.every(value => Number.isFinite(value) && value > 0);
+}
+
+function validPercent(value){
+    return Number.isFinite(value) && value >= 0 && value <= 100;
+}
+
+function fmt(value, digits = 2){
+    return Number(value).toLocaleString("uz-UZ", {
+        minimumFractionDigits:digits,
+        maximumFractionDigits:digits
+    });
+}
+
+/* XONA */
+function roomCalc(){
+    const l = getNumber("roomL");
+    const w = getNumber("roomW");
+    const h = getNumber("roomH");
+
+    if (!isPositive(l,w,h)){
+        setResult("roomResult", outText("invalid"));
+        return;
+    }
+
+    const area = l*w;
+    const volume = area*h;
+    const perimeter = 2*(l+w);
+
+    window.archCalcCalcMeta = window.archCalcCalcMeta || {}; window.archCalcCalcMeta.roomResult = {name:"Xona maydoni", qty:area, unit:"m²"};
+    setResult("roomResult",
+        outText("roomArea")+" "+fmt(area)+" m²<br>"+
+        outText("roomVol")+" "+fmt(volume)+" m³<br>"+
+        outText("roomPer")+" "+fmt(perimeter)+" m"
+    );
+}
+
+
+/* G‘ISHT */
+const BRICK_PRESETS = {
+    "250x120x65": [25,12,6.5],
+    "250x120x88": [25,12,8.8]
+};
+
+function applyBrickPreset(){
+    const preset = BRICK_PRESETS[document.getElementById("brickType")?.value];
+    if (!preset) return;
+    ["brickL","brickW","brickH"].forEach((id,i)=>{
+        const el=document.getElementById(id);
+        if(el) el.value=preset[i];
+    });
+}
+
+function brickCalc(){
+    const wallL = getNumber("wallL");
+    const wallH = getNumber("wallH");
+    const brickL = getNumber("brickL") / 100;
+    const brickW = getNumber("brickW") / 100;
+    const brickH = getNumber("brickH") / 100;
+    const thickness = Number.parseFloat(document.getElementById("brickThickness")?.value);
+    const openings = Number.isFinite(getNumber("brickOpenings")) ? getNumber("brickOpenings") : 0;
+    const reserve = getNumber("brickReserve");
+
+    if(!isPositive(wallL, wallH, brickL, brickW, brickH) ||
+       !Number.isFinite(thickness) || openings < 0 || !validPercent(reserve)){
+        setResult("brickResult", outText("invalid"));
+        return;
+    }
+
+    const grossArea = wallL * wallH;
+    if(openings >= grossArea){
+        setResult("brickResult", outText("invalidOpenings"));
+        return;
+    }
+
+    // Faqat g‘isht kalkulyatori uchun:
+    // 0.5 g‘isht = 120 mm
+    // 1 g‘isht   = 250 mm
+    // 1.5 g‘isht = 380 mm
+    // 2 g‘isht   = 500 mm
+    // Qorishma/chok hisobga olinmaydi.
+    const thicknessMap = {
+        0.5: 0.120,
+        1:   0.250,
+        1.5: 0.380,
+        2:   0.500
+    };
+
+    const wallThickness = thicknessMap[thickness];
+    if(!wallThickness){
+        setResult("brickResult", outText("invalid"));
+        return;
+    }
+
+    const netArea = grossArea - openings;
+    const wallVolume = netArea * wallThickness;
+    const oneBrickVolume = brickL * brickW * brickH;
+
+    // Asosiy hisob: devor m³ / 1 dona g‘isht m³.
+    const exactBricks = wallVolume / oneBrickVolume;
+    const bricksWithoutReserve = Math.ceil(exactBricks);
+    const bricksWithReserve = Math.ceil(exactBricks * (1 + reserve / 100));
+
+    window.archCalcCalcMeta = window.archCalcCalcMeta || {}; window.archCalcCalcMeta.brickResult = {name:"G‘isht", qty:bricksWithReserve, unit:"dona"};
+    setResult("brickResult",
+        outText("wallArea") + " " + fmt(netArea) + " m²<br>" +
+        outText("brickWallThickness") + " " + fmt(wallThickness * 1000, 0) + " mm<br>" +
+        outText("brickWallVolume") + " " + fmt(wallVolume, 3) + " m³<br>" +
+        outText("brickUnitVolume") + " " + fmt(oneBrickVolume, 6) + " m³<br>" +
+        outText("brickBase") + " " + bricksWithoutReserve.toLocaleString() + " pcs<br>" +
+        outText("reserve") + " " + bricksWithReserve.toLocaleString() + " pcs"
+    );
+}
+
+/* BLOK */
+const BLOCK_PRESETS = {
+    aac:[60,30,20],
+    foam:[60,30,20],
+    concrete:[40,20,20],
+    ceramic:[38,25,21.9]
+};
+
+function applyBlockPreset(){
+    const preset=BLOCK_PRESETS[document.getElementById("blockType")?.value];
+    if(!preset) return;
+    ["blockL","blockW","blockH"].forEach((id,i)=>{
+        const el=document.getElementById(id);
+        if(el) el.value=preset[i];
+    });
+}
+
+function blockCalc(){
+    const l=getNumber("blockWallL");
+    const h=getNumber("blockWallH");
+    const bl=getNumber("blockL")/100;
+    const bw=getNumber("blockW")/100;
+    const bh=getNumber("blockH")/100;
+    const openings=Number.isFinite(getNumber("blockOpenings")) ? getNumber("blockOpenings") : 0;
+    const reserve=getNumber("blockReserve");
+    const jointMm=getNumber("blockJoint");
+    const joint = Number.isFinite(jointMm) && jointMm >= 0 ? jointMm / 1000 : NaN;
+
+    if(!isPositive(l,h,bl,bw,bh) || !Number.isFinite(openings) || openings<0 || !validPercent(reserve) || !Number.isFinite(joint)){
+        setResult("blockResult",outText("invalid")); return;
+    }
+
+    const grossArea=l*h;
+    if(openings>=grossArea){
+        setResult("blockResult",outText("invalidOpenings")); return;
+    }
+
+    const area=grossArea-openings;
+    const wallVolume=area*bw;
+    const blockVolume=bl*bw*bh;
+    // Qorishma chokini blokning modul uzunligi va balandligiga qo‘shamiz.
+    const moduleArea=(bl+joint)*(bh+joint);
+    const baseCount=area/moduleArea;
+    const total=Math.ceil(baseCount*(1+reserve/100));
+
+    window.archCalcCalcMeta = window.archCalcCalcMeta || {}; window.archCalcCalcMeta.blockResult = {name:"Blok", qty:total, unit:"dona"};
+    setResult("blockResult",
+        outText("wallArea")+" "+fmt(area)+" m²<br>"+
+        outText("blockTypeResult")+" "+document.getElementById("blockType").selectedOptions[0].text+"<br>"+
+        outText("blockWallVolume")+" "+fmt(wallVolume,3)+" m³<br>"+
+        outText("blockUnitVolume")+" "+fmt(blockVolume,6)+" m³<br>"+
+        outText("base")+" "+Math.ceil(baseCount).toLocaleString()+" pcs<br>"+
+        outText("reserve")+" "+total.toLocaleString()+" pcs"
+    );
+}
+
+/* BETON */
+function concreteCalc(){
+    const l=getNumber("conL"), w=getNumber("conW"), h=getNumber("conH")/100;
+    const qty=getNumber("conQty"), cementPerM3=getNumber("cementPerM3"), bag=getNumber("cementBag"), reserve=getNumber("conReserve");
+
+    if(!isPositive(l,w,h,qty,cementPerM3,bag) || !validPercent(reserve)){
+        setResult("conResult",outText("invalid")); return;
+    }
+
+    const unitVolume=l*w*h;
+    const exactVolume=unitVolume*qty;
+    const totalVolume=exactVolume*(1+reserve/100);
+    const cementKg=totalVolume*cementPerM3;
+    const bags=cementKg/bag;
+    const wholeBags=Math.ceil(bags);
+
+    window.archCalcCalcMeta = window.archCalcCalcMeta || {}; window.archCalcCalcMeta.conResult = {name:"Beton", qty:totalVolume, unit:"m³"};
+    setResult("conResult",
+        outText("conUnit")+" "+fmt(unitVolume,3)+" m³<br>"+
+        outText("conExact")+" "+fmt(exactVolume,3)+" m³<br>"+
+        outText("reserve")+" "+fmt(totalVolume,3)+" m³<br>"+
+        outText("cementKg")+" "+fmt(cementKg,1)+" kg<br>"+
+        outText("cementBags")+" "+fmt(bags,2)+" qop (~"+wholeBags+" qop)"
+    );
+}
+
+/* BO‘YOQ */
+function paintCalc(){
+    const w=getNumber("paintW"), h=getNumber("paintH"), coats=getNumber("paintCoats");
+    const literCover=getNumber("paintLiterCover"), canCover=getNumber("paintCanCover"), canLiters=getNumber("paintCanLiters"), reserve=getNumber("paintReserve");
+
+    if(!isPositive(w,h,coats) || !validPercent(reserve) ||
+       !((Number.isFinite(literCover) && literCover>0) || (Number.isFinite(canCover) && canCover>0)) ||
+       (Number.isFinite(canLiters) && canLiters<0)){
+        setResult("paintResult",outText("invalidPaint")); return;
+    }
+
+    const area=w*h, workingArea=area*coats, reserveArea=workingArea*(1+reserve/100);
+    let html=outText("paintAreaResult")+" "+fmt(area)+" m²<br>"+outText("paintTotalArea")+" "+fmt(reserveArea)+" m²<br>";
+
+    if(literCover>0) html+=outText("paintLiters")+" "+fmt(reserveArea/literCover,2)+" L<br>";
+    if(canCover>0) html+=outText("paintCans")+" "+fmt(reserveArea/canCover,2)+" banka (~"+Math.ceil(reserveArea/canCover)+")<br>";
+    if(literCover>0 && canLiters>0) html+=outText("paintByCanVolume")+" "+fmt((reserveArea/literCover)/canLiters,2)+" banka (liter bo‘yicha)<br>";
+    if(canCover>0 && canLiters>0) html+=outText("paintCanLitersTotal")+" "+fmt((reserveArea/canCover)*canLiters,2)+" L";
+
+    const paintQty = literCover>0 ? reserveArea/literCover : Math.ceil(reserveArea/canCover);
+    const paintUnit = literCover>0 ? "litr" : "banka";
+    window.archCalcCalcMeta = window.archCalcCalcMeta || {}; window.archCalcCalcMeta.paintResult = {name:"Bo‘yoq", qty:paintQty, unit:paintUnit};
+    setResult("paintResult",html);
+}
+
+/* POL */
+const FLOOR_PRESETS={
+    laminate:2.22, parquet:1.8, vinyl:2.5, tile:1.44, linoleum:15, carpet:20, board:2.4
+};
+
+function applyFloorPreset(){
+    const val=document.getElementById("floorType")?.value;
+    const el=document.getElementById("floorPackage");
+    if(el && FLOOR_PRESETS[val]) el.value=FLOOR_PRESETS[val];
+}
+
+function floorCalc(){
+    const l=getNumber("floorL");
+    const w=getNumber("floorW");
+    const pack=getNumber("floorPackage");
+    const piece=getNumber("floorPiece");
+    const reserve=getNumber("floorReserve");
+
+    if(!isPositive(l,w,pack) || !validPercent(reserve)){
+        setResult("floorResult",outText("invalid")); return;
+    }
+
+    const area=l*w;
+    const totalArea=area*(1+reserve/100);
+    const packages=totalArea/pack;
+
+    let html=outText("floorArea")+" "+fmt(area)+" m²<br>"+
+              outText("floorReserveArea")+" "+fmt(totalArea)+" m²<br>"+
+              outText("floorPackages")+" "+fmt(packages,2)+" qadoq/rulon (~"+Math.ceil(packages)+")";
+
+    if(piece>0){
+        html+="<br>"+outText("floorPieces")+" "+Math.ceil(totalArea/piece).toLocaleString()+" pcs";
+    }
+
+    html+="<br>"+outText("floorTypeResult")+" "+document.getElementById("floorType").selectedOptions[0].text;
+    window.archCalcCalcMeta = window.archCalcCalcMeta || {}; window.archCalcCalcMeta.floorResult = {name:"Pol materiali — "+document.getElementById("floorType").selectedOptions[0].text, qty:Math.ceil(packages), unit:"qadoq"};
+    setResult("floorResult",html);
+}
+
+/* Qo‘shimcha qurilish kalkulyatorlari */
+function plasterCalc(){const area=getNumber("plasterArea"),thick=getNumber("plasterThickness"),reserve=getNumber("plasterReserve");if(!isPositive(area,thick)||!validPercent(reserve)){setResult("plasterResult",outText("invalid"));return}const volume=area*(thick/1000)*(1+reserve/100);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.plasterResult={name:"Suvoq qorishmasi",qty:volume,unit:"m³"};setResult("plasterResult",`Maydon: ${fmt(area)} m²<br>Qalinlik: ${fmt(thick,1)} mm<br>Zaxira bilan suvoq hajmi: ${fmt(volume,3)} m³`)}
+function adhesiveCalc(){const area=getNumber("adhesiveArea"),cons=getNumber("adhesiveConsumption"),bag=getNumber("adhesiveBag"),reserve=getNumber("adhesiveReserve");if(!isPositive(area,cons,bag)||!validPercent(reserve)){setResult("adhesiveResult",outText("invalid"));return}const kg=area*cons*(1+reserve/100),bags=Math.ceil(kg/bag);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.adhesiveResult={name:"Plitka yelimi",qty:bags,unit:"qop"};setResult("adhesiveResult",`Maydon: ${fmt(area)} m²<br>Yelim miqdori zaxira bilan: ${fmt(kg,2)} kg<br>Qoplar soni: ${bags} dona (${fmt(bag,0)} kg/qop)`)}
+function roofCalc(){const l=getNumber("roofLength"),w=getNumber("roofWidth"),slope=getNumber("roofSlope"),reserve=getNumber("roofReserve");if(!isPositive(l,w,slope)||slope<1||!validPercent(reserve)){setResult("roofResult",outText("invalid"));return}const base=l*w*slope,area=base*(1+reserve/100);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.roofResult={name:"Tom qoplamasi",qty:area,unit:"m²"};setResult("roofResult",`Gorizontal asos maydoni: ${fmt(l*w,2)} m²<br>Qiyalik hisobga olingan maydon: ${fmt(base,2)} m²<br>Zaxira bilan material: ${fmt(area,2)} m²`)}
+function rebarCalc(){const l=getNumber("rebarLength"),count=getNumber("rebarCount"),weight=getNumber("rebarWeight"),reserve=getNumber("rebarReserve");if(!isPositive(l,count,weight)||!validPercent(reserve)||!Number.isInteger(count)){setResult("rebarResult",outText("invalid"));return}const totalLength=l*count,kg=totalLength*weight*(1+reserve/100);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.rebarResult={name:"Armatura",qty:kg,unit:"kg"};setResult("rebarResult",`Umumiy uzunlik: ${fmt(totalLength,2)} m<br>Zaxirasiz og‘irlik: ${fmt(totalLength*weight,2)} kg<br>Zaxira bilan og‘irlik: ${fmt(kg,2)} kg`)}
+
+/* Qo‘shimcha hisoblash vositalari — natijalar avtomatik smetaga ulanadi. */
+function excavationCalc(){const l=getNumber("excavationL"),w=getNumber("excavationW"),d=getNumber("excavationD"),r=getNumber("excavationReserve");if(!isPositive(l,w,d)||!validPercent(r)){setResult("excavationResult",outText("invalid"));return}const base=l*w*d,total=base*(1+r/100);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.excavationResult={name:"Tuproq qazish",qty:total,unit:"m³"};setResult("excavationResult",`Asosiy hajm: ${fmt(base,3)} m³<br>Zaxira bilan qazish hajmi: ${fmt(total,3)} m³`)}
+function insulationCalc(){const l=getNumber("insulationL"),h=getNumber("insulationH"),o=getNumber("insulationOpenings"),r=getNumber("insulationReserve");if(!isPositive(l,h)||!Number.isFinite(o)||o<0||o>=l*h||!validPercent(r)){setResult("insulationResult",outText("invalid"));return}const base=l*h-o,total=base*(1+r/100);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.insulationResult={name:"Issiqlik izolyatsiyasi",qty:total,unit:"m²"};setResult("insulationResult",`Sof devor maydoni: ${fmt(base,2)} m²<br>Zaxira bilan izolyatsiya: ${fmt(total,2)} m²`)}
+function wallpaperCalc(){const p=getNumber("wallpaperPerimeter"),h=getNumber("wallpaperH"),o=getNumber("wallpaperOpenings"),c=getNumber("wallpaperCoverage"),r=getNumber("wallpaperReserve");if(!isPositive(p,h,c)||!Number.isFinite(o)||o<0||o>=p*h||!validPercent(r)){setResult("wallpaperResult",outText("invalid"));return}const area=(p*h-o)*(1+r/100),rolls=Math.ceil(area/c);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.wallpaperResult={name:"Oboy",qty:rolls,unit:"rulon"};setResult("wallpaperResult",`Zaxira bilan devor maydoni: ${fmt(area,2)} m²<br>Kerakli oboy: ${rolls} rulon (har biri ${fmt(c,2)} m²)`)}
+function tileCalc(){const l=getNumber("tileL"),w=getNumber("tileW"),c=getNumber("tileCoverage"),r=getNumber("tileReserve");if(!isPositive(l,w,c)||!validPercent(r)){setResult("tileResult",outText("invalid"));return}const area=l*w,total=area*(1+r/100),packs=Math.ceil(total/c);window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.tileResult={name:"Pol plitkasi",qty:packs,unit:"qadoq"};setResult("tileResult",`Pol maydoni: ${fmt(area,2)} m²<br>Zaxira bilan: ${fmt(total,2)} m²<br>Kerakli plitka: ${packs} qadoq`)}
+function gravelCalc(){const l=getNumber("gravelL"),w=getNumber("gravelW"),t=getNumber("gravelT"),d=getNumber("gravelDensity"),r=getNumber("gravelReserve");if(!isPositive(l,w,t,d)||!validPercent(r)){setResult("gravelResult",outText("invalid"));return}const volume=l*w*(t/100)*(1+r/100),kg=volume*d;window.archCalcCalcMeta=window.archCalcCalcMeta||{};window.archCalcCalcMeta.gravelResult={name:"Shag‘al / qum",qty:kg/1000,unit:"tonna"};setResult("gravelResult",`Hajm zaxira bilan: ${fmt(volume,3)} m³<br>Taxminiy og‘irlik: ${fmt(kg/1000,3)} tonna (${fmt(kg,0)} kg)`)}
+
+/* ZINA — bir nechta zina turi va dinamik SVG chizmalar bilan */
+
+function onStairTypeChange(){
+    const type=document.getElementById("stairType")?.value || "straight";
+    const spiralField=document.getElementById("spiralField");
+    const winderField=document.getElementById("winderField");
+    const landingField=document.getElementById("landingField");
+    if(spiralField) spiralField.hidden = type!=="spiral";
+    if(winderField) winderField.hidden = type!=="winder";
+    if(landingField) landingField.hidden = (type==="spiral" || type==="straight");
+}
+
+/* Riser/tread sonini tanlash — barcha zina turlari uchun umumiy asos. */
+function computeStairCore(total,targetH,targetB){
+    const minR=Math.max(1,Math.ceil(total/20));
+    const maxR=Math.max(minR,Math.floor(total/15));
+    let best=null;
+
+    for(let r=minR;r<=maxR;r++){
+        const h=total/r;
+        const b=targetB;
+        const comfort=2*h+b;
+        const angle=Math.atan2(h,b)*180/Math.PI;
+        const score=Math.abs(h-targetH)*3 + Math.abs(comfort-62) + Math.abs(angle-33)*0.5;
+        if(!best || score<best.score) best={r,h,b,comfort,angle,score};
+    }
+
+    if(!best){
+        const candidates=[];
+        for(let r=Math.max(1,Math.round(total/targetH)-2);r<=Math.round(total/targetH)+2;r++){
+            if(r>0){
+                const h=total/r;
+                const b=targetB;
+                const comfort=2*h+b;
+                const angle=Math.atan2(h,b)*180/Math.PI;
+                candidates.push({r,h,b,comfort,angle,score:Math.abs(h-targetH)*3+Math.abs(comfort-62)+Math.abs(angle-33)*0.5});
+            }
+        }
+        best=candidates.sort((a,b)=>a.score-b.score)[0];
+    }
+    return best;
+}
+
+/* Har bir zina turi uchun taxminiy planировка (footprint) hisoblanadi. */
+function buildStairGeometry(type,risers,tread,widthM,landingLenM,winderCount){
+    const treadsTotal=Math.max(0,risers-1);
+
+    if(type==="straight"){
+        const run=treadsTotal*tread/100;
+        return{ flights:[{risers,treads:treadsTotal,run}], turnDeg:0, landingLen:0,
+                footprintX:Math.max(run,0.3), footprintY:widthM, totalHorizontal:run };
+    }
+
+    if(type==="l_shape" || type==="u_shape" || type==="two_flight"){
+        const r1=Math.ceil(risers/2), r2=risers-r1;
+        const t1=r1, t2=Math.max(0,r2-1);
+        const run1=t1*tread/100, run2=t2*tread/100;
+        const turnDeg = type==="l_shape" ? 90 : (type==="u_shape" ? 180 : 0);
+        let footprintX,footprintY,totalHorizontal;
+
+        if(type==="two_flight"){
+            footprintX=run1+landingLenM+run2; footprintY=widthM;
+            totalHorizontal=footprintX;
+        } else if(type==="l_shape"){
+            footprintX=run1+landingLenM; footprintY=landingLenM+run2;
+            totalHorizontal=run1+run2+landingLenM;
+        } else {
+            footprintX=Math.max(run1,run2); footprintY=widthM*2+landingLenM;
+            totalHorizontal=run1+run2+landingLenM;
+        }
+        return{ flights:[{risers:r1,treads:t1,run:run1},{risers:r2,treads:t2,run:run2}],
+                turnDeg, landingLen:landingLenM,
+                footprintX:Math.max(footprintX,0.3), footprintY:Math.max(footprintY,0.3), totalHorizontal };
+    }
+
+    if(type==="winder"){
+        const wCount=Math.max(1,Math.round(winderCount));
+        const straightRisers=Math.max(0,risers-wCount);
+        const r1=Math.ceil(straightRisers/2), r2=straightRisers-r1;
+        const t1=r1, t2=Math.max(0,r2-1);
+        const run1=t1*tread/100, run2=t2*tread/100;
+        const corner=widthM;
+        return{ flights:[{risers:r1,treads:t1,run:run1},{risers:wCount,treads:wCount,run:corner,winder:true},{risers:r2,treads:t2,run:run2}],
+                turnDeg:90, landingLen:0,
+                footprintX:Math.max(run1+corner,0.3), footprintY:Math.max(corner+run2,0.3),
+                totalHorizontal:run1+run2+corner };
+    }
+
+    // spiral
+    const dM=widthM*2; // placeholder, overwritten by caller using real diameter
+    return{ flights:[{risers,treads:treadsTotal,run:0}], turnDeg:360, landingLen:0,
+            footprintX:dM, footprintY:dM, totalHorizontal:0 };
+}
+
+function buildSideView(risers,runM,heightM){
+    const svgW=300,svgH=210,pad=34;
+    const maxW=svgW-pad*2, maxH=svgH-pad*2;
+    const scale=Math.min(maxW/Math.max(runM,0.01), maxH/Math.max(heightM,0.01));
+    const drawRun=Math.max(runM*scale,60);
+    const drawH=Math.max(heightM*scale,60);
+    const x0=pad, y0=svgH-pad;
+    const treads=Math.max(1,risers-1);
+    const dx=drawRun/treads;
+    const dy=drawH/Math.max(risers,1);
+
+    let path=`M ${x0} ${y0}`;
+    for(let i=0;i<treads;i++){ path+=` h ${dx.toFixed(1)} v ${(-dy).toFixed(1)}`; }
+    path+=` h ${dx.toFixed(1)} v 0`;
+
+    return `<div class="stair-diagram-wrap"><div class="diagram-label">${outText("sideView")}</div>
+      <svg class="stair-diagram" viewBox="0 0 ${svgW} ${svgH}" role="img" aria-label="${outText("sideView")}">
+        <path d="${path}" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+        <line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y0-drawH}" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="${x0}" y1="${y0+14}" x2="${x0+drawRun}" y2="${y0+14}" stroke="currentColor" stroke-width="1"/>
+        <text x="${x0+drawRun/2}" y="${y0+30}" text-anchor="middle">${fmt(runM,2)} m</text>
+        <text x="${x0-6}" y="${y0-drawH-6}" text-anchor="start">${fmt(heightM,2)} m</text>
+      </svg></div>`;
+}
+
+function buildTopView(type,geo,widthM){
+    const svgW=300,svgH=210,pad=26;
+    const maxW=svgW-pad*2, maxH=svgH-pad*2;
+    const fx=Math.max(geo.footprintX,0.3), fy=Math.max(geo.footprintY,0.3);
+    const scale=Math.min(maxW/fx,maxH/fy);
+    const toX=m=>pad+m*scale;
+    const toY=m=>svgH-pad-m*scale;
+    const wPx=widthM*scale;
+    let shapes="";
+
+    if(type==="straight"){
+        const run=geo.flights[0].run, t=Math.max(1,geo.flights[0].treads);
+        shapes+=`<rect x="${toX(0).toFixed(1)}" y="${toY(widthM).toFixed(1)}" width="${(run*scale).toFixed(1)}" height="${wPx.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        for(let i=1;i<t;i++){
+            const x=toX(i*run/t);
+            shapes+=`<line x1="${x.toFixed(1)}" y1="${toY(widthM).toFixed(1)}" x2="${x.toFixed(1)}" y2="${toY(0).toFixed(1)}" stroke="currentColor" stroke-width="1" opacity="0.5"/>`;
+        }
+    } else if(type==="l_shape" || type==="winder"){
+        const run1=geo.flights[0].run;
+        const corner=type==="winder"?widthM:geo.landingLen;
+        const run2=geo.flights[geo.flights.length-1].run;
+        shapes+=`<rect x="${toX(0).toFixed(1)}" y="${toY(widthM).toFixed(1)}" width="${(run1*scale).toFixed(1)}" height="${wPx.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        shapes+=`<rect x="${toX(run1).toFixed(1)}" y="${toY(corner).toFixed(1)}" width="${(corner*scale).toFixed(1)}" height="${(corner*scale).toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2" ${type==="winder"?'stroke-dasharray="3 3"':''}/>`;
+        shapes+=`<rect x="${toX(run1).toFixed(1)}" y="${toY(corner+run2).toFixed(1)}" width="${wPx.toFixed(1)}" height="${(run2*scale).toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+    } else if(type==="u_shape"){
+        const run1=geo.flights[0].run, run2=geo.flights[1].run, gap=geo.landingLen;
+        shapes+=`<rect x="${toX(0).toFixed(1)}" y="${toY(widthM).toFixed(1)}" width="${(run1*scale).toFixed(1)}" height="${wPx.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        shapes+=`<rect x="${toX(0).toFixed(1)}" y="${toY(widthM*2+gap).toFixed(1)}" width="${(run2*scale).toFixed(1)}" height="${wPx.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        shapes+=`<rect x="${toX(Math.max(run1,run2)).toFixed(1)}" y="${toY(widthM*2+gap).toFixed(1)}" width="${wPx.toFixed(1)}" height="${((widthM+gap)*scale).toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3"/>`;
+    } else if(type==="two_flight"){
+        const run1=geo.flights[0].run, run2=geo.flights[1].run, landing=geo.landingLen;
+        shapes+=`<rect x="${toX(0).toFixed(1)}" y="${toY(widthM).toFixed(1)}" width="${(run1*scale).toFixed(1)}" height="${wPx.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        shapes+=`<rect x="${toX(run1).toFixed(1)}" y="${toY(widthM).toFixed(1)}" width="${(landing*scale).toFixed(1)}" height="${wPx.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/>`;
+        shapes+=`<rect x="${toX(run1+landing).toFixed(1)}" y="${toY(widthM).toFixed(1)}" width="${(run2*scale).toFixed(1)}" height="${wPx.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+    } else if(type==="spiral"){
+        const cx=svgW/2, cy=svgH/2;
+        const rOuter=Math.min(maxW,maxH)/2*0.92;
+        const rInner=rOuter*0.18;
+        shapes+=`<circle cx="${cx}" cy="${cy}" r="${rOuter.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        shapes+=`<circle cx="${cx}" cy="${cy}" r="${rInner.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        const n=Math.max(4,Math.min(24,geo.flights[0].risers));
+        for(let i=0;i<n;i++){
+            const a=(i/n)*Math.PI*2;
+            const x1=cx+Math.cos(a)*rInner, y1=cy+Math.sin(a)*rInner;
+            const x2=cx+Math.cos(a)*rOuter, y2=cy+Math.sin(a)*rOuter;
+            shapes+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="currentColor" stroke-width="1" opacity="0.6"/>`;
+        }
+    }
+
+    return `<div class="stair-diagram-wrap"><div class="diagram-label">${outText("topView")}</div>
+      <svg class="stair-diagram" viewBox="0 0 ${svgW} ${svgH}" role="img" aria-label="${outText("topView")}">${shapes}</svg></div>`;
+}
+
+function buildFrontView(widthM,heightM,risers){
+    const svgW=300,svgH=210,pad=30;
+    const maxW=svgW-pad*2, maxH=svgH-pad*2;
+    const scale=Math.min(maxW/Math.max(widthM,0.3), maxH/Math.max(heightM,0.3));
+    const w=widthM*scale, h=heightM*scale;
+    const x0=(svgW-w)/2, y0=svgH-pad-h;
+    let lines="";
+    for(let i=1;i<risers;i++){
+        const y=y0+h-(h*i/risers);
+        lines+=`<line x1="${x0.toFixed(1)}" y1="${y.toFixed(1)}" x2="${(x0+w).toFixed(1)}" y2="${y.toFixed(1)}" stroke="currentColor" stroke-width="1" opacity="0.3"/>`;
+    }
+    return `<div class="stair-diagram-wrap"><div class="diagram-label">${outText("frontView")}</div>
+      <svg class="stair-diagram" viewBox="0 0 ${svgW} ${svgH}" role="img" aria-label="${outText("frontView")}">
+        <rect x="${x0.toFixed(1)}" y="${y0.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>
+        ${lines}
+        <text x="${svgW/2}" y="${svgH-8}" text-anchor="middle">${fmt(widthM,2)} m</text>
+      </svg></div>`;
+}
+
+function buildIsoView(type,risersCount){
+    if(!["straight","l_shape","spiral"].includes(type)) return "";
+    const svgW=300,svgH=210;
+    let shapes="";
+
+    if(type==="spiral"){
+        const cx=150,cy=115,rOuter=72,rInner=16,tilt=0.4;
+        shapes+=`<ellipse cx="${cx}" cy="${cy}" rx="${rOuter}" ry="${(rOuter*tilt).toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        shapes+=`<ellipse cx="${cx}" cy="${cy}" rx="${rInner}" ry="${(rInner*tilt).toFixed(1)}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+        const n=Math.max(6,Math.min(16,risersCount));
+        for(let i=0;i<n;i++){
+            const a=(i/n)*Math.PI*2;
+            const lift=i*1.6;
+            const x1=cx+Math.cos(a)*rInner, y1=cy+Math.sin(a)*rInner*tilt-lift;
+            const x2=cx+Math.cos(a)*rOuter, y2=cy+Math.sin(a)*rOuter*tilt-lift;
+            shapes+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="currentColor" stroke-width="1" opacity="0.55"/>`;
+        }
+    } else {
+        const n=Math.min(8,Math.max(3,risersCount-1));
+        const stepW=26, stepDx=16, stepDy=-13;
+        let x=44,y=176;
+        for(let i=0;i<n;i++){
+            shapes+=`<rect x="${x.toFixed(1)}" y="${(y-8).toFixed(1)}" width="${stepW}" height="8" fill="none" stroke="currentColor" stroke-width="1" opacity="0.85"/>`;
+            shapes+=`<line x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${x.toFixed(1)}" y2="${(y-8).toFixed(1)}" stroke="currentColor" stroke-width="1" opacity="0.5"/>`;
+            x+=stepDx; y+=stepDy;
+        }
+        if(type==="l_shape"){
+            shapes+=`<text x="150" y="198" text-anchor="middle" opacity="0.75">90°</text>`;
+        }
+    }
+
+    return `<div class="stair-diagram-wrap"><div class="diagram-label">${outText("isoView")}</div>
+      <svg class="stair-diagram" viewBox="0 0 ${svgW} ${svgH}" role="img" aria-label="${outText("isoView")}">${shapes}</svg></div>`;
+}
+
+function buildStairViews(type,geo,widthM,risers,totalHeightCm){
+    const runForSide = type==="spiral" ? Math.max(geo.diameter*Math.PI,0.01) : Math.max(geo.totalHorizontal,0.01);
+    const sideHtml=buildSideView(risers,runForSide,totalHeightCm/100);
+    const topHtml=buildTopView(type,geo,widthM);
+    const frontHtml=buildFrontView(widthM,totalHeightCm/100,risers);
+    const isoHtml=buildIsoView(type,risers);
+    return `<div class="stair-views-grid">${sideHtml}${topHtml}${frontHtml}${isoHtml}</div>`;
+}
+
+function stairCalc(){
+    const total=getNumber("stairHeight");
+    const targetH=getNumber("stepHeight");
+    const targetB=getNumber("stepDepth");
+    const width=getNumber("stairWidth");
+    const available=getNumber("availableRun");
+    const landing=getNumber("landingLength");
+    const type=document.getElementById("stairType")?.value || "straight";
+    const spiralDiameter=getNumber("spiralDiameter");
+    const winderCount=getNumber("winderCount");
+
+    if(!isPositive(total,targetH,targetB,width) ||
+       (Number.isFinite(available)&&available<0) ||
+       (Number.isFinite(landing)&&landing<0)){
+        setResult("stairResult",outText("invalid"));
+        setResult("stairDiagrams","");
+        return;
+    }
+    if(type==="spiral" && !isPositive(spiralDiameter)){
+        setResult("stairResult",outText("invalid"));
+        setResult("stairDiagrams","");
+        return;
+    }
+    if(type==="winder" && !(Number.isFinite(winderCount) && winderCount>=1)){
+        setResult("stairResult",outText("invalid"));
+        setResult("stairDiagrams","");
+        return;
+    }
+
+    const best=computeStairCore(total,targetH,targetB);
+    const risers=best.r;
+    const riserH=best.h;
+    const tread=best.b;
+    const comfort=best.comfort;
+    const angle=best.angle;
+    const widthM=width/100;
+    const landingLengthValue=(Number.isFinite(landing)&&landing>0)?landing:Math.max(widthM,0.9);
+
+    const riserOk=riserH>=15 && riserH<=20;
+    const treadOk=tread>=25 && tread<=32;
+    const comfortOk=comfort>=59 && comfort<=65;
+    const angleOk=angle>=25 && angle<=45;
+
+    let warnings=[];
+    if(!riserOk) warnings.push(outText("stairWarnRiser"));
+    if(!treadOk) warnings.push(outText("stairWarnTread"));
+    if(!comfortOk) warnings.push(outText("stairWarnComfort"));
+    if(!angleOk) warnings.push(outText("stairWarnAngle"));
+
+    const geo=buildStairGeometry(type,risers,tread,widthM,landingLengthValue,winderCount);
+    if(type==="spiral"){
+        geo.diameter=spiralDiameter/100;
+        geo.footprintX=geo.diameter;
+        geo.footprintY=geo.diameter;
+    }
+
+    if(type!=="spiral" && Number.isFinite(available) && available>0 && geo.totalHorizontal>available){
+        warnings.push(outText("stairWarnSpace"));
+    }
+
+    const warning=warnings.length
+        ? "<br><span class=\"result-warning\">⚠️ "+warnings.join("<br>⚠️ ")+"</span>"
+        : "<br><span class=\"result-ok\">✓ "+outText("stairGood")+"</span>";
+
+    const typeLabel=document.getElementById("stairType")?.selectedOptions[0]?.text || "";
+    const treadsTotal=Math.max(0,risers-1);
+
+    let html =
+        outText("stairTypeResult")+" "+typeLabel+"<br>"+
+        outText("stairs")+" "+risers+" pcs ("+outText("calculated")+")<br>"+
+        outText("treads")+" "+treadsTotal+" pcs<br>"+
+        outText("stepHeight")+" "+fmt(riserH,1)+" cm<br>"+
+        outText("stepDepthResult")+" "+fmt(tread,1)+" cm<br>"+
+        outText("stairWidthResult")+" "+fmt(width,0)+" cm<br>"+
+        outText("stairComfort")+" "+fmt(comfort,1)+" cm<br>"+
+        outText("stairAngle")+" "+fmt(angle,1)+"° ("+outText("approximate")+")";
+
+    if(type==="spiral"){
+        html += "<br>"+outText("spiralDiameterResult")+" "+fmt(spiralDiameter,0)+" cm ("+outText("designDependent")+")";
+    } else {
+        html += "<br>"+outText("run")+" "+fmt(geo.totalHorizontal,2)+" m";
+        if(geo.turnDeg>0) html += "<br>"+outText("turnAngle")+" "+geo.turnDeg+"°";
+        if(geo.landingLen>0) html += "<br>"+outText("landingSize")+" "+fmt(geo.landingLen,2)+" × "+fmt(widthM,2)+" m ("+outText("designDependent")+")";
+        if(type==="winder") html += "<br>"+outText("winderCountResult")+" "+Math.max(1,Math.round(winderCount))+" ("+outText("designDependent")+")";
+        if(Number.isFinite(available) && available>0) html += "<br>"+outText("stairTotalRun")+" "+fmt(geo.totalHorizontal,2)+" m";
+    }
+
+    html += warning;
+
+    window.archCalcCalcMeta = window.archCalcCalcMeta || {}; window.archCalcCalcMeta.stairResult = {name:"Zina qurilishi", qty:1, unit:"ish"};
+    setResult("stairResult",html);
+    setResult("stairDiagrams",buildStairViews(type,geo,widthM,risers,total));
+}
+
+function currentLang(){
+    return localStorage.getItem("archcalc-language") || "uz";
+}
+
+const outputTranslations = {
+    uz:{
+        invalid:"⚠️ Qiymatlarni to‘g‘ri kiriting.", invalidOpenings:"⚠️ Eshik/deraza maydoni devor maydonidan kichik bo‘lishi kerak.", invalidPaint:"⚠️ Maydon va qavatlar sonini kiriting. Kamida 1 litr qoplash yoki 1 banka qoplash qiymatini kiriting.",
+        roomArea:"📐 Maydon:", roomVol:"📦 Hajm:", roomPer:"📏 Perimetr:", wallArea:"🧱 Sof devor maydoni:", base:"📦 Asosiy hisob:", reserve:"➕ Zaxira bilan:",
+        brickWallThickness:"📏 Devor qalinligi:", brickBase:"🧱 Hisoblangan g‘isht:", brickWallVolume:"📦 Devor hajmi:", brickUnitVolume:"🧱 1 dona g‘isht hajmi:",
+        blockTypeResult:"🧱 Blok turi:", blockWallVolume:"📦 Devor hajmi:", blockUnitVolume:"🧱 1 dona blok hajmi:", concrete:"🪨 Beton hajmi:", conUnit:"📦 1 element hajmi:", conExact:"🎯 Aniq umumiy hajm:", cementKg:"🧱 Sement massasi:", cementBags:"🛍️ Sement:",
+        paintAreaResult:"🎨 Bo‘yaladigan maydon:", paintTotalArea:"🖌️ Qavatlar + zaxira bilan maydon:", paintLiters:"🧴 Kerakli bo‘yoq:", paintCans:"🪣 Kerakli banka:", paintByCanVolume:"🪣 Litr bo‘yicha banka:", paintCanLitersTotal:"🧴 Bankalar bo‘yicha jami:",
+        floorArea:"🪵 Pol maydoni:", floorReserveArea:"📐 Zaxira bilan maydon:", floorPackages:"📦 Kerakli qadoq/rulon:", floorPieces:"🧩 Taxminiy dona:", floorTypeResult:"🏷️ Pol turi:",
+        stairs:"🪜 Zinalar soni:", treads:"🪜 Pog‘onalar soni:", stepHeight:"📏 Har bir zina balandligi:", stepDepthResult:"📏 Har bir zina chuqurligi:", run:"↔️ Gorizontal yurish:", stairTotalRun:"📐 Maydoncha bilan umumiy uzunlik:", stairWidthResult:"↔️ Zina eni:", stairComfort:"📐 Qulaylik (2h+b):", stairAngle:"📏 Qiyalik burchagi:", stairGood:"Asosiy geometriya tavsiya etilgan diapazonda.", stairWarnRiser:"zina balandligi 15–20 cm oralig‘idan tashqarida", stairWarnTread:"zina chuqurligi 25–32 cm oralig‘idan tashqarida", stairWarnComfort:"2h+b 59–65 cm diapazonidan tashqarida", stairWarnAngle:"qiyalik 25–45° diapazonidan tashqarida", stairWarnSpace:"mavjud gorizontal joy yetarli emas",
+        stairTypeResult:"🏗️ Zina turi:", sideView:"Yon ko‘rinish", topView:"Tepadan ko‘rinish", frontView:"Old ko‘rinish", isoView:"Izometrik ko‘rinish",
+        calculated:"hisoblangan", approximate:"taxminiy", designDependent:"loyihaga bog‘liq",
+        turnAngle:"↩️ Burilish burchagi:", landingSize:"🟦 Maydoncha o‘lchami:", spiralDiameterResult:"🌀 Spiral diametri:", winderCountResult:"🔀 Burama pog‘onalar soni:"
+    },
+    ru:{
+        invalid:"⚠️ Введите корректные значения.", invalidOpenings:"⚠️ Площадь дверей/окон должна быть меньше площади стены.", invalidPaint:"⚠️ Введите размеры и количество слоёв. Укажите покрытие на 1 литр или на 1 банку.",
+        roomArea:"📐 Площадь:", roomVol:"📦 Объём:", roomPer:"📏 Периметр:", wallArea:"🧱 Чистая площадь стены:", base:"📦 Основной расчёт:", reserve:"➕ С запасом:",
+        brickWallThickness:"📏 Толщина стены:", brickBase:"🧱 Расчётный кирпич:", brickWallVolume:"📦 Объём стены:", brickUnitVolume:"🧱 Объём 1 кирпича:", blockTypeResult:"🧱 Тип блока:", blockWallVolume:"📦 Объём стены:", blockUnitVolume:"🧱 Объём 1 блока:", concrete:"🪨 Объём бетона:", conUnit:"📦 Объём 1 элемента:", conExact:"🎯 Точный общий объём:", cementKg:"🧱 Масса цемента:", cementBags:"🛍️ Цемент:",
+        paintAreaResult:"🎨 Площадь окраски:", paintTotalArea:"🖌️ Площадь с учётом слоёв и запаса:", paintLiters:"🧴 Необходимо краски:", paintCans:"🪣 Необходимо банок:", paintByCanVolume:"🪣 Банок по литражу:", paintCanLitersTotal:"🧴 Общий объём по банкам:",
+        floorArea:"🪵 Площадь пола:", floorReserveArea:"📐 Площадь с запасом:", floorPackages:"📦 Необходимо упаковок/рулонов:", floorPieces:"🧩 Примерное количество штук:", floorTypeResult:"🏷️ Тип пола:",
+        stairs:"🪜 Количество ступеней:", treads:"🪜 Количество проступей:", stepHeight:"📏 Высота ступени:", stepDepthResult:"📏 Глубина ступени:", run:"↔️ Горизонтальный марш:", stairTotalRun:"📐 Общая длина с площадкой:", stairWidthResult:"↔️ Ширина лестницы:", stairComfort:"📐 Удобство (2h+b):", stairAngle:"📏 Угол наклона:", stairGood:"Основная геометрия в рекомендуемом диапазоне.", stairWarnRiser:"высота ступени вне диапазона 15–20 см", stairWarnTread:"глубина ступени вне диапазона 25–32 см", stairWarnComfort:"2h+b вне диапазона 59–65 см", stairWarnAngle:"угол вне диапазона 25–45°", stairWarnSpace:"недостаточно доступного горизонтального места",
+        stairTypeResult:"🏗️ Тип лестницы:", sideView:"Вид сбоку", topView:"Вид сверху", frontView:"Вид спереди", isoView:"Изометрический вид",
+        calculated:"рассчитано", approximate:"приблизительно", designDependent:"зависит от проекта",
+        turnAngle:"↩️ Угол поворота:", landingSize:"🟦 Размер площадки:", spiralDiameterResult:"🌀 Диаметр спирали:", winderCountResult:"🔀 Количество забежных ступеней:"
+    },
+    en:{
+        invalid:"⚠️ Enter valid values.", invalidOpenings:"⚠️ Door/window area must be smaller than wall area.", invalidPaint:"⚠️ Enter dimensions and coats. Provide coverage per liter or per can.",
+        roomArea:"📐 Area:", roomVol:"📦 Volume:", roomPer:"📏 Perimeter:", wallArea:"🧱 Net wall area:", base:"📦 Base calculation:", reserve:"➕ With reserve:",
+        brickWallThickness:"📏 Wall thickness:", brickBase:"🧱 Calculated bricks:", brickWallVolume:"📦 Wall volume:", brickUnitVolume:"🧱 Volume of 1 brick:", blockTypeResult:"🧱 Block type:", blockWallVolume:"📦 Wall volume:", blockUnitVolume:"🧱 Volume of 1 block:", concrete:"🪨 Concrete volume:", conUnit:"📦 Volume per element:", conExact:"🎯 Exact total volume:", cementKg:"🧱 Cement mass:", cementBags:"🛍️ Cement:",
+        paintAreaResult:"🎨 Paint area:", paintTotalArea:"🖌️ Area with coats and reserve:", paintLiters:"🧴 Required paint:", paintCans:"🪣 Required cans:", paintByCanVolume:"🪣 Cans by liters:", paintCanLitersTotal:"🧴 Total volume by cans:",
+        floorArea:"🪵 Floor area:", floorReserveArea:"📐 Area with reserve:", floorPackages:"📦 Required packs/rolls:", floorPieces:"🧩 Approx. pieces:", floorTypeResult:"🏷️ Floor type:",
+        stairs:"🪜 Number of risers:", treads:"🪜 Number of treads:", stepHeight:"📏 Riser height:", stepDepthResult:"📏 Tread depth:", run:"↔️ Horizontal run:", stairTotalRun:"📐 Total length with landing:", stairWidthResult:"↔️ Stair width:", stairComfort:"📐 Comfort (2h+b):", stairAngle:"📏 Stair angle:", stairGood:"Core geometry is within the recommended range.", stairWarnRiser:"riser height is outside 15–20 cm", stairWarnTread:"tread depth is outside 25–32 cm", stairWarnComfort:"2h+b is outside 59–65 cm", stairWarnAngle:"angle is outside 25–45°", stairWarnSpace:"available horizontal space is insufficient",
+        stairTypeResult:"🏗️ Stair type:", sideView:"Side view", topView:"Top view", frontView:"Front view", isoView:"Isometric view",
+        calculated:"calculated", approximate:"approximate", designDependent:"design-dependent",
+        turnAngle:"↩️ Turn angle:", landingSize:"🟦 Landing size:", spiralDiameterResult:"🌀 Spiral diameter:", winderCountResult:"🔀 Number of winder treads:"
+    }
+};
+
+function outText(key){
+    const lang = currentLang();
+    return (outputTranslations[lang] && outputTranslations[lang][key])
+        || outputTranslations.uz[key]
+        || key;
+}
+
+/* ============================================
+   LANGUAGE + THEME
+   ============================================ */
+
+
+const archCalcFullTranslations = {
+  uz: {
+    dashboard:"Bosh sahifa", calculators:"KALKULYATORLAR", workspace:"Ish maydoni", eyebrow:"Arxitektura / Qurilish", heroTitle:"Aniqlik bilan hisoblang.", heroDesc:"Arxitektura va qurilish hisoblari uchun toza, aniq va amaliy ish maydoni.", system:"TIZIM", toolCount:"11 ta hisoblash vositasi", calcTools:"Hisoblash vositalari",
+    room_title:"Xona kalkulyatori", room_desc:"Maydon, hajm va perimetr", brick_title:"G‘isht kalkulyatori", brick_desc:"G‘isht urish qalinligi va miqdori", block_title:"Blok kalkulyatori", block_desc:"Blok turi va miqdorini hisoblash", concrete_title:"Beton kalkulyatori", concrete_desc:"Aniq hajm va sement qoplarini hisoblash", paint_title:"Bo‘yoq kalkulyatori", paint_desc:"Litr yoki banka bo‘yicha bo‘yoq hisoblash", floor_title:"Pol kalkulyatori", floor_desc:"Pol turiga qarab material miqdorini hisoblash", stair_title:"Zina kalkulyatori", stair_desc:"Zina geometriyasi va qulaylik tekshiruvi",
+    room_l:"Uzunlik (m)", room_w:"Kenglik (m)", room_h:"Balandlik (m)", wall_l:"Devor uzunligi (m)", wall_h:"Devor balandligi (m)", brick_type:"G‘isht o‘lchami", brick_thickness:"G‘isht urish qalinligi", brick_l:"G‘isht uzunligi (cm)", brick_w:"G‘isht eni (cm)", brick_h:"G‘isht balandligi (cm)", brick_openings:"Eshik/deraza maydoni (m²)", brick_reserve:"Zaxira (%)",
+    block_type:"Blok turi", block_l:"Blok uzunligi (cm)", block_w:"Blok eni/qalinligi (cm)", block_h:"Blok balandligi (cm)", block_openings:"Eshik/deraza maydoni (m²)", reserve:"Zaxira (%)",
+    con_l:"Uzunlik (m)", con_w:"Kenglik (m)", con_h:"Qalinlik (cm)", con_qty:"Bir xil elementlar soni", cementPerM3:"1 m³ beton uchun sement (kg)", cementBag:"1 qop sement (kg)",
+    paint_w:"Bo‘yaladigan maydon eni (m)", paint_h:"Bo‘yaladigan maydon bo‘yi (m)", paint_coats:"Qavatlar soni", paint_liter_cover:"1 litr bo‘yoq qoplaydigan maydon (m²)", paint_can_cover:"1 banka bo‘yoq qoplaydigan maydon (m²)", paint_can_liters:"1 banka hajmi (L) — ixtiyoriy",
+    floor_type:"Pol turi", floor_l:"Xona uzunligi (m)", floor_w:"Xona kengligi (m)", floor_package:"1 qadoq/rulon qoplaydigan maydon (m²) — majburiy", floor_piece:"1 dona mahsulot maydoni (m²) — ixtiyoriy",
+    stair_type:"Zina turi", stair_straight:"To‘g‘ri zina", stair_l:"L-shakldagi zina (90°)", stair_u:"U-shakldagi zina (180°)", stair_two_flight:"Maydonchali ikki marshli zina", stair_winder:"Burama pog‘onali (winder) zina", stair_spiral:"Spiral (vintli) zina", spiral_diameter:"Spiral zina diametri (cm)", winder_count:"Burilishdagi burama pog‘onalar soni",
+    stair_height:"Qavatlar orasidagi umumiy balandlik (cm)", step_height:"Maqsadli zina balandligi (cm)", step_depth:"Maqsadli zina chuqurligi (cm)", stair_width:"Zina eni (cm)", available_run:"Mavjud gorizontal joy (m) — ixtiyoriy", landing:"Maydoncha uzunligi (m) — ixtiyoriy",
+    plaster_title:"Suvoq kalkulyatori", plaster_desc:"Devor suvoqi hajmi va taxminiy qorishma", adhesive_title:"Plitka yelimi kalkulyatori", adhesive_desc:"Sarf me’yori va qoplar soni", roof_title:"Tom materiali kalkulyatori", roof_desc:"Tom maydoni va qoplama zaxirasi", rebar_title:"Armatura kalkulyatori", rebar_desc:"Armatura og‘irligi va uzunligi", plaster_area:"Suvaladigan maydon (m²)", plaster_thickness:"Suvoq qalinligi (mm)", adhesive_area:"Plitka maydoni (m²)", adhesive_consumption:"1 m² uchun sarf (kg)", adhesive_bag:"1 qop og‘irligi (kg)", roof_length:"Tom uzunligi (m)", roof_width:"Tomning gorizontal eni (m)", roof_slope:"Qiyalik koeffitsiyenti", rebar_length:"Bitta sterjen uzunligi (m)", rebar_count:"Sterjenlar soni (dona)", rebar_weight:"1 metr og‘irligi (kg/m)", calc_plaster:"Suvoqni hisoblash", calc_adhesive:"Yelimni hisoblash", calc_roof:"Tom maydonini hisoblash", calc_rebar:"Armaturani hisoblash", nav_plaster:"Suvoq", nav_adhesive:"Plitka yelimi", nav_roof:"Tom", nav_rebar:"Armatura", calc_room:"Hisoblash", calc_brick:"G‘ishtni hisoblash", calc_block:"Blokni hisoblash", calc_concrete:"Betonni hisoblash", calc_paint:"Bo‘yoqni hisoblash", calc_floor:"Polni hisoblash", calc_stair:"Zinani hisoblash", result_empty:"Natija shu yerda chiqadi.", nav_room:"Xona", nav_brick:"G‘isht", nav_block:"Blok", nav_concrete:"Beton", nav_paint:"Bo‘yoq", nav_floor:"Pol", nav_stairs:"Zina", footer:"ARCHCALC · ARXITEKTURA VA QURILISH · 2026"
+  },
+  ru: {
+    dashboard:"Главная", calculators:"КАЛЬКУЛЯТОРЫ", workspace:"Рабочая область", eyebrow:"Архитектура / Строительство", heroTitle:"Расчёты с точностью.", heroDesc:"Чистое и практичное рабочее пространство для архитектурных и строительных расчётов.", system:"СИСТЕМА", toolCount:"11 инструментов", calcTools:"Инструменты расчёта",
+    room_title:"Калькулятор помещения", room_desc:"Площадь, объём и периметр", brick_title:"Калькулятор кирпича", brick_desc:"Толщина кладки и количество кирпича", block_title:"Калькулятор блоков", block_desc:"Тип блока и количество", concrete_title:"Калькулятор бетона", concrete_desc:"Точный объём и мешки цемента", paint_title:"Калькулятор краски", paint_desc:"Расчёт краски по литрам или банкам", floor_title:"Калькулятор пола", floor_desc:"Количество материала по типу пола", stair_title:"Калькулятор лестницы", stair_desc:"Геометрия и проверка удобства",
+    room_l:"Длина (м)", room_w:"Ширина (м)", room_h:"Высота (м)", wall_l:"Длина стены (м)", wall_h:"Высота стены (м)", brick_type:"Размер кирпича", brick_thickness:"Толщина кладки", brick_l:"Длина кирпича (см)", brick_w:"Ширина кирпича (см)", brick_h:"Высота кирпича (см)", brick_openings:"Площадь дверей/окон (м²)", brick_reserve:"Запас (%)",
+    block_type:"Тип блока", block_l:"Длина блока (см)", block_w:"Ширина/толщина блока (см)", block_h:"Высота блока (см)", block_openings:"Площадь дверей/окон (м²)", reserve:"Запас (%)",
+    con_l:"Длина (м)", con_w:"Ширина (м)", con_h:"Толщина (см)", con_qty:"Количество одинаковых элементов", cementPerM3:"Цемент на 1 м³ бетона (кг)", cementBag:"Вес 1 мешка цемента (кг)",
+    paint_w:"Ширина окрашиваемой площади (м)", paint_h:"Высота окрашиваемой площади (м)", paint_coats:"Количество слоёв", paint_liter_cover:"Площадь покрытия 1 литром (м²)", paint_can_cover:"Площадь покрытия 1 банкой (м²)", paint_can_liters:"Объём 1 банки (л) — необязательно",
+    floor_type:"Тип пола", floor_l:"Длина комнаты (м)", floor_w:"Ширина комнаты (м)", floor_package:"Площадь 1 упаковки/рулона (м²) — обязательно", floor_piece:"Площадь 1 единицы (м²) — необязательно",
+    stair_type:"Тип лестницы", stair_straight:"Прямая лестница", stair_l:"Г-образная лестница (90°)", stair_u:"П-образная лестница (180°)", stair_two_flight:"Двухмаршевая лестница с площадкой", stair_winder:"Лестница с забежными ступенями", stair_spiral:"Винтовая (спиральная) лестница", spiral_diameter:"Диаметр винтовой лестницы (см)", winder_count:"Количество забежных ступеней на повороте",
+    stair_height:"Общая высота между этажами (см)", step_height:"Целевая высота ступени (см)", step_depth:"Целевая глубина ступени (см)", stair_width:"Ширина лестницы (см)", available_run:"Доступная горизонтальная длина (м) — необязательно", landing:"Длина площадки (м) — необязательно",
+    plaster_title:"Калькулятор штукатурки", plaster_desc:"Объём штукатурки стен", adhesive_title:"Калькулятор плиточного клея", adhesive_desc:"Расход и количество мешков", roof_title:"Калькулятор кровли", roof_desc:"Площадь крыши с запасом", rebar_title:"Калькулятор арматуры", rebar_desc:"Длина и вес арматуры", plaster_area:"Площадь оштукатуривания (м²)", plaster_thickness:"Толщина штукатурки (мм)", adhesive_area:"Площадь плитки (м²)", adhesive_consumption:"Расход на 1 м² (кг)", adhesive_bag:"Вес одного мешка (кг)", roof_length:"Длина крыши (м)", roof_width:"Горизонтальная ширина крыши (м)", roof_slope:"Коэффициент уклона", rebar_length:"Длина одного стержня (м)", rebar_count:"Количество стержней", rebar_weight:"Вес 1 метра (кг/м)", calc_plaster:"Рассчитать штукатурку", calc_adhesive:"Рассчитать клей", calc_roof:"Рассчитать площадь крыши", calc_rebar:"Рассчитать арматуру", nav_plaster:"Штукатурка", nav_adhesive:"Плиточный клей", nav_roof:"Кровля", nav_rebar:"Арматура", calc_room:"Рассчитать", calc_brick:"Рассчитать кирпич", calc_block:"Рассчитать блоки", calc_concrete:"Рассчитать бетон", calc_paint:"Рассчитать краску", calc_floor:"Рассчитать пол", calc_stair:"Рассчитать лестницу", result_empty:"Результат появится здесь.", nav_room:"Помещение", nav_brick:"Кирпич", nav_block:"Блок", nav_concrete:"Бетон", nav_paint:"Краска", nav_floor:"Пол", nav_stairs:"Лестница", footer:"ARCHCALC · АРХИТЕКТУРА И СТРОИТЕЛЬСТВО · 2026"
+  },
+  en: {
+    dashboard:"Dashboard", calculators:"CALCULATORS", workspace:"Workspace", eyebrow:"Architecture / Construction", heroTitle:"Calculate with precision.", heroDesc:"A focused workspace for practical architectural and construction calculations.", system:"SYSTEM", toolCount:"11 calculation tools", calcTools:"Calculation tools",
+    room_title:"Room calculator", room_desc:"Area, volume and perimeter", brick_title:"Brick calculator", brick_desc:"Masonry thickness and brick quantity", block_title:"Block calculator", block_desc:"Block type and quantity", concrete_title:"Concrete calculator", concrete_desc:"Accurate volume and cement bag estimate", paint_title:"Paint calculator", paint_desc:"Paint quantity by liters or cans", floor_title:"Floor calculator", floor_desc:"Material quantity by floor type", stair_title:"Stairs calculator", stair_desc:"Stair geometry and comfort check",
+    room_l:"Length (m)", room_w:"Width (m)", room_h:"Height (m)", wall_l:"Wall length (m)", wall_h:"Wall height (m)", brick_type:"Brick size", brick_thickness:"Masonry thickness", brick_l:"Brick length (cm)", brick_w:"Brick width (cm)", brick_h:"Brick height (cm)", brick_openings:"Door/window area (m²)", brick_reserve:"Reserve (%)",
+    block_type:"Block type", block_l:"Block length (cm)", block_w:"Block width/thickness (cm)", block_h:"Block height (cm)", block_openings:"Door/window area (m²)", reserve:"Reserve (%)",
+    con_l:"Length (m)", con_w:"Width (m)", con_h:"Thickness (cm)", con_qty:"Number of identical elements", cementPerM3:"Cement per 1 m³ concrete (kg)", cementBag:"Cement bag weight (kg)",
+    paint_w:"Paint area width (m)", paint_h:"Paint area height (m)", paint_coats:"Number of coats", paint_liter_cover:"Area covered by 1 liter (m²)", paint_can_cover:"Area covered by 1 can (m²)", paint_can_liters:"Can volume (L) — optional",
+    floor_type:"Floor type", floor_l:"Room length (m)", floor_w:"Room width (m)", floor_package:"Area covered by 1 pack/roll (m²) — required", floor_piece:"Area per piece (m²) — optional",
+    stair_type:"Stair type", stair_straight:"Straight stair", stair_l:"L-shaped stair (90°)", stair_u:"U-shaped stair (180°)", stair_two_flight:"Two-flight stair with landing", stair_winder:"Winder stair", stair_spiral:"Spiral stair", spiral_diameter:"Spiral stair diameter (cm)", winder_count:"Number of winder treads at the turn",
+    stair_height:"Total floor-to-floor height (cm)", step_height:"Target riser height (cm)", step_depth:"Target tread depth (cm)", stair_width:"Stair width (cm)", available_run:"Available horizontal space (m) — optional", landing:"Landing length (m) — optional",
+    plaster_title:"Plaster calculator", plaster_desc:"Wall plaster volume estimate", adhesive_title:"Tile adhesive calculator", adhesive_desc:"Consumption rate and bag count", roof_title:"Roofing calculator", roof_desc:"Roof area with slope and reserve", rebar_title:"Rebar calculator", rebar_desc:"Total reinforcement length and weight", plaster_area:"Plastering area (m²)", plaster_thickness:"Plaster thickness (mm)", adhesive_area:"Tiling area (m²)", adhesive_consumption:"Consumption per m² (kg)", adhesive_bag:"Bag weight (kg)", roof_length:"Roof length (m)", roof_width:"Horizontal roof width (m)", roof_slope:"Slope factor", rebar_length:"Length per bar (m)", rebar_count:"Number of bars", rebar_weight:"Weight per meter (kg/m)", calc_plaster:"Calculate plaster", calc_adhesive:"Calculate adhesive", calc_roof:"Calculate roof area", calc_rebar:"Calculate rebar", nav_plaster:"Plaster", nav_adhesive:"Tile adhesive", nav_roof:"Roof", nav_rebar:"Rebar", calc_room:"Calculate", calc_brick:"Calculate bricks", calc_block:"Calculate blocks", calc_concrete:"Calculate concrete", calc_paint:"Calculate paint", calc_floor:"Calculate floor", calc_stair:"Calculate stairs", result_empty:"Result will appear here.", nav_room:"Room", nav_brick:"Brick", nav_block:"Block", nav_concrete:"Concrete", nav_paint:"Paint", nav_floor:"Floor", nav_stairs:"Stairs", footer:"ARCHCALC · ARCHITECTURE & CONSTRUCTION · 2026"
+  }
+};
+const archCalcTranslations = Object.fromEntries(Object.keys(archCalcFullTranslations).map(lang => [lang, {...archCalcFullTranslations[lang]}]));
+const archCalcLanguageOrder = ["uz", "ru", "en"];
+
+function applyLanguage(lang) {
+    const base = archCalcTranslations[lang] || archCalcTranslations.uz;
+    const t = {...base, ...archCalcFullTranslations[lang]};
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (t[key]) el.textContent = t[key];
+    });
+
+    const languageBtn = document.getElementById("languageBtn");
+    if (languageBtn) languageBtn.textContent = lang.toUpperCase();
+
+    localStorage.setItem("archcalc-language", lang);
+}
+
+function toggleLanguage() {
+    const current = localStorage.getItem("archcalc-language") || "uz";
+    const index = archCalcLanguageOrder.indexOf(current);
+    const next = archCalcLanguageOrder[(index + 1) % archCalcLanguageOrder.length];
+    applyLanguage(next);
+}
+
+function applyTheme(theme) {
+    const light = theme === "light";
+    document.body.classList.toggle("light", light);
+
+    const themeBtn = document.getElementById("themeBtn");
+    if (themeBtn) {
+        themeBtn.textContent = light ? "☀" : "☾";
+        themeBtn.title = light ? "Dark mode" : "Light mode";
+        themeBtn.setAttribute("aria-label", themeBtn.title);
+    }
+
+    localStorage.setItem("archcalc-theme", theme);
+}
+
+function toggleTheme() {
+    const current = localStorage.getItem("archcalc-theme") || "dark";
+    applyTheme(current === "dark" ? "light" : "dark");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    applyLanguage(localStorage.getItem("archcalc-language") || "uz");
+    applyTheme(localStorage.getItem("archcalc-theme") || "dark");
+    applyBrickPreset();
+    applyBlockPreset();
+    applyFloorPreset();
+    onStairTypeChange();
+});
+
+</script>
+
+
+<!-- ARCHCALC: FIRST-VISIT DISCLAIMER -->
+<style id="archcalc-disclaimer-style">
+    .archcalc-disclaimer-backdrop{
+        position:fixed;
+        inset:0;
+        z-index:99999;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:20px;
+        background:rgba(0,0,0,.58);
+        backdrop-filter:blur(3px);
+        -webkit-backdrop-filter:blur(3px);
+    }
+    .archcalc-disclaimer-backdrop[hidden]{display:none!important}
+    .archcalc-disclaimer{
+        width:min(520px,100%);
+        box-sizing:border-box;
+        border:1px solid rgba(255,255,255,.12);
+        border-radius:18px;
+        padding:24px;
+        background:#17191d;
+        color:#f5f7fa;
+        box-shadow:0 22px 70px rgba(0,0,0,.42);
+        font-family:inherit;
+    }
+    body.light .archcalc-disclaimer{
+        background:#ffffff;
+        color:#17191d;
+        border-color:rgba(0,0,0,.10);
+    }
+    .archcalc-disclaimer-badge{
+        display:inline-flex;
+        align-items:center;
+        gap:7px;
+        margin-bottom:12px;
+        padding:6px 10px;
+        border-radius:999px;
+        background:rgba(245,158,11,.12);
+        color:#f59e0b;
+        font-size:12px;
+        font-weight:700;
+    }
+    .archcalc-disclaimer h2{
+        margin:0 0 12px;
+        font-size:20px;
+        line-height:1.25;
+    }
+    .archcalc-disclaimer p{
+        margin:0 0 18px;
+        font-size:14px;
+        line-height:1.65;
+        opacity:.9;
+    }
+    .archcalc-disclaimer-note{
+        margin-top:-4px!important;
+        font-size:12px!important;
+        opacity:.65!important;
+    }
+    .archcalc-disclaimer-btn{
+        width:100%;
+        border:0;
+        border-radius:11px;
+        padding:12px 16px;
+        font:inherit;
+        font-size:14px;
+        font-weight:700;
+        cursor:pointer;
+        color:#fff;
+        background:#2563eb;
+        transition:transform .15s ease,opacity .15s ease;
+    }
+    .archcalc-disclaimer-btn:hover{opacity:.92;transform:translateY(-1px)}
+    .archcalc-disclaimer-btn:active{transform:translateY(0)}
+    .archcalc-disclaimer-btn:focus-visible{outline:2px solid #60a5fa;outline-offset:3px}
+</style>
+
+<div id="archcalc-disclaimer" class="archcalc-disclaimer-backdrop" hidden aria-hidden="true">
+    <section class="archcalc-disclaimer" role="dialog" aria-modal="true" aria-labelledby="archcalc-disclaimer-title">
+        <div class="archcalc-disclaimer-badge">⚠️ Ogohlantirish</div>
+        <h2 id="archcalc-disclaimer-title">Hisob-kitoblardan foydalanishdan oldin</h2>
+        <p>
+            Ushbu sayt odamlarning ishini yengillashtirish maqsadida yaratilgan.
+            Biroq sayt orqali amalga oshiriladigan hisob-kitoblar professional mutaxassis
+            tomonidan bajarilgan aniq hisob-kitoblarning o‘rnini bosa olmaydi.
+            Saytda ko‘rsatilgan hisob-kitoblarda xatoliklar bo‘lishi mumkin.
+            Ushbu hisob-kitoblardan foydalanish natijasida yuzaga keladigan xatolar yoki
+            zararlar uchun sayt ma’muriyati javobgarlikni o‘z zimmasiga olmaydi.
+        </p>
+        <p class="archcalc-disclaimer-note">
+            Davom etish orqali siz ushbu ogohlantirishni o‘qib chiqqaningizni va uning
+            shartlariga roziligingizni tasdiqlaysiz.
+        </p>
+        <button id="archcalc-disclaimer-accept" class="archcalc-disclaimer-btn" type="button">
+            ✓ Men buni o‘qib chiqdim va roziman
+        </button>
+    </section>
+</div>
+
+
+<div id="archcalc-auth" hidden>
+  <section class="auth-card" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="brand-mark" style="margin-bottom:16px">A</div>
+    <h2 id="authTitle">ArchCalc hisobiga kirish</h2>
+    <p id="authSubtitle">Davom etish uchun hisobingizga kiring.</p>
+    <div class="auth-switch">
+      <button type="button" id="authLoginTab" class="active" onclick="archCalcSetAuthMode('login')">Kirish</button>
+      <button type="button" id="authRegisterTab" onclick="archCalcSetAuthMode('register')">Ro‘yxatdan o‘tish</button>
+    </div>
+    <form id="archcalc-auth-form" novalidate>
+      <label for="authUsername">Foydalanuvchi nomi</label>
+      <input id="authUsername" autocomplete="username" minlength="3" maxlength="32" required>
+      <label for="authPassword">Parol</label>
+      <input id="authPassword" type="password" autocomplete="current-password" minlength="6" required>
+      <div id="authError" role="alert"></div>
+      <button class="auth-primary" id="authSubmit" type="button" onclick="archCalcSubmitAuth()">Kirish</button>
+    </form>
+    <div class="auth-divider">yoki</div>
+    <button class="auth-google" id="authGoogleBtn" type="button" onclick="archCalcGoogleSignIn()"><span aria-hidden="true" style="font-size:17px;font-weight:800">G</span> Google orqali kirish</button>
+    <p id="authNotice">Google orqali kirish Firebase hisobingizdan foydalanadi. Foydalanuvchi nomi/parol usuli esa hozircha faqat shu brauzerda saqlanadi.</p>
+  </section>
+</div>
+
+<script id="archcalc-disclaimer-script">
+(function(){
+    const STORAGE_KEY = "archcalc-disclaimer-accepted";
+
+    function showArchCalcDisclaimer(){
+        const modal=document.getElementById("archcalc-disclaimer");
+        if(!modal || localStorage.getItem(STORAGE_KEY)==="1") return;
+        modal.hidden=false;
+        modal.setAttribute("aria-hidden","false");
+        document.body.style.overflow="hidden";
+        const button=document.getElementById("archcalc-disclaimer-accept");
+        if(button) setTimeout(()=>button.focus(),50);
+    }
+
+    function acceptArchCalcDisclaimer(){
+        const modal=document.getElementById("archcalc-disclaimer");
+        if(!modal) return;
+        localStorage.setItem(STORAGE_KEY,"1");
+        modal.hidden=true;
+        modal.setAttribute("aria-hidden","true");
+        document.body.style.overflow="";
+    }
+
+    document.addEventListener("DOMContentLoaded",function(){
+        showArchCalcDisclaimer();
+        const button=document.getElementById("archcalc-disclaimer-accept");
+        if(button) button.addEventListener("click",acceptArchCalcDisclaimer);
+    });
+})();
+</script>
+
+
+<script id="archcalc-auth-script">
+(function(){
+  const USERS_KEY = "archcalc-local-users-v1";
+  const SESSION_KEY = "archcalc-local-session-v1";
+  let mode = "login";
+  const $ = id => document.getElementById(id);
+
+  function readUsers(){
+    try {
+      const data = JSON.parse(localStorage.getItem(USERS_KEY) || "{}");
+      return data && typeof data === "object" && !Array.isArray(data) ? data : {};
+    } catch (e) { return {}; }
+  }
+
+  function showAuth(){
+    const modal = $("archcalc-auth");
+    if (!modal) return;
+    let session = "";
+    try { session = localStorage.getItem(SESSION_KEY) || ""; } catch (e) {}
+    const all = readUsers();
+    const localLoggedIn = !!(session && Object.prototype.hasOwnProperty.call(all, session));
+    const firebaseUser = window.archCalcFirebaseUser || null;
+    const loggedIn = !!(firebaseUser || localLoggedIn);
+    modal.hidden = loggedIn;
+    $("accountName").textContent = firebaseUser ? (firebaseUser.displayName || firebaseUser.email || "Google foydalanuvchisi") : (localLoggedIn ? (all[session].display || session) : "");
+    $("logoutBtn").hidden = !loggedIn;
+  }
+
+  window.archCalcSetAuthMode = function(next){
+    mode = next === "register" ? "register" : "login";
+    $("authTitle").textContent = mode === "login" ? "ArchCalc hisobiga kirish" : "Yangi hisob yaratish";
+    $("authSubtitle").textContent = mode === "login" ? "Davom etish uchun hisobingizga kiring." : "Foydalanuvchi nomi va parol tanlang.";
+    $("authSubmit").textContent = mode === "login" ? "Kirish" : "Hisob yaratish";
+    $("authLoginTab").classList.toggle("active", mode === "login");
+    $("authRegisterTab").classList.toggle("active", mode === "register");
+    $("authPassword").autocomplete = mode === "login" ? "current-password" : "new-password";
+    $("authError").textContent = "";
+  };
+
+  window.archCalcSubmitAuth = function(){
+    const error = $("authError");
+    error.textContent = "";
+    try {
+      const name = $("authUsername").value.trim();
+      const key = name.toLocaleLowerCase();
+      const password = $("authPassword").value;
+      const all = readUsers();
+      if (!/^[\p{L}\p{N}_.-]{3,32}$/u.test(name)) {
+        error.textContent = "Foydalanuvchi nomi 3–32 belgidan iborat bo‘lsin (harf, raqam, _, . yoki -).";
+        return;
+      }
+      if (password.length < 6) {
+        error.textContent = "Parol kamida 6 ta belgidan iborat bo‘lishi kerak.";
+        return;
+      }
+      if (mode === "register") {
+        if (Object.prototype.hasOwnProperty.call(all, key)) {
+          error.textContent = "Bu foydalanuvchi nomi band. Boshqa nom tanlang yoki tizimga kiring.";
+          return;
+        }
+        all[key] = {display: name, password: password};
+        localStorage.setItem(USERS_KEY, JSON.stringify(all));
+      } else {
+        if (!Object.prototype.hasOwnProperty.call(all, key) || !all[key] || all[key].password !== password) {
+          error.textContent = "Foydalanuvchi nomi yoki parol noto‘g‘ri. Avval hisob yaratganingizni tekshiring.";
+          return;
+        }
+      }
+      localStorage.setItem(SESSION_KEY, key);
+      $("authPassword").value = "";
+      showAuth();
+    } catch (e) {
+      error.textContent = "Brauzer hisobni saqlay olmadi. Faylni Chrome/Edge’da oching va sayt ma’lumotlarini saqlashga ruxsat bering.";
+    }
+  };
+
+  const form = $("archcalc-auth-form");
+  if (form) {
+    form.addEventListener("submit", function(event){ event.preventDefault(); window.archCalcSubmitAuth(); });
+    form.addEventListener("keydown", function(event){
+      if (event.key === "Enter") { event.preventDefault(); window.archCalcSubmitAuth(); }
+    });
+  }
+
+  window.archCalcLogout = function(){
+    try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
+    if (window.archCalcFirebaseSignOut) window.archCalcFirebaseSignOut();
+    $("authPassword").value = "";
+    window.archCalcSetAuthMode("login");
+    showAuth();
+  };
+
+  window.archCalcRefreshAuthUI = showAuth;
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", showAuth);
+  else showAuth();
+})();
+</script>
+
+<script type="module" id="archcalc-firebase-auth">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCYrssDBqrp4qiul3S6IXiZeYoHSqfC42k",
+    authDomain: "archcalc-9dbfc.firebaseapp.com",
+    projectId: "archcalc-9dbfc",
+    storageBucket: "archcalc-9dbfc.firebasestorage.app",
+    messagingSenderId: "992749602317",
+    appId: "1:992749602317:web:8eaddffe93f4bddbaab744",
+    measurementId: "G-9LHC2RHGQ9"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: "select_account" });
+  const googleButton = document.getElementById("authGoogleBtn");
+  const errorBox = document.getElementById("authError");
+  const historyList = document.getElementById("archcalc-history-list");
+  const historyStatus = document.getElementById("archcalc-history-status");
+  const calcNames = { roomResult:"Xona hisobi", brickResult:"G‘isht hisobi", blockResult:"Blok hisobi", conResult:"Beton hisobi", paintResult:"Bo‘yoq hisobi", floorResult:"Pol hisobi", stairResult:"Zina hisobi", plasterResult:"Suvoq hisobi", adhesiveResult:"Plitka yelimi", roofResult:"Tom qoplamasi", rebarResult:"Armatura", excavationResult:"Tuproq qazish", insulationResult:"Issiqlik izolyatsiyasi", wallpaperResult:"Oboy", tileResult:"Pol plitkasi", gravelResult:"Shag‘al / qum" };
+  const calcSections = { roomResult:"room", brickResult:"brick", blockResult:"block", conResult:"concrete", paintResult:"paint", floorResult:"floor", stairResult:"stair", plasterResult:"plaster", adhesiveResult:"adhesive", roofResult:"roof", rebarResult:"rebar", excavationResult:"excavation", insulationResult:"insulation", wallpaperResult:"wallpaper", tileResult:"tile", gravelResult:"gravel" };
+  let historyUserId = null;
+  let lastSaveAt = 0;
+
+  function plainText(html) {
+    const node = document.createElement("div");
+    node.innerHTML = String(html || "");
+    return (node.textContent || node.innerText || "").replace(/\s+/g, " ").trim().slice(0, 1800);
+  }
+  function showHistoryMessage(message) {
+    if (historyList) historyList.innerHTML = '<div class="history-empty"></div>';
+    const empty = historyList && historyList.querySelector(".history-empty");
+    if (empty) empty.textContent = message;
+  }
+  async function loadHistory() {
+    const user = auth.currentUser;
+    if (!user) {
+      historyUserId = null;
+      if (historyStatus) historyStatus.textContent = "Google hisobingizga kiring — hisob-kitoblaringiz bulutda saqlanadi.";
+      showHistoryMessage("Bulutli tarixni ko‘rish uchun Google orqali kiring.");
+      return;
+    }
+    historyUserId = user.uid;
+    if (historyStatus) historyStatus.textContent = "Hisob-kitoblaringiz shu Google hisobiga bog‘langan holda saqlanadi.";
+    showHistoryMessage("Tarix yuklanmoqda…");
+    try {
+      const q = query(collection(db, "users", user.uid, "calculationHistory"), orderBy("createdAt", "desc"), limit(20));
+      const snapshot = await getDocs(q);
+      if (auth.currentUser?.uid !== user.uid) return;
+      if (snapshot.empty) { showHistoryMessage("Hali saqlangan hisob-kitoblar yo‘q. Birinchi hisob-kitobingizni bajaring."); return; }
+      historyList.innerHTML = "";
+      snapshot.forEach((docSnap) => {
+        const item = docSnap.data();
+        const row = document.createElement("article"); row.className = "history-item";
+        const body = document.createElement("div");
+        const title = document.createElement("strong"); title.textContent = item.title || "Hisob-kitob";
+        const result = document.createElement("p"); result.textContent = item.resultText || "";
+        body.append(title, result);
+        const time = document.createElement("span"); time.className = "history-time";
+        const date = item.createdAt?.toDate ? item.createdAt.toDate() : (item.createdAt?.seconds ? new Date(item.createdAt.seconds * 1000) : null);
+        time.textContent = date ? date.toLocaleString("uz-UZ") : "Yangi";
+        const actions = document.createElement("div"); actions.className = "history-actions";
+        const reopen = document.createElement("button"); reopen.type = "button"; reopen.textContent = "Qayta ochish";
+        reopen.addEventListener("click", () => {
+          const sectionId = calcSections[item.resultId];
+          const section = sectionId ? document.getElementById(sectionId) : null;
+          if (!section) { if (historyStatus) historyStatus.textContent = "Bu hisob-kitob bo‘limini qayta ochib bo‘lmadi."; return; }
+          if (item.inputs && typeof item.inputs === "object") {
+            Object.entries(item.inputs).forEach(([fieldId, value]) => {
+              const field = document.getElementById(fieldId);
+              if (field && section.contains(field)) field.value = value;
+            });
+          }
+          const result = document.getElementById(item.resultId);
+          if (result) { result.textContent = item.resultText || "Saqlangan natija mavjud emas."; result.style.whiteSpace = "pre-wrap"; }
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+          if (historyStatus) historyStatus.textContent = "Saqlangan qiymatlar qayta ochildi. Natija — tarixda saqlangan nusxa.";
+        });
+        const remove = document.createElement("button"); remove.type = "button"; remove.className = "history-delete"; remove.textContent = "O‘chirish";
+        remove.addEventListener("click", async () => {
+          const currentUser = auth.currentUser;
+          if (!currentUser || currentUser.uid !== user.uid) return;
+          if (!window.confirm("Ushbu hisob-kitobni tarixdan o‘chirmoqchimisiz?")) return;
+          remove.disabled = true;
+          try {
+            await deleteDoc(doc(db, "users", user.uid, "calculationHistory", docSnap.id));
+            await loadHistory();
+          } catch (error) {
+            console.error("ArchCalc history delete error:", error);
+            if (historyStatus) historyStatus.textContent = "O‘chirib bo‘lmadi. Firestore xavfsizlik qoidalarini tekshiring.";
+            remove.disabled = false;
+          }
+        });
+        actions.append(reopen, remove);
+        body.appendChild(actions);
+        row.append(body, time); historyList.appendChild(row);
+      });
+    } catch (error) {
+      console.error("ArchCalc history load error:", error);
+      showHistoryMessage("Tarixni yuklab bo‘lmadi. Firebase Console’da Firestore Database yoqilganini va xavfsizlik qoidalarini tekshiring.");
+      if (historyStatus) historyStatus.textContent = "Bulutli saqlash sozlamasi tekshirilishi kerak.";
+    }
+  }
+  window.archCalcRecordCalculation = async function (resultId, html) {
+    const user = auth.currentUser;
+    if (!user || user.uid !== historyUserId) return;
+    const now = Date.now();
+    if (now - lastSaveAt < 1200) return;
+    lastSaveAt = now;
+    try {
+      const section = document.getElementById(calcSections[resultId] || "");
+      const inputs = {};
+      section?.querySelectorAll("input, select, textarea").forEach((field) => {
+        if (field.id) inputs[field.id] = field.value;
+      });
+      await addDoc(collection(db, "users", user.uid, "calculationHistory"), {
+        title: calcNames[resultId] || "Hisob-kitob", resultId, resultText: plainText(html), inputs,
+        createdAt: serverTimestamp(), app: "ArchCalc"
+      });
+      await loadHistory();
+    } catch (error) {
+      console.error("ArchCalc history save error:", error);
+      if (historyStatus) historyStatus.textContent = "Saqlash amalga oshmadi. Firestore Database va xavfsizlik qoidalarini tekshiring.";
+    }
+  };
+  document.getElementById("archcalc-refresh-history")?.addEventListener("click", loadHistory);
+  const historyToggle = document.getElementById("archcalc-history-toggle");
+  const historyPanel = document.getElementById("archcalc-history-panel");
+  historyToggle?.addEventListener("click", async () => {
+    const isOpen = historyPanel?.classList.toggle("is-open") || false;
+    historyToggle.setAttribute("aria-expanded", String(isOpen));
+    if (isOpen) {
+      await loadHistory();
+      historyPanel?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+
+  window.archCalcGoogleSignIn = async function () {
+    if (googleButton) { googleButton.disabled = true; googleButton.textContent = "Google hisobiga ulanmoqda…"; }
+    if (errorBox) errorBox.textContent = "";
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      const messages = {
+        "auth/unauthorized-domain": "Bu sayt domeni Firebase’da ruxsat etilmagan. Firebase Authentication → Settings → Authorized domains bo‘limiga localhost yoki sayt domenini qo‘shing.",
+        "auth/popup-blocked": "Brauzer Google kirish oynasini blokladi. Popup’ga ruxsat bering va qayta urinib ko‘ring.",
+        "auth/operation-not-allowed": "Firebase’da Google sign-in yoqilmagan. Authentication → Sign-in method → Google ni yoqing.",
+        "auth/network-request-failed": "Tarmoq xatosi. Internet aloqasini tekshirib qayta urinib ko‘ring."
+      };
+      if (errorBox) errorBox.textContent = messages[error.code] || ("Google orqali kirib bo‘lmadi: " + (error.message || error.code));
+    } finally {
+      if (googleButton) { googleButton.disabled = false; googleButton.innerHTML = '<span aria-hidden="true" style="font-size:17px;font-weight:800">G</span> Google orqali kirish'; }
+    }
+  };
+
+  window.archCalcFirebaseSignOut = async function () {
+    try { await signOut(auth); }
+    catch (error) { console.error("ArchCalc Firebase sign-out error:", error); }
+  };
+
+  onAuthStateChanged(auth, (user) => {
+    window.archCalcFirebaseUser = user || null;
+    if (window.archCalcRefreshAuthUI) window.archCalcRefreshAuthUI();
+    loadHistory();
+  }, (error) => {
+    if (errorBox) errorBox.textContent = "Firebase autentifikatsiya xatosi: " + error.message;
+  });
+</script>
+
+
+<style id="archcalc-2-design">
+:root{--ac2-ink:#15202b;--ac2-muted:#748091;--ac2-line:rgba(126,145,165,.22);--ac2-teal:#31c6b1;--ac2-blue:#5b8def;--ac2-panel:rgba(18,25,35,.84)}
+.ac2-overview{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(300px,.95fr);gap:26px;align-items:stretch;margin:0 0 34px;padding:30px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(125deg,rgba(49,198,177,.10),transparent 48%),linear-gradient(315deg,rgba(91,141,239,.10),transparent 44%),var(--panel);box-shadow:0 22px 60px rgba(0,0,0,.10)}
+.ac2-overview-copy{display:flex;flex-direction:column;align-items:flex-start;justify-content:center}.ac2-kicker{display:inline-block;color:var(--ac2-teal);font-size:10px;font-weight:850;letter-spacing:.18em}.ac2-overview h2{max-width:640px;margin:12px 0;font-size:clamp(26px,3vw,42px);line-height:1.12;letter-spacing:-.045em}.ac2-overview p,.ac2-section-head p{color:var(--muted);font-size:13px;line-height:1.7;margin:0;max-width:560px}.ac2-hero-actions,.ac2-head-actions,.ac2-estimator-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.ac2-hero-actions{margin-top:22px}.ac2-primary,.ac2-secondary{min-height:39px;padding:0 14px;border-radius:10px;font-size:12px;font-weight:750;cursor:pointer;transition:transform .18s ease,filter .18s ease,border-color .18s ease}.ac2-primary{background:var(--ac2-teal);color:#09201e;box-shadow:0 7px 20px rgba(49,198,177,.15)}.ac2-secondary{background:rgba(255,255,255,.035);color:var(--text);border:1px solid var(--line)}.ac2-primary:hover,.ac2-secondary:hover{transform:translateY(-1px);filter:brightness(1.06)}.ac2-stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-content:center}.ac2-stat{padding:17px 14px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.025);min-width:0}.ac2-stat span,.ac2-stat small{display:block;color:var(--muted);font-size:10px;line-height:1.45}.ac2-stat strong{display:block;margin:12px 0 7px;font-size:clamp(19px,2vw,27px);letter-spacing:-.04em;overflow-wrap:anywhere}.ac2-stat small{font-size:9px}.ac2-workspace{margin:0 0 42px;padding:24px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,rgba(49,198,177,.035),transparent 35%),var(--panel)}.ac2-section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:22px}.ac2-section-head h2{margin:7px 0 6px;font-size:25px;letter-spacing:-.035em}.ac2-head-actions{justify-content:flex-end}.ac2-work-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr);gap:16px}.ac2-panel{min-width:0;padding:20px;border:1px solid var(--ac2-line);border-radius:17px;background:var(--ac2-panel)}.ac2-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.ac2-panel-head h3{font-size:17px;margin:5px 0 0;letter-spacing:-.02em}.ac2-pill{padding:6px 9px;border:1px solid var(--ac2-line);border-radius:99px;color:var(--muted);font-size:10px;white-space:nowrap}.ac2-label{display:block;margin:0 0 7px;color:var(--muted);font-size:11px;font-weight:700}.ac2-input,.ac2-small-input{width:100%;min-width:0;color:var(--text);background:rgba(255,255,255,.035);border:1px solid var(--ac2-line);border-radius:9px;padding:10px 11px;outline:none}.ac2-input:focus,.ac2-small-input:focus{border-color:var(--ac2-teal);box-shadow:0 0 0 3px rgba(49,198,177,.09)}.ac2-table-wrap{overflow:auto;margin:16px 0 12px}.ac2-table{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:11px}.ac2-table th{padding:0 7px 7px;color:var(--muted);font-size:9px;font-weight:700;text-align:left;white-space:nowrap}.ac2-table td{padding:5px 4px;background:rgba(255,255,255,.025)}.ac2-table td:first-child{border-radius:8px 0 0 8px}.ac2-table td:last-child{border-radius:0 8px 8px 0}.ac2-table input,.ac2-table select{width:100%;min-width:62px;padding:8px 7px;color:var(--text);background:transparent;border:1px solid transparent;border-radius:6px;font-size:11px}.ac2-table input:focus,.ac2-table select:focus{outline:1px solid var(--ac2-teal);border-color:var(--ac2-teal)}.ac2-table .ac2-row-sum{white-space:nowrap;font-weight:750;padding:8px}.ac2-remove-row{background:transparent;color:var(--danger);font-size:18px;cursor:pointer;padding:5px}.ac2-reserve-label{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:11px;margin-left:auto}.ac2-small-input{width:72px;padding:8px}.ac2-total-row{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:17px 0;padding:17px;border-radius:13px;background:linear-gradient(100deg,rgba(49,198,177,.11),rgba(91,141,239,.07));border:1px solid rgba(49,198,177,.20)}.ac2-total-row span,.ac2-total-row small{display:block}.ac2-total-row span{font-size:12px;font-weight:750}.ac2-total-row small{font-size:10px;color:var(--muted);margin-top:4px}.ac2-total-row strong{font-size:clamp(18px,2vw,25px);letter-spacing:-.035em;text-align:right;overflow-wrap:anywhere}.ac2-note{font-size:10px;line-height:1.6;color:var(--muted);margin:14px 0 0}.ac2-project-list{display:grid;gap:10px;max-height:570px;overflow:auto}.ac2-empty{min-height:190px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:22px;color:var(--muted)}.ac2-empty>span{font-size:30px;color:var(--ac2-teal);margin-bottom:9px}.ac2-empty strong{color:var(--text);font-size:13px}.ac2-empty p{max-width:230px;font-size:11px;line-height:1.6}.ac2-project-item{padding:14px;border:1px solid var(--ac2-line);border-radius:12px;background:rgba(255,255,255,.025)}.ac2-project-item-top{display:flex;justify-content:space-between;gap:10px}.ac2-project-item strong{font-size:12px;overflow-wrap:anywhere}.ac2-project-item p{margin:7px 0;color:var(--muted);font-size:10px}.ac2-project-item-total{font-size:16px!important;font-weight:800;color:var(--ac2-teal)!important}.ac2-project-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.ac2-project-actions button{padding:7px 9px;border:1px solid var(--ac2-line);border-radius:7px;color:var(--text);background:transparent;font-size:10px;cursor:pointer}.ac2-project-actions .delete{color:var(--danger)}.ac2-storage-note{display:flex;align-items:center;gap:8px;margin-top:17px;padding-top:13px;border-top:1px solid var(--ac2-line);color:var(--muted);font-size:10px}.ac2-status-dot{width:7px;height:7px;background:#e0ae50;border-radius:50%;box-shadow:0 0 0 3px rgba(224,174,80,.12)}
+/* Three coordinated appearances: graphite, light, and blueprint. */
+body.light{--bg:#f3f6f8;--bg-soft:#eef2f5;--panel:#ffffff;--panel-2:#f7f9fb;--panel-hover:#edf2f5;--line:rgba(50,75,95,.18);--line-strong:rgba(36,150,139,.55);--text:#172331;--muted:#647284;--dim:#8491a0;background:radial-gradient(circle at 75% 0%,rgba(49,198,177,.09),transparent 28rem),var(--bg)}body.light .sidebar,body.light .topbar{background:rgba(255,255,255,.86)}body.light .ac2-panel{background:rgba(255,255,255,.88)}body.light .ac2-input,body.light .ac2-small-input,body.light .ac2-table td{background:rgba(20,35,50,.035)}body.light .ac2-table input,body.light .ac2-table select{color:var(--text)}body.light .ac2-secondary{background:#fff}
+body.blueprint{--bg:#071827;--bg-soft:#0a2235;--panel:#0b2030;--panel-2:#102b3e;--panel-hover:#15364b;--line:rgba(84,178,224,.28);--line-strong:rgba(84,178,224,.72);--text:#e5f5ff;--muted:#93b6c8;--dim:#64869a;--accent:#55bce7;--accent-soft:rgba(85,188,231,.13);background:radial-gradient(circle at 85% 0%,rgba(85,188,231,.11),transparent 30rem),var(--bg)}body.blueprint .sidebar,body.blueprint .topbar{background:rgba(5,20,33,.84);border-color:rgba(84,178,224,.25)}body.blueprint .ac2-overview{background:linear-gradient(125deg,rgba(85,188,231,.12),transparent 55%),var(--panel)}body.blueprint .ac2-primary{background:#55bce7;color:#061a28}
+@media(max-width:1000px){.ac2-overview{grid-template-columns:1fr}.ac2-stat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.ac2-work-grid{grid-template-columns:1fr}.ac2-project-list{max-height:none}}
+@media(max-width:650px){.ac2-overview{padding:20px;border-radius:17px}.ac2-stat-grid{grid-template-columns:1fr 1fr}.ac2-stat:last-child{grid-column:span 2}.ac2-workspace{padding:15px}.ac2-panel{padding:13px}.ac2-section-head{align-items:flex-start;flex-direction:column}.ac2-head-actions{justify-content:flex-start}.ac2-table{min-width:600px}.ac2-reserve-label{margin-left:0}.ac2-estimator-actions{align-items:flex-start}.ac2-total-row{align-items:flex-start;flex-direction:column}.ac2-total-row strong{text-align:left}.topbar{padding:0 14px}.top-actions{gap:5px}.top-btn{padding:0 8px;font-size:11px}}
+@media print{.sidebar,.topbar,.mobile-nav,.ac2-hero-actions,.ac2-head-actions,.ac2-estimator-actions,.ac2-project-actions,.ac2-storage-note,.section-head{display:none!important}.app{display:block}.workspace{padding:0;max-width:none}.ac2-overview{box-shadow:none}.ac2-workspace{border:0;padding:0}.ac2-work-grid{grid-template-columns:1fr}.ac2-panel{break-inside:avoid}.ac2-project-list{max-height:none}}
+</style>
+<style>
+/* Guided project-first workflow */
+body.ac2-flow-locked .workspace > .hero,
+body.ac2-flow-locked .workspace > .history-panel,
+body.ac2-flow-locked .workspace > .ac2-overview,
+body.ac2-flow-locked .workspace > .ac2-workspace,
+body.ac2-flow-locked .workspace > .section-head,
+body.ac2-flow-locked .workspace > .container, body.ac2-flow-locked .ac2-workflow-bar { display:none !important; }
+body:not(.ac2-flow-locked) .ac2-flow-gate{display:none !important;}
+.ac2-flow-gate{max-width:1050px;margin:28px auto 48px;padding:clamp(22px,4vw,44px);border:1px solid var(--line);border-radius:26px;background:radial-gradient(circle at 90% 0%,rgba(49,198,177,.12),transparent 30rem),var(--panel);box-shadow:0 24px 70px rgba(0,0,0,.12)}
+.ac2-gate-kicker{font-size:10px;font-weight:850;letter-spacing:.18em;color:var(--ac2-teal);margin-bottom:14px}
+.ac2-flow-gate h1{font-size:clamp(28px,4vw,44px);letter-spacing:-.045em;margin:0 0 10px;color:var(--text)}
+.ac2-gate-intro{max-width:650px;color:var(--muted);font-size:14px;line-height:1.7;margin:0 0 24px}
+.ac2-gate-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px}
+.ac2-gate-list-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:22px;margin-bottom:15px}
+.ac2-gate-list-head h2{font-size:17px;margin:0;color:var(--text)}
+.ac2-flow-project-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.ac2-flow-project{padding:18px;border:1px solid var(--line);border-radius:15px;background:var(--panel-2);display:flex;flex-direction:column;gap:9px;min-width:0}
+.ac2-flow-project h3{font-size:15px;overflow-wrap:anywhere;margin:0;color:var(--text)}
+.ac2-flow-project p{font-size:12px;color:var(--muted);margin:0;line-height:1.5}
+.ac2-flow-project .amount{font-size:20px;font-weight:850;color:var(--ac2-teal)}
+.ac2-flow-project button{align-self:flex-start;margin-top:5px}
+.ac2-gate-footnote{font-size:11px;color:var(--muted);margin:22px 0 0}
+.ac2-calc-pricebox{display:grid;grid-template-columns:minmax(0,1fr) minmax(130px,.6fr);gap:12px;align-items:end;padding:13px;margin:0 0 14px;border:1px solid var(--ac2-line);border-radius:12px;background:rgba(49,198,177,.055)}
+.ac2-calc-pricebox label{display:grid;gap:6px;font-size:11px;color:var(--muted);font-weight:700}
+.ac2-calc-pricebox input{width:100%;min-width:0;padding:10px 11px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit}
+.ac2-calc-pricebox small{grid-column:1/-1;color:var(--muted);font-size:10px;line-height:1.5}
+.ac2-auto-estimate-status{font-size:11px;color:var(--ac2-teal);margin-top:8px;line-height:1.5}
+.ac2-workflow-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 22px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.ac2-workflow-bar strong{font-size:12px;color:var(--text)}
+.ac2-workflow-bar span{font-size:11px;color:var(--muted)}
+@media(max-width:600px){.ac2-calc-pricebox{grid-template-columns:1fr}.ac2-flow-gate{margin:12px auto 28px;padding:20px;border-radius:18px}}
+</style>
+<script id="archcalc-2-workspace">
+(function(){
+  const STORAGE_KEY='archcalc-projects-v2';
+  let rowCounter=0;
+  const fmt=n=>new Intl.NumberFormat('uz-UZ',{maximumFractionDigits:2}).format(Number.isFinite(n)?n:0);
+  const money=n=>fmt(n)+' so‘m';
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function readProjects(){try{const p=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');return Array.isArray(p)?p:[]}catch{return []}}
+  function writeProjects(p){localStorage.setItem(STORAGE_KEY,JSON.stringify(p));renderProjects();if(window.archCalcRenderFlowGate)window.archCalcRenderFlowGate()}
+  function addRow(item={name:'',qty:1,unit:'dona',price:0}){
+    const body=document.getElementById('ac2-estimate-rows');if(!body)return;
+    const id=++rowCounter;const tr=document.createElement('tr');tr.dataset.rowId=String(id);if(item.sourceKey)tr.dataset.sourceKey=item.sourceKey;
+    tr.innerHTML=`<td><input aria-label="Material nomi" class="ac2-material-name" maxlength="100" placeholder="Masalan: Beton M300" value="${esc(item.name)}"></td><td><input aria-label="Miqdor" class="ac2-material-qty" type="number" min="0" step="any" value="${Number(item.qty)||0}"></td><td><select aria-label="Birlik" class="ac2-material-unit">${['dona','m','m²','m³','kg','tonna','qop','qadoq','rulon','litr','banka','ish'].map(u=>`<option ${item.unit===u?'selected':''}>${u}</option>`).join('')}</select></td><td><input aria-label="Birlik narxi" class="ac2-material-price" type="number" min="0" step="any" value="${Number(item.price)||0}"></td><td class="ac2-row-sum">0 so‘m</td><td><button class="ac2-remove-row" type="button" aria-label="Qatorni o‘chirish">×</button></td>`;
+    body.appendChild(tr);tr.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',renderTotal));tr.querySelector('.ac2-remove-row').addEventListener('click',()=>{tr.remove();renderTotal()});renderTotal();
+  }
+  function getRows(){return [...document.querySelectorAll('#ac2-estimate-rows tr')].map(tr=>({name:tr.querySelector('.ac2-material-name').value.trim(),qty:Math.max(0,Number(tr.querySelector('.ac2-material-qty').value)||0),unit:tr.querySelector('.ac2-material-unit').value,price:Math.max(0,Number(tr.querySelector('.ac2-material-price').value)||0),sourceKey:tr.dataset.sourceKey||''}))}
+  function totals(){const rows=getRows();const subtotal=rows.reduce((sum,r)=>sum+r.qty*r.price,0);const reserve=Math.min(100,Math.max(0,Number(document.getElementById('ac2-reserve')?.value)||0));return {rows,subtotal,reserve,total:subtotal*(1+reserve/100)}}
+  function renderTotal(){const t=totals();document.querySelectorAll('#ac2-estimate-rows tr').forEach((tr,i)=>{const r=t.rows[i];const cell=tr.querySelector('.ac2-row-sum');if(cell)cell.textContent=money(r.qty*r.price)});const total=document.getElementById('ac2-estimate-total');if(total)total.textContent=money(t.total);const note=document.getElementById('ac2-total-note');if(note)note.textContent=`Materiallar: ${money(t.subtotal)} · Zaxira: ${t.reserve}%`;}
+  function renderProjects(){const projects=readProjects();const list=document.getElementById('ac2-project-list');if(!list)return;const count=document.getElementById('ac2-project-count');const badge=document.getElementById('ac2-project-badge');if(count)count.textContent=String(projects.length);if(badge)badge.textContent=projects.length+' ta';const lastTotal=document.getElementById('ac2-last-total'),lastName=document.getElementById('ac2-last-name');if(projects[0]){if(lastTotal)lastTotal.textContent=money(projects[0].total);if(lastName)lastName.textContent=projects[0].name}else{if(lastTotal)lastTotal.textContent='—';if(lastName)lastName.textContent='Hali smeta yo‘q'}
+    if(!projects.length){list.innerHTML='<div class="ac2-empty"><span>▧</span><strong>Hali loyiha yo‘q</strong><p>Birinchi smetangizni saqlang — shu yerda paydo bo‘ladi.</p></div>';return}
+    list.innerHTML='';projects.forEach(p=>{const card=document.createElement('article');card.className='ac2-project-item';const date=new Date(p.updatedAt||p.createdAt||Date.now()).toLocaleDateString('uz-UZ');card.innerHTML=`<div class="ac2-project-item-top"><strong>${esc(p.name)}</strong><span class="ac2-pill">${esc(date)}</span></div><p>${p.rows.length} ta material / ish qatori</p><p class="ac2-project-item-total">${money(p.total)}</p><div class="ac2-project-actions"><button type="button" data-action="open">Ochish</button><button type="button" data-action="csv">CSV</button><button type="button" data-action="delete" class="delete">O‘chirish</button></div>`;card.querySelector('[data-action="open"]').addEventListener('click',()=>loadProject(p.id));card.querySelector('[data-action="csv"]').addEventListener('click',()=>exportOne(p));card.querySelector('[data-action="delete"]').addEventListener('click',()=>{if(confirm('“'+p.name+'” loyihasini o‘chirmoqchimisiz?'))writeProjects(readProjects().filter(x=>x.id!==p.id))});list.appendChild(card)})
+  }
+  window.archCalcRefreshProjects=renderProjects;
+  function currentEstimate(){const t=totals();return {name:document.getElementById('ac2-project-name')?.value.trim()||'Nomsiz loyiha',rows:t.rows.filter(r=>r.name||r.qty||r.price),subtotal:t.subtotal,reserve:t.reserve,total:t.total}}
+  window.archCalcAddEstimateRow=(item)=>addRow(item||{});
+  window.archCalcRenderEstimateTotal=renderTotal;
+  window.archCalcResetEstimate=()=>{if(!confirm('Smeta maydonlarini tozalaymizmi?'))return;document.getElementById('ac2-project-name').value='';document.getElementById('ac2-estimate-rows').innerHTML='';document.getElementById('ac2-reserve').value='5';addRow({name:'Beton',qty:1,unit:'m³',price:0});addRow({name:'G‘isht',qty:1,unit:'dona',price:0});addRow({name:'Ish haqi',qty:1,unit:'ish',price:0});renderTotal()};
+  window.archCalcSaveProject=()=>{const p=currentEstimate();const existing=readProjects();const name=p.name.trim()||'Nomsiz loyiha';const found=existing.find(x=>x.id===window.archCalcActiveProjectId)||existing.find(x=>x.name.toLowerCase()===name.toLowerCase());const record={...p,name,id:found?.id||('ac2-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)),createdAt:found?.createdAt||Date.now(),updatedAt:Date.now()};window.archCalcActiveProjectId=record.id;writeProjects([record,...existing.filter(x=>x.id!==record.id)]);if(window.archCalcRenderFlowGate)window.archCalcRenderFlowGate();const label=document.getElementById('ac2-active-project-label');if(label)label.textContent='Faol loyiha: '+name;alert('Loyiha saqlandi. Hozircha ushbu brauzerda saqlanadi.');};
+  function loadProject(id){const p=readProjects().find(x=>x.id===id);if(!p)return;window.archCalcActiveProjectId=p.id;document.getElementById('ac2-project-name').value=p.name;document.getElementById('ac2-reserve').value=p.reserve??5;document.getElementById('ac2-estimate-rows').innerHTML='';(p.rows||[]).forEach(addRow);renderTotal();if(window.archCalcStartWorkspace)window.archCalcStartWorkspace(p.name);else window.archCalcOpenEstimate();}
+  window.archCalcLoadProject=loadProject;
+  window.archCalcOpenWorkspace=()=>{const el=document.getElementById('ac2-project-workspace');if(el){el.scrollIntoView({behavior:'smooth',block:'start'});el.classList.add('ac2-focus');setTimeout(()=>el.classList.remove('ac2-focus'),900)}};
+  window.archCalcOpenEstimate=()=>{const el=document.getElementById('ac2-estimator');if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.getElementById('ac2-project-name')?.focus({preventScroll:true})}};
+  function download(filename,content,type){const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+  function csvFor(p){const lines=[['Loyiha',p.name],['Zaxira foizi',p.reserve],[],['Material / ish','Miqdor','Birlik','Birlik narxi','Jami'],...(p.rows||[]).map(r=>[r.name,r.qty,r.unit,r.price,r.qty*r.price]),[],['Materiallar jami',p.subtotal],['Zaxira bilan jami',p.total]];return '\ufeff'+lines.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n')}
+  function exportOne(p){download((p.name||'archcalc-smeta').replace(/[^\p{L}\p{N}-]+/gu,'_')+'.csv',csvFor(p),'text/csv;charset=utf-8')}
+  window.archCalcExportCSV=()=>{const p=currentEstimate();if(!p.rows.length){const saved=readProjects()[0];if(saved){exportOne(saved);return}alert('Eksport qilish uchun smeta kiriting yoki loyiha saqlang.');return}exportOne(p)};
+  // Theme cycle: Graphite -> Light -> Blueprint. Existing light/dark storage stays compatible.
+  window.toggleTheme=function(){const current=localStorage.getItem('archcalc-theme')||'dark';const next=current==='dark'?'light':current==='light'?'blueprint':'dark';document.body.classList.remove('light','blueprint');if(next==='light')document.body.classList.add('light');if(next==='blueprint')document.body.classList.add('blueprint');localStorage.setItem('archcalc-theme',next);const b=document.getElementById('themeBtn');if(b){b.textContent=next==='light'?'☀':next==='blueprint'?'▦':'☾';b.title=next==='dark'?'Graphite theme':next==='light'?'Light theme':'Blueprint theme';b.setAttribute('aria-label',b.title)}};
+  const originalApplyTheme=window.applyTheme;
+  window.applyTheme=function(theme){document.body.classList.remove('light','blueprint');if(theme==='light')document.body.classList.add('light');if(theme==='blueprint')document.body.classList.add('blueprint');localStorage.setItem('archcalc-theme',theme);const b=document.getElementById('themeBtn');if(b){b.textContent=theme==='light'?'☀':theme==='blueprint'?'▦':'☾';b.title=theme==='dark'?'Graphite theme':theme==='light'?'Light theme':'Blueprint theme';b.setAttribute('aria-label',b.title)}};
+  document.addEventListener('DOMContentLoaded',()=>{if(!document.querySelector('#ac2-estimate-rows tr')){addRow({name:'Beton',qty:1,unit:'m³',price:0});addRow({name:'G‘isht',qty:1,unit:'dona',price:0});addRow({name:'Ish haqi',qty:1,unit:'ish',price:0})}renderProjects();renderTotal();const theme=localStorage.getItem('archcalc-theme')||'dark';window.applyTheme(theme);});
+})();
+</script>
+<script id="archcalc-guided-project-flow">
+(function(){
+  const resultMap={roomResult:'room',brickResult:'brick',blockResult:'block',conResult:'concrete',paintResult:'paint',floorResult:'floor',stairResult:'stair',plasterResult:'plaster',adhesiveResult:'adhesive',roofResult:'roof',rebarResult:'rebar',excavationResult:'excavation',insulationResult:'insulation',wallpaperResult:'wallpaper',tileResult:'tile',gravelResult:'gravel'};
+  const labels={roomResult:'Xona maydoni',brickResult:'G‘isht',blockResult:'Blok',conResult:'Beton',paintResult:'Bo‘yoq',floorResult:'Pol materiali',stairResult:'Zina qurilishi',plasterResult:'Suvoq qorishmasi',adhesiveResult:'Plitka yelimi',roofResult:'Tom qoplamasi',rebarResult:'Armatura',excavationResult:'Qazish ishlari',insulationResult:'Issiqlik izolyatsiyasi',wallpaperResult:'Oboy',tileResult:'Pol plitkasi',gravelResult:'Shag‘al / qum'};
+  function projectStore(){try{const v=JSON.parse(localStorage.getItem('archcalc-projects-v2')||'[]');return Array.isArray(v)?v:[]}catch(e){return []}}
+  function fmtMoney(n){return new Intl.NumberFormat('uz-UZ',{maximumFractionDigits:2}).format(Number(n)||0)+' so‘m'}
+  function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function flowCard(p){const d=new Date(p.updatedAt||p.createdAt||Date.now()).toLocaleDateString('uz-UZ');return `<article class="ac2-flow-project"><h3>${esc(p.name||'Nomsiz loyiha')}</h3><p>${(p.rows||[]).length} ta material / ish qatori · ${esc(d)}</p><div class="amount">${fmtMoney(p.total||0)}</div><button class="ac2-primary" type="button" data-open-project="${esc(p.id)}">Loyihani ochish →</button></article>`}
+  function renderGate(){const list=document.getElementById('ac2-flow-project-list');if(!list)return;const projects=projectStore();const count=document.getElementById('ac2-gate-project-count');if(count)count.textContent=projects.length+' ta';list.innerHTML=projects.length?projects.map(flowCard).join(''):'<div class="ac2-empty"><span>▧</span><strong>Hali loyihalar yo‘q</strong><p>Birinchi loyihangizni yaratish uchun yuqoridagi tugmani bosing.</p></div>';list.querySelectorAll('[data-open-project]').forEach(btn=>btn.addEventListener('click',()=>{const id=btn.getAttribute('data-open-project');window.archCalcOpenFlowProject(id)}))}
+  window.archCalcRenderFlowGate=renderGate;
+  window.archCalcCreateFlowProject=function(){const name=prompt('Yangi loyiha nomini kiriting:','Mening yangi loyiham');if(!name||!name.trim())return;const projects=projectStore();const id='ac2-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);const p={id,name:name.trim(),rows:[],subtotal:0,reserve:5,total:0,createdAt:Date.now(),updatedAt:Date.now()};localStorage.setItem('archcalc-projects-v2',JSON.stringify([p,...projects]));window.archCalcOpenFlowProject(id)};
+  window.archCalcOpenFlowProject=function(id){const p=projectStore().find(x=>x.id===id);if(!p)return;window.archCalcActiveProjectId=id;document.body.classList.remove('ac2-flow-locked');if(typeof window.archCalcLoadProject==='function')window.archCalcLoadProject(id);else{document.getElementById('ac2-project-name').value=p.name;document.getElementById('ac2-estimate-rows').innerHTML='';(p.rows||[]).forEach(r=>window.archCalcAddEstimateRow(r));window.archCalcRenderEstimateTotal();window.archCalcStartWorkspace(p.name)}renderGate()};
+  window.archCalcStartWorkspace=function(name){document.body.classList.remove('ac2-flow-locked');const label=document.getElementById('ac2-active-project-label');if(label)label.textContent='Faol loyiha: '+(name||document.getElementById('ac2-project-name')?.value||'Loyiha');const target=document.getElementById('ac2-calculations-heading');if(target)target.scrollIntoView({behavior:'smooth',block:'start'});};
+  window.archCalcOpenWorkspace=function(){document.body.classList.add('ac2-flow-locked');window.archCalcActiveProjectId=null;renderGate();const gate=document.getElementById('ac2-flow-gate');if(gate)gate.scrollIntoView({behavior:'smooth',block:'start'})};
+  // expose the existing internal loader to the flow screen
+  document.addEventListener('DOMContentLoaded',()=>{
+    const originalAdd=window.archCalcAddEstimateRow;
+    document.querySelectorAll('.card[id]').forEach(card=>{const result=card.querySelector('.result[id$="Result"]');if(!result)return;const resultId=result.id;const box=document.createElement('div');box.className='ac2-calc-pricebox';box.innerHTML=`<label>Bir birlik narxi (so‘m)<input type="number" min="0" step="any" id="ac2-price-${resultId}" value="0" inputmode="decimal" placeholder="Masalan: 25000"></label><label>Hisoblash turi<input type="text" readonly value="${esc(labels[resultId]||card.querySelector('.card-title')?.textContent||'Material')}"></label><small>Hisoblash tugmasini bosganingizda miqdor va birlik narxi smetaga avtomatik qo‘shiladi. Narxni keyin ham o‘zgartirishingiz mumkin.</small>`;const calcBtn=card.querySelector('button.calc');if(calcBtn)calcBtn.parentNode.insertBefore(box,calcBtn);const status=document.createElement('div');status.className='ac2-auto-estimate-status';status.id='ac2-status-'+resultId;result.insertAdjacentElement('afterend',status)});
+    // Add a price widget per calculator and keep existing estimate rows in sync when a price changes.
+    document.querySelectorAll('#ac2-estimate-rows input, #ac2-estimate-rows select, #ac2-reserve').forEach(input=>input.addEventListener('change',persistActiveEstimate));
+    document.querySelectorAll('.ac2-calc-pricebox input[type="number"]').forEach(input=>input.addEventListener('change',()=>{const resultId=input.id.replace('ac2-price-','');const tr=document.querySelector(`#ac2-estimate-rows tr[data-source-key="${resultId}"]`);if(tr){const price=tr.querySelector('.ac2-material-price');if(price){price.value=Math.max(0,Number(input.value)||0);price.dispatchEvent(new Event('input',{bubbles:true}));persistActiveEstimate();}}}));
+    renderGate();
+  });
+  const originalGo=window.go; window.go=function(id){if(!window.archCalcActiveProjectId){window.archCalcOpenWorkspace();return}if(originalGo)originalGo(id)};
+  function persistActiveEstimate(){const id=window.archCalcActiveProjectId;if(!id)return;const projects=projectStore();const i=projects.findIndex(p=>p.id===id);if(i<0)return;const rows=[...document.querySelectorAll('#ac2-estimate-rows tr')].map(tr=>({name:tr.querySelector('.ac2-material-name')?.value.trim()||'',qty:Math.max(0,Number(tr.querySelector('.ac2-material-qty')?.value)||0),unit:tr.querySelector('.ac2-material-unit')?.value||'dona',price:Math.max(0,Number(tr.querySelector('.ac2-material-price')?.value)||0),sourceKey:tr.dataset.sourceKey||''})).filter(r=>r.name||r.qty||r.price);const subtotal=rows.reduce((a,r)=>a+r.qty*r.price,0);const reserve=Math.min(100,Math.max(0,Number(document.getElementById('ac2-reserve')?.value)||0));projects[i]={...projects[i],name:document.getElementById('ac2-project-name')?.value.trim()||projects[i].name,rows,subtotal,reserve,total:subtotal*(1+reserve/100),updatedAt:Date.now()};localStorage.setItem('archcalc-projects-v2',JSON.stringify(projects));window.archCalcRefreshProjects?.();renderGate();}
+  window.archCalcOnCalculation=function(resultId){const meta=window.archCalcCalcMeta?.[resultId];if(!meta)return;const activeId=window.archCalcActiveProjectId;const projects=projectStore();const project=projects.find(p=>p.id===activeId);if(!project){const status=document.getElementById('ac2-status-'+resultId);if(status)status.textContent='Avval loyiha yarating yoki ro‘yxatdan loyihani oching.';return}
+    const price=Math.max(0,Number(document.getElementById('ac2-price-'+resultId)?.value)||0);const body=document.getElementById('ac2-estimate-rows');let tr=body?.querySelector(`tr[data-source-key="${resultId}"]`);
+    if(tr){tr.querySelector('.ac2-material-name').value=meta.name;tr.querySelector('.ac2-material-qty').value=Number(meta.qty)||0;tr.querySelector('.ac2-material-unit').value=meta.unit;tr.querySelector('.ac2-material-price').value=price;tr.querySelector('.ac2-material-price').dispatchEvent(new Event('input',{bubbles:true}));}
+    else if(typeof window.archCalcAddEstimateRow==='function'){window.archCalcAddEstimateRow({name:meta.name,qty:meta.qty,unit:meta.unit,price,sourceKey:resultId});tr=body?.lastElementChild;}
+    window.archCalcRenderEstimateTotal?.();persistActiveEstimate();const status=document.getElementById('ac2-status-'+resultId);if(status)status.textContent=`✓ Smetaga qo‘shildi: ${Number(meta.qty).toLocaleString('uz-UZ',{maximumFractionDigits:2})} ${meta.unit} × ${fmtMoney(price)} = ${fmtMoney((Number(meta.qty)||0)*price)}. Smeta jami yuqorida yangilandi.`;
+  };
+})();
+</script>
+</body>
+</html>
