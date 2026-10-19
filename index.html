@@ -822,7 +822,7 @@ body.light .section-title{
 .auth-google:disabled{opacity:.6;cursor:wait}
 #accountName{font-size:12px;color:var(--muted);padding:0 8px}
 .history-panel{display:none;margin:0 0 34px;padding:22px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}.history-panel.is-open{display:block}
-.history-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.history-heading h2{margin:5px 0;font-size:21px}.history-heading p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}.history-list{display:grid;gap:9px;margin-top:18px}.history-item{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:13px;border:1px solid var(--line);border-radius:10px;background:var(--bg-soft)}.history-item strong{display:block;font-size:13px;margin-bottom:4px}.history-item p{margin:0;color:var(--muted);font-size:12px;line-height:1.5;overflow-wrap:anywhere}.history-time{color:var(--muted);font-size:11px;white-space:nowrap}.history-empty{padding:16px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:12px}
+.history-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.history-heading h2{margin:5px 0;font-size:21px}.history-heading p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}.history-list{display:grid;gap:9px;margin-top:18px}.history-item{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:13px;border:1px solid var(--line);border-radius:10px;background:var(--bg-soft)}.history-item strong{display:block;font-size:13px;margin-bottom:4px}.history-item p{margin:0;color:var(--muted);font-size:12px;line-height:1.5;overflow-wrap:anywhere}.history-time{color:var(--muted);font-size:11px;white-space:nowrap}.history-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.history-actions button{font:inherit;font-size:11px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);cursor:pointer}.history-actions button:hover{filter:brightness(.96)}.history-actions .history-delete{color:#b42318}.history-empty{padding:16px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:12px}
 @media(max-width:760px){#accountName{display:none}.auth-card{padding:22px}.history-panel{padding:16px}.history-heading{align-items:flex-start}.history-item{display:block}.history-time{display:block;margin-top:8px}}
 </style>
 
@@ -871,10 +871,11 @@ body.light .section-title{
         <div class="crumb"><strong>ArchCalc</strong> / <span id="crumbWorkspace" data-i18n="workspace">Workspace</span></div>
         <div class="top-actions">
             <button class="top-btn" id="languageBtn" type="button" onclick="toggleLanguage()">UZ</button>
+            <button class="top-btn" type="button" onclick="archCalcOpenWorkspace()">Loyihalar</button>
             <button class="top-btn" id="archcalc-history-toggle" type="button" aria-expanded="false" aria-controls="archcalc-history-panel">Tarix</button>
             <span id="accountName" aria-live="polite"></span>
             <button class="top-btn" id="logoutBtn" type="button" onclick="archCalcLogout()">Chiqish</button>
-            <button class="top-btn" id="themeBtn" type="button" onclick="toggleTheme()" aria-label="Toggle theme">☾</button>
+            <button class="top-btn" id="themeBtn" type="button" onclick="toggleTheme()" aria-label="Toggle theme" title="Graphite / Light / Blueprint">☾</button>
         </div>
     </header>
 
@@ -899,7 +900,7 @@ body.light .section-title{
 
             <div class="hero-meta">
                 <div class="meta-label" data-i18n="system">SYSTEM</div>
-                <div class="meta-value" data-i18n="toolCount">7 calculation tools</div>
+                <div class="meta-value" data-i18n="toolCount">7 calculation tools + smeta</div>
             </div>
         </div>
 
@@ -909,6 +910,47 @@ body.light .section-title{
                 <button type="button" class="top-btn" id="archcalc-refresh-history">Yangilash</button>
             </div>
             <div id="archcalc-history-list" class="history-list"><div class="history-empty">Hali saqlangan hisob-kitoblar yo‘q.</div></div>
+        </section>
+
+        <section class="ac2-overview" aria-label="ArchCalc overview">
+            <div class="ac2-overview-copy">
+                <span class="ac2-kicker">ARCHCALC WORKSPACE</span>
+                <h2>Hisoblang. Rejalashtiring. Boshqaring.</h2>
+                <p>Kalkulyatorlar, materiallar smetasi va loyihalaringiz — bitta ish maydonida.</p>
+                <div class="ac2-hero-actions">
+                    <button class="ac2-primary" type="button" onclick="archCalcOpenEstimate()">＋ Yangi smeta</button>
+                    <button class="ac2-secondary" type="button" onclick="archCalcOpenWorkspace()">Loyihalarim</button>
+                </div>
+            </div>
+            <div class="ac2-stat-grid">
+                <article class="ac2-stat"><span>Hisoblash vositalari</span><strong>7</strong><small>Arxitektura va qurilish</small></article>
+                <article class="ac2-stat"><span>Saqlangan loyihalar</span><strong id="ac2-project-count">0</strong><small>Ushbu brauzerda</small></article>
+                <article class="ac2-stat"><span>Oxirgi smeta</span><strong id="ac2-last-total">—</strong><small id="ac2-last-name">Hali smeta yo‘q</small></article>
+            </div>
+        </section>
+
+        <section class="ac2-workspace" id="ac2-project-workspace">
+            <div class="ac2-section-head">
+                <div><span class="ac2-kicker">PROJECT DESK</span><h2>Loyihalar va smeta</h2><p>Loyiha xarajatlarini hisoblang, saqlang va eksport qiling.</p></div>
+                <div class="ac2-head-actions"><button class="ac2-secondary" type="button" onclick="archCalcExportCSV()">Eksport CSV</button><button class="ac2-secondary" type="button" onclick="window.print()">PDF / Chop etish</button></div>
+            </div>
+            <div class="ac2-work-grid">
+                <article class="ac2-panel ac2-estimator" id="ac2-estimator">
+                    <div class="ac2-panel-head"><div><span class="ac2-kicker">COST ESTIMATOR</span><h3>Materiallar smetasi</h3></div><span class="ac2-pill">Hisoblash</span></div>
+                    <label class="ac2-label" for="ac2-project-name">Loyiha nomi</label>
+                    <input class="ac2-input" id="ac2-project-name" maxlength="80" placeholder="Masalan: 2 xonali uy qurilishi" />
+                    <div class="ac2-table-wrap"><table class="ac2-table"><thead><tr><th>Material / ish</th><th>Miqdor</th><th>Birlik</th><th>Narx / birlik</th><th>Jami</th><th></th></tr></thead><tbody id="ac2-estimate-rows"></tbody></table></div>
+                    <div class="ac2-estimator-actions"><button class="ac2-secondary" type="button" onclick="archCalcAddEstimateRow()">＋ Qator qo‘shish</button><label class="ac2-reserve-label">Zaxira (%) <input id="ac2-reserve" class="ac2-small-input" type="number" min="0" max="100" step="1" value="5" oninput="archCalcRenderEstimateTotal()"></label></div>
+                    <div class="ac2-total-row"><div><span>Taxminiy umumiy qiymat</span><small id="ac2-total-note">Zaxira bilan hisoblanadi</small></div><strong id="ac2-estimate-total">0 so‘m</strong></div>
+                    <div class="ac2-estimator-actions"><button class="ac2-primary" type="button" onclick="archCalcSaveProject()">Loyihani saqlash</button><button class="ac2-secondary" type="button" onclick="archCalcResetEstimate()">Tozalash</button></div>
+                    <p class="ac2-note">Narxlarni o‘zingiz kiritasiz. Bu dastlabki smeta bo‘lib, real narxlar va ish hajmini tekshirish zarur.</p>
+                </article>
+                <article class="ac2-panel ac2-projects-panel">
+                    <div class="ac2-panel-head"><div><span class="ac2-kicker">SAVED WORK</span><h3>Saqlangan loyihalar</h3></div><span class="ac2-pill" id="ac2-project-badge">0 ta</span></div>
+                    <div id="ac2-project-list" class="ac2-project-list"><div class="ac2-empty"><span>▧</span><strong>Hali loyiha yo‘q</strong><p>Birinchi smetangizni saqlang — shu yerda paydo bo‘ladi.</p></div></div>
+                    <div class="ac2-storage-note"><span class="ac2-status-dot"></span> Hozircha ushbu brauzerda saqlanadi</div>
+                </article>
+            </div>
         </section>
 
         <div class="section-head">
@@ -2177,7 +2219,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <script type="module" id="archcalc-firebase-auth">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCYrssDBqrp4qiul3S6IXiZeYoHSqfC42k",
@@ -2240,6 +2282,40 @@ document.addEventListener("DOMContentLoaded", () => {
         const time = document.createElement("span"); time.className = "history-time";
         const date = item.createdAt?.toDate ? item.createdAt.toDate() : (item.createdAt?.seconds ? new Date(item.createdAt.seconds * 1000) : null);
         time.textContent = date ? date.toLocaleString("uz-UZ") : "Yangi";
+        const actions = document.createElement("div"); actions.className = "history-actions";
+        const reopen = document.createElement("button"); reopen.type = "button"; reopen.textContent = "Qayta ochish";
+        reopen.addEventListener("click", () => {
+          const sectionId = calcSections[item.resultId];
+          const section = sectionId ? document.getElementById(sectionId) : null;
+          if (!section) { if (historyStatus) historyStatus.textContent = "Bu hisob-kitob bo‘limini qayta ochib bo‘lmadi."; return; }
+          if (item.inputs && typeof item.inputs === "object") {
+            Object.entries(item.inputs).forEach(([fieldId, value]) => {
+              const field = document.getElementById(fieldId);
+              if (field && section.contains(field)) field.value = value;
+            });
+          }
+          const result = document.getElementById(item.resultId);
+          if (result) { result.textContent = item.resultText || "Saqlangan natija mavjud emas."; result.style.whiteSpace = "pre-wrap"; }
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+          if (historyStatus) historyStatus.textContent = "Saqlangan qiymatlar qayta ochildi. Natija — tarixda saqlangan nusxa.";
+        });
+        const remove = document.createElement("button"); remove.type = "button"; remove.className = "history-delete"; remove.textContent = "O‘chirish";
+        remove.addEventListener("click", async () => {
+          const currentUser = auth.currentUser;
+          if (!currentUser || currentUser.uid !== user.uid) return;
+          if (!window.confirm("Ushbu hisob-kitobni tarixdan o‘chirmoqchimisiz?")) return;
+          remove.disabled = true;
+          try {
+            await deleteDoc(doc(db, "users", user.uid, "calculationHistory", docSnap.id));
+            await loadHistory();
+          } catch (error) {
+            console.error("ArchCalc history delete error:", error);
+            if (historyStatus) historyStatus.textContent = "O‘chirib bo‘lmadi. Firestore xavfsizlik qoidalarini tekshiring.";
+            remove.disabled = false;
+          }
+        });
+        actions.append(reopen, remove);
+        body.appendChild(actions);
         row.append(body, time); historyList.appendChild(row);
       });
     } catch (error) {
@@ -2314,5 +2390,58 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 </script>
 
+
+<style id="archcalc-2-design">
+:root{--ac2-ink:#15202b;--ac2-muted:#748091;--ac2-line:rgba(126,145,165,.22);--ac2-teal:#31c6b1;--ac2-blue:#5b8def;--ac2-panel:rgba(18,25,35,.84)}
+.ac2-overview{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(300px,.95fr);gap:26px;align-items:stretch;margin:0 0 34px;padding:30px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(125deg,rgba(49,198,177,.10),transparent 48%),linear-gradient(315deg,rgba(91,141,239,.10),transparent 44%),var(--panel);box-shadow:0 22px 60px rgba(0,0,0,.10)}
+.ac2-overview-copy{display:flex;flex-direction:column;align-items:flex-start;justify-content:center}.ac2-kicker{display:inline-block;color:var(--ac2-teal);font-size:10px;font-weight:850;letter-spacing:.18em}.ac2-overview h2{max-width:640px;margin:12px 0;font-size:clamp(26px,3vw,42px);line-height:1.12;letter-spacing:-.045em}.ac2-overview p,.ac2-section-head p{color:var(--muted);font-size:13px;line-height:1.7;margin:0;max-width:560px}.ac2-hero-actions,.ac2-head-actions,.ac2-estimator-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.ac2-hero-actions{margin-top:22px}.ac2-primary,.ac2-secondary{min-height:39px;padding:0 14px;border-radius:10px;font-size:12px;font-weight:750;cursor:pointer;transition:transform .18s ease,filter .18s ease,border-color .18s ease}.ac2-primary{background:var(--ac2-teal);color:#09201e;box-shadow:0 7px 20px rgba(49,198,177,.15)}.ac2-secondary{background:rgba(255,255,255,.035);color:var(--text);border:1px solid var(--line)}.ac2-primary:hover,.ac2-secondary:hover{transform:translateY(-1px);filter:brightness(1.06)}.ac2-stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-content:center}.ac2-stat{padding:17px 14px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.025);min-width:0}.ac2-stat span,.ac2-stat small{display:block;color:var(--muted);font-size:10px;line-height:1.45}.ac2-stat strong{display:block;margin:12px 0 7px;font-size:clamp(19px,2vw,27px);letter-spacing:-.04em;overflow-wrap:anywhere}.ac2-stat small{font-size:9px}.ac2-workspace{margin:0 0 42px;padding:24px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,rgba(49,198,177,.035),transparent 35%),var(--panel)}.ac2-section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:22px}.ac2-section-head h2{margin:7px 0 6px;font-size:25px;letter-spacing:-.035em}.ac2-head-actions{justify-content:flex-end}.ac2-work-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr);gap:16px}.ac2-panel{min-width:0;padding:20px;border:1px solid var(--ac2-line);border-radius:17px;background:var(--ac2-panel)}.ac2-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.ac2-panel-head h3{font-size:17px;margin:5px 0 0;letter-spacing:-.02em}.ac2-pill{padding:6px 9px;border:1px solid var(--ac2-line);border-radius:99px;color:var(--muted);font-size:10px;white-space:nowrap}.ac2-label{display:block;margin:0 0 7px;color:var(--muted);font-size:11px;font-weight:700}.ac2-input,.ac2-small-input{width:100%;min-width:0;color:var(--text);background:rgba(255,255,255,.035);border:1px solid var(--ac2-line);border-radius:9px;padding:10px 11px;outline:none}.ac2-input:focus,.ac2-small-input:focus{border-color:var(--ac2-teal);box-shadow:0 0 0 3px rgba(49,198,177,.09)}.ac2-table-wrap{overflow:auto;margin:16px 0 12px}.ac2-table{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:11px}.ac2-table th{padding:0 7px 7px;color:var(--muted);font-size:9px;font-weight:700;text-align:left;white-space:nowrap}.ac2-table td{padding:5px 4px;background:rgba(255,255,255,.025)}.ac2-table td:first-child{border-radius:8px 0 0 8px}.ac2-table td:last-child{border-radius:0 8px 8px 0}.ac2-table input,.ac2-table select{width:100%;min-width:62px;padding:8px 7px;color:var(--text);background:transparent;border:1px solid transparent;border-radius:6px;font-size:11px}.ac2-table input:focus,.ac2-table select:focus{outline:1px solid var(--ac2-teal);border-color:var(--ac2-teal)}.ac2-table .ac2-row-sum{white-space:nowrap;font-weight:750;padding:8px}.ac2-remove-row{background:transparent;color:var(--danger);font-size:18px;cursor:pointer;padding:5px}.ac2-reserve-label{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:11px;margin-left:auto}.ac2-small-input{width:72px;padding:8px}.ac2-total-row{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:17px 0;padding:17px;border-radius:13px;background:linear-gradient(100deg,rgba(49,198,177,.11),rgba(91,141,239,.07));border:1px solid rgba(49,198,177,.20)}.ac2-total-row span,.ac2-total-row small{display:block}.ac2-total-row span{font-size:12px;font-weight:750}.ac2-total-row small{font-size:10px;color:var(--muted);margin-top:4px}.ac2-total-row strong{font-size:clamp(18px,2vw,25px);letter-spacing:-.035em;text-align:right;overflow-wrap:anywhere}.ac2-note{font-size:10px;line-height:1.6;color:var(--muted);margin:14px 0 0}.ac2-project-list{display:grid;gap:10px;max-height:570px;overflow:auto}.ac2-empty{min-height:190px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:22px;color:var(--muted)}.ac2-empty>span{font-size:30px;color:var(--ac2-teal);margin-bottom:9px}.ac2-empty strong{color:var(--text);font-size:13px}.ac2-empty p{max-width:230px;font-size:11px;line-height:1.6}.ac2-project-item{padding:14px;border:1px solid var(--ac2-line);border-radius:12px;background:rgba(255,255,255,.025)}.ac2-project-item-top{display:flex;justify-content:space-between;gap:10px}.ac2-project-item strong{font-size:12px;overflow-wrap:anywhere}.ac2-project-item p{margin:7px 0;color:var(--muted);font-size:10px}.ac2-project-item-total{font-size:16px!important;font-weight:800;color:var(--ac2-teal)!important}.ac2-project-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.ac2-project-actions button{padding:7px 9px;border:1px solid var(--ac2-line);border-radius:7px;color:var(--text);background:transparent;font-size:10px;cursor:pointer}.ac2-project-actions .delete{color:var(--danger)}.ac2-storage-note{display:flex;align-items:center;gap:8px;margin-top:17px;padding-top:13px;border-top:1px solid var(--ac2-line);color:var(--muted);font-size:10px}.ac2-status-dot{width:7px;height:7px;background:#e0ae50;border-radius:50%;box-shadow:0 0 0 3px rgba(224,174,80,.12)}
+/* Three coordinated appearances: graphite, light, and blueprint. */
+body.light{--bg:#f3f6f8;--bg-soft:#eef2f5;--panel:#ffffff;--panel-2:#f7f9fb;--panel-hover:#edf2f5;--line:rgba(50,75,95,.18);--line-strong:rgba(36,150,139,.55);--text:#172331;--muted:#647284;--dim:#8491a0;background:radial-gradient(circle at 75% 0%,rgba(49,198,177,.09),transparent 28rem),var(--bg)}body.light .sidebar,body.light .topbar{background:rgba(255,255,255,.86)}body.light .ac2-panel{background:rgba(255,255,255,.88)}body.light .ac2-input,body.light .ac2-small-input,body.light .ac2-table td{background:rgba(20,35,50,.035)}body.light .ac2-table input,body.light .ac2-table select{color:var(--text)}body.light .ac2-secondary{background:#fff}
+body.blueprint{--bg:#071827;--bg-soft:#0a2235;--panel:#0b2030;--panel-2:#102b3e;--panel-hover:#15364b;--line:rgba(84,178,224,.28);--line-strong:rgba(84,178,224,.72);--text:#e5f5ff;--muted:#93b6c8;--dim:#64869a;--accent:#55bce7;--accent-soft:rgba(85,188,231,.13);background:radial-gradient(circle at 85% 0%,rgba(85,188,231,.11),transparent 30rem),var(--bg)}body.blueprint .sidebar,body.blueprint .topbar{background:rgba(5,20,33,.84);border-color:rgba(84,178,224,.25)}body.blueprint .ac2-overview{background:linear-gradient(125deg,rgba(85,188,231,.12),transparent 55%),var(--panel)}body.blueprint .ac2-primary{background:#55bce7;color:#061a28}
+@media(max-width:1000px){.ac2-overview{grid-template-columns:1fr}.ac2-stat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.ac2-work-grid{grid-template-columns:1fr}.ac2-project-list{max-height:none}}
+@media(max-width:650px){.ac2-overview{padding:20px;border-radius:17px}.ac2-stat-grid{grid-template-columns:1fr 1fr}.ac2-stat:last-child{grid-column:span 2}.ac2-workspace{padding:15px}.ac2-panel{padding:13px}.ac2-section-head{align-items:flex-start;flex-direction:column}.ac2-head-actions{justify-content:flex-start}.ac2-table{min-width:600px}.ac2-reserve-label{margin-left:0}.ac2-estimator-actions{align-items:flex-start}.ac2-total-row{align-items:flex-start;flex-direction:column}.ac2-total-row strong{text-align:left}.topbar{padding:0 14px}.top-actions{gap:5px}.top-btn{padding:0 8px;font-size:11px}}
+@media print{.sidebar,.topbar,.mobile-nav,.ac2-hero-actions,.ac2-head-actions,.ac2-estimator-actions,.ac2-project-actions,.ac2-storage-note,.section-head{display:none!important}.app{display:block}.workspace{padding:0;max-width:none}.ac2-overview{box-shadow:none}.ac2-workspace{border:0;padding:0}.ac2-work-grid{grid-template-columns:1fr}.ac2-panel{break-inside:avoid}.ac2-project-list{max-height:none}}
+</style>
+<script id="archcalc-2-workspace">
+(function(){
+  const STORAGE_KEY='archcalc-projects-v2';
+  let rowCounter=0;
+  const fmt=n=>new Intl.NumberFormat('uz-UZ',{maximumFractionDigits:2}).format(Number.isFinite(n)?n:0);
+  const money=n=>fmt(n)+' so‘m';
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function readProjects(){try{const p=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');return Array.isArray(p)?p:[]}catch{return []}}
+  function writeProjects(p){localStorage.setItem(STORAGE_KEY,JSON.stringify(p));renderProjects()}
+  function addRow(item={name:'',qty:1,unit:'dona',price:0}){
+    const body=document.getElementById('ac2-estimate-rows');if(!body)return;
+    const id=++rowCounter;const tr=document.createElement('tr');tr.dataset.rowId=String(id);
+    tr.innerHTML=`<td><input aria-label="Material nomi" class="ac2-material-name" maxlength="100" placeholder="Masalan: Beton M300" value="${esc(item.name)}"></td><td><input aria-label="Miqdor" class="ac2-material-qty" type="number" min="0" step="any" value="${Number(item.qty)||0}"></td><td><select aria-label="Birlik" class="ac2-material-unit">${['dona','m','m²','m³','kg','qop','litr','ish'].map(u=>`<option ${item.unit===u?'selected':''}>${u}</option>`).join('')}</select></td><td><input aria-label="Birlik narxi" class="ac2-material-price" type="number" min="0" step="any" value="${Number(item.price)||0}"></td><td class="ac2-row-sum">0 so‘m</td><td><button class="ac2-remove-row" type="button" aria-label="Qatorni o‘chirish">×</button></td>`;
+    body.appendChild(tr);tr.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',renderTotal));tr.querySelector('.ac2-remove-row').addEventListener('click',()=>{tr.remove();renderTotal()});renderTotal();
+  }
+  function getRows(){return [...document.querySelectorAll('#ac2-estimate-rows tr')].map(tr=>({name:tr.querySelector('.ac2-material-name').value.trim(),qty:Math.max(0,Number(tr.querySelector('.ac2-material-qty').value)||0),unit:tr.querySelector('.ac2-material-unit').value,price:Math.max(0,Number(tr.querySelector('.ac2-material-price').value)||0)}))}
+  function totals(){const rows=getRows();const subtotal=rows.reduce((sum,r)=>sum+r.qty*r.price,0);const reserve=Math.min(100,Math.max(0,Number(document.getElementById('ac2-reserve')?.value)||0));return {rows,subtotal,reserve,total:subtotal*(1+reserve/100)}}
+  function renderTotal(){const t=totals();document.querySelectorAll('#ac2-estimate-rows tr').forEach((tr,i)=>{const r=t.rows[i];const cell=tr.querySelector('.ac2-row-sum');if(cell)cell.textContent=money(r.qty*r.price)});const total=document.getElementById('ac2-estimate-total');if(total)total.textContent=money(t.total);const note=document.getElementById('ac2-total-note');if(note)note.textContent=`Materiallar: ${money(t.subtotal)} · Zaxira: ${t.reserve}%`;}
+  function renderProjects(){const projects=readProjects();const list=document.getElementById('ac2-project-list');if(!list)return;const count=document.getElementById('ac2-project-count');const badge=document.getElementById('ac2-project-badge');if(count)count.textContent=String(projects.length);if(badge)badge.textContent=projects.length+' ta';const lastTotal=document.getElementById('ac2-last-total'),lastName=document.getElementById('ac2-last-name');if(projects[0]){if(lastTotal)lastTotal.textContent=money(projects[0].total);if(lastName)lastName.textContent=projects[0].name}else{if(lastTotal)lastTotal.textContent='—';if(lastName)lastName.textContent='Hali smeta yo‘q'}
+    if(!projects.length){list.innerHTML='<div class="ac2-empty"><span>▧</span><strong>Hali loyiha yo‘q</strong><p>Birinchi smetangizni saqlang — shu yerda paydo bo‘ladi.</p></div>';return}
+    list.innerHTML='';projects.forEach(p=>{const card=document.createElement('article');card.className='ac2-project-item';const date=new Date(p.updatedAt||p.createdAt||Date.now()).toLocaleDateString('uz-UZ');card.innerHTML=`<div class="ac2-project-item-top"><strong>${esc(p.name)}</strong><span class="ac2-pill">${esc(date)}</span></div><p>${p.rows.length} ta material / ish qatori</p><p class="ac2-project-item-total">${money(p.total)}</p><div class="ac2-project-actions"><button type="button" data-action="open">Ochish</button><button type="button" data-action="csv">CSV</button><button type="button" data-action="delete" class="delete">O‘chirish</button></div>`;card.querySelector('[data-action="open"]').addEventListener('click',()=>loadProject(p.id));card.querySelector('[data-action="csv"]').addEventListener('click',()=>exportOne(p));card.querySelector('[data-action="delete"]').addEventListener('click',()=>{if(confirm('“'+p.name+'” loyihasini o‘chirmoqchimisiz?'))writeProjects(readProjects().filter(x=>x.id!==p.id))});list.appendChild(card)})
+  }
+  function currentEstimate(){const t=totals();return {name:document.getElementById('ac2-project-name')?.value.trim()||'Nomsiz loyiha',rows:t.rows.filter(r=>r.name||r.qty||r.price),subtotal:t.subtotal,reserve:t.reserve,total:t.total}}
+  window.archCalcAddEstimateRow=()=>addRow();
+  window.archCalcRenderEstimateTotal=renderTotal;
+  window.archCalcResetEstimate=()=>{if(!confirm('Smeta maydonlarini tozalaymizmi?'))return;document.getElementById('ac2-project-name').value='';document.getElementById('ac2-estimate-rows').innerHTML='';document.getElementById('ac2-reserve').value='5';addRow({name:'Beton',qty:1,unit:'m³',price:0});addRow({name:'G‘isht',qty:1,unit:'dona',price:0});addRow({name:'Ish haqi',qty:1,unit:'ish',price:0});renderTotal()};
+  window.archCalcSaveProject=()=>{const p=currentEstimate();if(!p.rows.length){alert('Saqlashdan oldin kamida bitta material yoki ish qatorini kiriting.');return}const existing=readProjects();const name=p.name.trim()||'Nomsiz loyiha';const found=existing.find(x=>x.name.toLowerCase()===name.toLowerCase());const record={...p,id:found?.id||('ac2-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)),createdAt:found?.createdAt||Date.now(),updatedAt:Date.now()};writeProjects([record,...existing.filter(x=>x.id!==record.id)]);alert('Loyiha saqlandi. Eslatma: hozircha ushbu brauzerda saqlanadi.');};
+  function loadProject(id){const p=readProjects().find(x=>x.id===id);if(!p)return;document.getElementById('ac2-project-name').value=p.name;document.getElementById('ac2-reserve').value=p.reserve??5;document.getElementById('ac2-estimate-rows').innerHTML='';(p.rows||[]).forEach(addRow);renderTotal();window.archCalcOpenEstimate();}
+  window.archCalcOpenWorkspace=()=>{const el=document.getElementById('ac2-project-workspace');if(el){el.scrollIntoView({behavior:'smooth',block:'start'});el.classList.add('ac2-focus');setTimeout(()=>el.classList.remove('ac2-focus'),900)}};
+  window.archCalcOpenEstimate=()=>{const el=document.getElementById('ac2-estimator');if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.getElementById('ac2-project-name')?.focus({preventScroll:true})}};
+  function download(filename,content,type){const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+  function csvFor(p){const lines=[['Loyiha',p.name],['Zaxira foizi',p.reserve],[],['Material / ish','Miqdor','Birlik','Birlik narxi','Jami'],...(p.rows||[]).map(r=>[r.name,r.qty,r.unit,r.price,r.qty*r.price]),[],['Materiallar jami',p.subtotal],['Zaxira bilan jami',p.total]];return '\ufeff'+lines.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n')}
+  function exportOne(p){download((p.name||'archcalc-smeta').replace(/[^\p{L}\p{N}-]+/gu,'_')+'.csv',csvFor(p),'text/csv;charset=utf-8')}
+  window.archCalcExportCSV=()=>{const p=currentEstimate();if(!p.rows.length){const saved=readProjects()[0];if(saved){exportOne(saved);return}alert('Eksport qilish uchun smeta kiriting yoki loyiha saqlang.');return}exportOne(p)};
+  // Theme cycle: Graphite -> Light -> Blueprint. Existing light/dark storage stays compatible.
+  window.toggleTheme=function(){const current=localStorage.getItem('archcalc-theme')||'dark';const next=current==='dark'?'light':current==='light'?'blueprint':'dark';document.body.classList.remove('light','blueprint');if(next==='light')document.body.classList.add('light');if(next==='blueprint')document.body.classList.add('blueprint');localStorage.setItem('archcalc-theme',next);const b=document.getElementById('themeBtn');if(b){b.textContent=next==='light'?'☀':next==='blueprint'?'▦':'☾';b.title=next==='dark'?'Graphite theme':next==='light'?'Light theme':'Blueprint theme';b.setAttribute('aria-label',b.title)}};
+  const originalApplyTheme=window.applyTheme;
+  window.applyTheme=function(theme){document.body.classList.remove('light','blueprint');if(theme==='light')document.body.classList.add('light');if(theme==='blueprint')document.body.classList.add('blueprint');localStorage.setItem('archcalc-theme',theme);const b=document.getElementById('themeBtn');if(b){b.textContent=theme==='light'?'☀':theme==='blueprint'?'▦':'☾';b.title=theme==='dark'?'Graphite theme':theme==='light'?'Light theme':'Blueprint theme';b.setAttribute('aria-label',b.title)}};
+  document.addEventListener('DOMContentLoaded',()=>{if(!document.querySelector('#ac2-estimate-rows tr')){addRow({name:'Beton',qty:1,unit:'m³',price:0});addRow({name:'G‘isht',qty:1,unit:'dona',price:0});addRow({name:'Ish haqi',qty:1,unit:'ish',price:0})}renderProjects();renderTotal();const theme=localStorage.getItem('archcalc-theme')||'dark';window.applyTheme(theme);});
+})();
+</script>
 </body>
 </html>
