@@ -912,7 +912,7 @@ body.light .section-title{
             <div class="ac2-gate-actions"><button class="ac2-primary" type="button" onclick="archCalcCreateFlowProject()">＋ Yangi loyiha yaratish</button></div>
             <div class="ac2-gate-list-head"><h2>Loyihalar ro‘yxati</h2><span class="ac2-pill" id="ac2-gate-project-count">0 ta</span></div>
             <div class="ac2-flow-project-list" id="ac2-flow-project-list"><div class="ac2-empty"><span>▧</span><strong>Hali loyihalar yo‘q</strong><p>Birinchi loyihangizni yaratish uchun yuqoridagi tugmani bosing.</p></div></div>
-            <p class="ac2-gate-footnote">Loyiha va smeta ma’lumotlari hozircha ushbu brauzerda saqlanadi.</p>
+            <p class="ac2-gate-footnote ac2-cloud-status">Google hisobiga kirsangiz, loyihalar Firebase bulutida saqlanadi.</p>
         </section>
 
         <div class="hero">
@@ -948,7 +948,7 @@ body.light .section-title{
             </div>
             <div class="ac2-stat-grid">
                 <article class="ac2-stat"><span>Hisoblash vositalari</span><strong>16</strong><small>Arxitektura va qurilish</small></article>
-                <article class="ac2-stat"><span>Saqlangan loyihalar</span><strong id="ac2-project-count">0</strong><small>Ushbu brauzerda</small></article>
+                <article class="ac2-stat"><span>Saqlangan loyihalar</span><strong id="ac2-project-count">0</strong><small>Google akkauntga bog‘langan</small></article>
                 <article class="ac2-stat"><span>Oxirgi smeta</span><strong id="ac2-last-total">—</strong><small id="ac2-last-name">Hali smeta yo‘q</small></article>
             </div>
         </section>
@@ -972,7 +972,7 @@ body.light .section-title{
                 <article class="ac2-panel ac2-projects-panel">
                     <div class="ac2-panel-head"><div><span class="ac2-kicker">SAVED WORK</span><h3>Saqlangan loyihalar</h3></div><span class="ac2-pill" id="ac2-project-badge">0 ta</span></div>
                     <div id="ac2-project-list" class="ac2-project-list"><div class="ac2-empty"><span>▧</span><strong>Hali loyiha yo‘q</strong><p>Birinchi smetangizni saqlang — shu yerda paydo bo‘ladi.</p></div></div>
-                    <div class="ac2-storage-note"><span class="ac2-status-dot"></span> Hozircha ushbu brauzerda saqlanadi</div>
+                    <div class="ac2-storage-note ac2-cloud-status"><span class="ac2-status-dot"></span> Google hisobiga kirsangiz, bulutli saqlash yoqiladi.</div>
                 </article>
             </div>
         </section>
@@ -2303,7 +2303,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <script type="module" id="archcalc-firebase-auth">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-  import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, serverTimestamp, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCYrssDBqrp4qiul3S6IXiZeYoHSqfC42k",
@@ -2328,6 +2328,112 @@ document.addEventListener("DOMContentLoaded", () => {
   const calcSections = { roomResult:"room", brickResult:"brick", blockResult:"block", conResult:"concrete", paintResult:"paint", floorResult:"floor", stairResult:"stair", plasterResult:"plaster", adhesiveResult:"adhesive", roofResult:"roof", rebarResult:"rebar", excavationResult:"excavation", insulationResult:"insulation", wallpaperResult:"wallpaper", tileResult:"tile", gravelResult:"gravel" };
   let historyUserId = null;
   let lastSaveAt = 0;
+  let cloudProjectUserId = null;
+  let cloudProjectsReady = false;
+  let cloudProjectSyncQueue = Promise.resolve();
+
+  function setProjectCloudStatus(message, state = "info") {
+    document.querySelectorAll(".ac2-cloud-status").forEach(el => {
+      el.textContent = message;
+      el.dataset.state = state;
+      el.style.color = state === "success" ? "#31c6b1" : state === "error" ? "#e58b8b" : "";
+    });
+  }
+  function normalizeProject(project, uid) {
+    return {
+      id: String(project.id || ("ac2-" + Date.now())),
+      name: String(project.name || "Nomsiz loyiha").slice(0, 120),
+      rows: Array.isArray(project.rows) ? project.rows.map(r => ({
+        name: String(r.name || "").slice(0, 120),
+        qty: Math.max(0, Number(r.qty) || 0),
+        unit: String(r.unit || "dona").slice(0, 20),
+        price: Math.max(0, Number(r.price) || 0),
+        sourceKey: String(r.sourceKey || "").slice(0, 80)
+      })) : [],
+      subtotal: Math.max(0, Number(project.subtotal) || 0),
+      reserve: Math.min(100, Math.max(0, Number(project.reserve) || 0)),
+      total: Math.max(0, Number(project.total) || 0),
+      createdAt: Number(project.createdAt) || Date.now(),
+      updatedAt: Number(project.updatedAt) || Date.now(),
+      ownerUid: uid
+    };
+  }
+  async function writeCloudProject(user, project) {
+    const safe = normalizeProject(project, user.uid);
+    await setDoc(doc(db, "users", user.uid, "projects", safe.id), {
+      ...safe,
+      updatedAtServer: serverTimestamp()
+    }, { merge: true });
+  }
+  async function syncCloudProjectList(user, projects, removedIds = []) {
+    if (!user || !cloudProjectsReady || cloudProjectUserId !== user.uid) return;
+    cloudProjectSyncQueue = cloudProjectSyncQueue.then(async () => {
+      if (auth.currentUser?.uid !== user.uid || !cloudProjectsReady) return;
+      for (const project of projects) await writeCloudProject(user, project);
+      for (const id of removedIds) {
+        if (!id || projects.some(p => p.id === id)) continue;
+        await deleteDoc(doc(db, "users", user.uid, "projects", String(id)));
+      }
+      setProjectCloudStatus("Bulut bilan sinxronlandi. Loyihalaringiz Google hisobingizda saqlanmoqda.", "success");
+    }).catch(error => {
+      console.error("ArchCalc project cloud sync error:", error);
+      setProjectCloudStatus("Bulutga saqlash amalga oshmadi. Firestore qoidalari va internetni tekshiring.", "error");
+    });
+    return cloudProjectSyncQueue;
+  }
+  async function loadCloudProjects(user) {
+    cloudProjectsReady = false;
+    cloudProjectUserId = user?.uid || null;
+    if (!user) {
+      setProjectCloudStatus("Bulutli loyihalarni saqlash uchun Google hisobingizga kiring.", "info");
+      return;
+    }
+    setProjectCloudStatus("Loyihalar Firebase bulutidan yuklanmoqda…", "info");
+    try {
+      const snap = await getDocs(collection(db, "users", user.uid, "projects"));
+      if (auth.currentUser?.uid !== user.uid) return;
+      let cloudProjects = snap.docs.map(d => normalizeProject({ ...d.data(), id: d.id }, user.uid));
+      const localProjects = typeof window.archCalcGetLocalProjects === "function" ? window.archCalcGetLocalProjects() : [];
+      if (localProjects.length) {
+        try { localStorage.setItem("archcalc-projects-migration-backup", JSON.stringify({ savedAt: Date.now(), projects: localProjects })); } catch (_) {}
+        const message = cloudProjects.length
+          ? `Ushbu brauzerda ${localProjects.length} ta mahalliy loyiha bor, bulutda esa ${cloudProjects.length} ta. Mahalliy loyihalarni ham ${user.email || "ushbu Google hisobiga"} import qilasizmi? Faqat o‘zingizga tegishli ma’lumotlarni import qiling.`
+          : `Ushbu brauzerda ${localProjects.length} ta mahalliy loyiha topildi. Ularni Google hisobingizga bulutga ko‘chirasizmi?`;
+        if (window.confirm(message)) {
+          const cloudIds = new Set(cloudProjects.map(p => p.id));
+          for (const local of localProjects) {
+            if (cloudIds.has(String(local.id))) continue;
+            const safe = normalizeProject(local, user.uid);
+            await writeCloudProject(user, safe);
+            cloudProjects.push(safe);
+          }
+        }
+      }
+      if (auth.currentUser?.uid !== user.uid) return;
+      cloudProjects.sort((a,b) => (Number(b.updatedAt)||0) - (Number(a.updatedAt)||0));
+      if (typeof window.archCalcReplaceLocalProjects === "function") window.archCalcReplaceLocalProjects(cloudProjects);
+      cloudProjectsReady = true;
+      setProjectCloudStatus(`Bulut ulandi: ${cloudProjects.length} ta loyiha yuklandi. O‘zgarishlar avtomatik saqlanadi.`, "success");
+    } catch (error) {
+      console.error("ArchCalc project cloud load error:", error);
+      cloudProjectsReady = false;
+      setProjectCloudStatus("Loyihalarni bulutdan yuklab bo‘lmadi. Firestore Database va Rules bo‘limlarini tekshiring.", "error");
+    }
+  }
+  window.archCalcCloudSaveProject = async project => {
+    const user = auth.currentUser;
+    if (!user || !cloudProjectsReady || cloudProjectUserId !== user.uid) return false;
+    try {
+      await writeCloudProject(user, project);
+      setProjectCloudStatus("Loyiha bulutga saqlandi.", "success");
+      return true;
+    } catch (error) {
+      console.error("ArchCalc project save error:", error);
+      setProjectCloudStatus("Loyiha bulutga saqlanmadi. Firestore Rules sozlamasini tekshiring.", "error");
+      return false;
+    }
+  };
+  window.archCalcCloudReplaceProjects = (projects, removedIds = []) => syncCloudProjectList(auth.currentUser, projects, removedIds);
 
   function plainText(html) {
     const node = document.createElement("div");
@@ -2465,10 +2571,27 @@ document.addEventListener("DOMContentLoaded", () => {
     catch (error) { console.error("ArchCalc Firebase sign-out error:", error); }
   };
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
+    const previousUid = cloudProjectUserId;
+    if (previousUid && user && previousUid !== user.uid) {
+      try { localStorage.setItem("archcalc-projects-cache-" + previousUid, JSON.stringify(window.archCalcGetLocalProjects?.() || [])); } catch (_) {}
+      window.archCalcReplaceLocalProjects?.([]);
+      cloudProjectsReady = false;
+      cloudProjectUserId = null;
+    }
     window.archCalcFirebaseUser = user || null;
     if (window.archCalcRefreshAuthUI) window.archCalcRefreshAuthUI();
     loadHistory();
+    if (user) await loadCloudProjects(user);
+    else {
+      if (previousUid) {
+        try { localStorage.setItem("archcalc-projects-cache-" + previousUid, JSON.stringify(window.archCalcGetLocalProjects?.() || [])); } catch (_) {}
+        window.archCalcReplaceLocalProjects?.([]);
+      }
+      cloudProjectsReady = false;
+      cloudProjectUserId = null;
+      setProjectCloudStatus("Bulutli loyihalarni saqlash uchun Google hisobingizga kiring.", "info");
+    }
   }, (error) => {
     if (errorBox) errorBox.textContent = "Firebase autentifikatsiya xatosi: " + error.message;
   });
@@ -2527,7 +2650,9 @@ body:not(.ac2-flow-locked) .ac2-flow-gate{display:none !important;}
   const money=n=>fmt(n)+' so‘m';
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function readProjects(){try{const p=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');return Array.isArray(p)?p:[]}catch{return []}}
-  function writeProjects(p){localStorage.setItem(STORAGE_KEY,JSON.stringify(p));renderProjects();if(window.archCalcRenderFlowGate)window.archCalcRenderFlowGate()}
+  function writeProjects(p){const previous=readProjects();localStorage.setItem(STORAGE_KEY,JSON.stringify(p));renderProjects();if(window.archCalcRenderFlowGate)window.archCalcRenderFlowGate();const removed=previous.filter(old=>!p.some(now=>now.id===old.id)).map(old=>old.id);if(window.archCalcCloudReplaceProjects)window.archCalcCloudReplaceProjects(p,removed)}
+  window.archCalcGetLocalProjects=readProjects;
+  window.archCalcReplaceLocalProjects=function(projects){localStorage.setItem(STORAGE_KEY,JSON.stringify(Array.isArray(projects)?projects:[]));renderProjects();if(window.archCalcRenderFlowGate)window.archCalcRenderFlowGate();};
   function addRow(item={name:'',qty:1,unit:'dona',price:0}){
     const body=document.getElementById('ac2-estimate-rows');if(!body)return;
     const id=++rowCounter;const tr=document.createElement('tr');tr.dataset.rowId=String(id);if(item.sourceKey)tr.dataset.sourceKey=item.sourceKey;
@@ -2546,7 +2671,7 @@ body:not(.ac2-flow-locked) .ac2-flow-gate{display:none !important;}
   window.archCalcAddEstimateRow=(item)=>addRow(item||{});
   window.archCalcRenderEstimateTotal=renderTotal;
   window.archCalcResetEstimate=()=>{if(!confirm('Smeta maydonlarini tozalaymizmi?'))return;document.getElementById('ac2-project-name').value='';document.getElementById('ac2-estimate-rows').innerHTML='';document.getElementById('ac2-reserve').value='5';addRow({name:'Beton',qty:1,unit:'m³',price:0});addRow({name:'G‘isht',qty:1,unit:'dona',price:0});addRow({name:'Ish haqi',qty:1,unit:'ish',price:0});renderTotal()};
-  window.archCalcSaveProject=()=>{const p=currentEstimate();const existing=readProjects();const name=p.name.trim()||'Nomsiz loyiha';const found=existing.find(x=>x.id===window.archCalcActiveProjectId)||existing.find(x=>x.name.toLowerCase()===name.toLowerCase());const record={...p,name,id:found?.id||('ac2-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)),createdAt:found?.createdAt||Date.now(),updatedAt:Date.now()};window.archCalcActiveProjectId=record.id;writeProjects([record,...existing.filter(x=>x.id!==record.id)]);if(window.archCalcRenderFlowGate)window.archCalcRenderFlowGate();const label=document.getElementById('ac2-active-project-label');if(label)label.textContent='Faol loyiha: '+name;alert('Loyiha saqlandi. Hozircha ushbu brauzerda saqlanadi.');};
+  window.archCalcSaveProject=()=>{const p=currentEstimate();const existing=readProjects();const name=p.name.trim()||'Nomsiz loyiha';const found=existing.find(x=>x.id===window.archCalcActiveProjectId)||existing.find(x=>x.name.toLowerCase()===name.toLowerCase());const record={...p,name,id:found?.id||('ac2-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)),createdAt:found?.createdAt||Date.now(),updatedAt:Date.now()};window.archCalcActiveProjectId=record.id;writeProjects([record,...existing.filter(x=>x.id!==record.id)]);if(window.archCalcRenderFlowGate)window.archCalcRenderFlowGate();const label=document.getElementById('ac2-active-project-label');if(label)label.textContent='Faol loyiha: '+name;alert(window.archCalcFirebaseUser ? 'Loyiha saqlandi. Bulut bilan sinxronlash boshlandi.' : 'Loyiha brauzerda saqlandi. Bulutda saqlash uchun Google orqali kiring.');};
   function loadProject(id){const p=readProjects().find(x=>x.id===id);if(!p)return;window.archCalcActiveProjectId=p.id;document.getElementById('ac2-project-name').value=p.name;document.getElementById('ac2-reserve').value=p.reserve??5;document.getElementById('ac2-estimate-rows').innerHTML='';(p.rows||[]).forEach(addRow);renderTotal();if(window.archCalcStartWorkspace)window.archCalcStartWorkspace(p.name);else window.archCalcOpenEstimate();}
   window.archCalcLoadProject=loadProject;
   window.archCalcOpenWorkspace=()=>{const el=document.getElementById('ac2-project-workspace');if(el){el.scrollIntoView({behavior:'smooth',block:'start'});el.classList.add('ac2-focus');setTimeout(()=>el.classList.remove('ac2-focus'),900)}};
@@ -2572,7 +2697,7 @@ body:not(.ac2-flow-locked) .ac2-flow-gate{display:none !important;}
   function flowCard(p){const d=new Date(p.updatedAt||p.createdAt||Date.now()).toLocaleDateString('uz-UZ');return `<article class="ac2-flow-project"><h3>${esc(p.name||'Nomsiz loyiha')}</h3><p>${(p.rows||[]).length} ta material / ish qatori · ${esc(d)}</p><div class="amount">${fmtMoney(p.total||0)}</div><button class="ac2-primary" type="button" data-open-project="${esc(p.id)}">Loyihani ochish →</button></article>`}
   function renderGate(){const list=document.getElementById('ac2-flow-project-list');if(!list)return;const projects=projectStore();const count=document.getElementById('ac2-gate-project-count');if(count)count.textContent=projects.length+' ta';list.innerHTML=projects.length?projects.map(flowCard).join(''):'<div class="ac2-empty"><span>▧</span><strong>Hali loyihalar yo‘q</strong><p>Birinchi loyihangizni yaratish uchun yuqoridagi tugmani bosing.</p></div>';list.querySelectorAll('[data-open-project]').forEach(btn=>btn.addEventListener('click',()=>{const id=btn.getAttribute('data-open-project');window.archCalcOpenFlowProject(id)}))}
   window.archCalcRenderFlowGate=renderGate;
-  window.archCalcCreateFlowProject=function(){const name=prompt('Yangi loyiha nomini kiriting:','Mening yangi loyiham');if(!name||!name.trim())return;const projects=projectStore();const id='ac2-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);const p={id,name:name.trim(),rows:[],subtotal:0,reserve:5,total:0,createdAt:Date.now(),updatedAt:Date.now()};localStorage.setItem('archcalc-projects-v2',JSON.stringify([p,...projects]));window.archCalcOpenFlowProject(id)};
+  window.archCalcCreateFlowProject=function(){const name=prompt('Yangi loyiha nomini kiriting:','Mening yangi loyiham');if(!name||!name.trim())return;const projects=projectStore();const id='ac2-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);const p={id,name:name.trim(),rows:[],subtotal:0,reserve:5,total:0,createdAt:Date.now(),updatedAt:Date.now()};localStorage.setItem('archcalc-projects-v2',JSON.stringify([p,...projects]));if(window.archCalcCloudSaveProject)window.archCalcCloudSaveProject(p);window.archCalcOpenFlowProject(id)};
   window.archCalcOpenFlowProject=function(id){const p=projectStore().find(x=>x.id===id);if(!p)return;window.archCalcActiveProjectId=id;document.body.classList.remove('ac2-flow-locked');if(typeof window.archCalcLoadProject==='function')window.archCalcLoadProject(id);else{document.getElementById('ac2-project-name').value=p.name;document.getElementById('ac2-estimate-rows').innerHTML='';(p.rows||[]).forEach(r=>window.archCalcAddEstimateRow(r));window.archCalcRenderEstimateTotal();window.archCalcStartWorkspace(p.name)}renderGate()};
   window.archCalcStartWorkspace=function(name){document.body.classList.remove('ac2-flow-locked');const label=document.getElementById('ac2-active-project-label');if(label)label.textContent='Faol loyiha: '+(name||document.getElementById('ac2-project-name')?.value||'Loyiha');const target=document.getElementById('ac2-calculations-heading');if(target)target.scrollIntoView({behavior:'smooth',block:'start'});};
   window.archCalcOpenWorkspace=function(){document.body.classList.add('ac2-flow-locked');window.archCalcActiveProjectId=null;renderGate();const gate=document.getElementById('ac2-flow-gate');if(gate)gate.scrollIntoView({behavior:'smooth',block:'start'})};
@@ -2581,12 +2706,12 @@ body:not(.ac2-flow-locked) .ac2-flow-gate{display:none !important;}
     const originalAdd=window.archCalcAddEstimateRow;
     document.querySelectorAll('.card[id]').forEach(card=>{const result=card.querySelector('.result[id$="Result"]');if(!result)return;const resultId=result.id;const box=document.createElement('div');box.className='ac2-calc-pricebox';box.innerHTML=`<label>Bir birlik narxi (so‘m)<input type="number" min="0" step="any" id="ac2-price-${resultId}" value="0" inputmode="decimal" placeholder="Masalan: 25000"></label><label>Hisoblash turi<input type="text" readonly value="${esc(labels[resultId]||card.querySelector('.card-title')?.textContent||'Material')}"></label><small>Hisoblash tugmasini bosganingizda miqdor va birlik narxi smetaga avtomatik qo‘shiladi. Narxni keyin ham o‘zgartirishingiz mumkin.</small>`;const calcBtn=card.querySelector('button.calc');if(calcBtn)calcBtn.parentNode.insertBefore(box,calcBtn);const status=document.createElement('div');status.className='ac2-auto-estimate-status';status.id='ac2-status-'+resultId;result.insertAdjacentElement('afterend',status)});
     // Add a price widget per calculator and keep existing estimate rows in sync when a price changes.
-    document.querySelectorAll('#ac2-estimate-rows input, #ac2-estimate-rows select, #ac2-reserve').forEach(input=>input.addEventListener('change',persistActiveEstimate));
+    document.getElementById('ac2-estimate-rows')?.addEventListener('change',persistActiveEstimate);document.getElementById('ac2-project-name')?.addEventListener('change',persistActiveEstimate);document.getElementById('ac2-reserve')?.addEventListener('change',persistActiveEstimate);
     document.querySelectorAll('.ac2-calc-pricebox input[type="number"]').forEach(input=>input.addEventListener('change',()=>{const resultId=input.id.replace('ac2-price-','');const tr=document.querySelector(`#ac2-estimate-rows tr[data-source-key="${resultId}"]`);if(tr){const price=tr.querySelector('.ac2-material-price');if(price){price.value=Math.max(0,Number(input.value)||0);price.dispatchEvent(new Event('input',{bubbles:true}));persistActiveEstimate();}}}));
     renderGate();
   });
   const originalGo=window.go; window.go=function(id){if(!window.archCalcActiveProjectId){window.archCalcOpenWorkspace();return}if(originalGo)originalGo(id)};
-  function persistActiveEstimate(){const id=window.archCalcActiveProjectId;if(!id)return;const projects=projectStore();const i=projects.findIndex(p=>p.id===id);if(i<0)return;const rows=[...document.querySelectorAll('#ac2-estimate-rows tr')].map(tr=>({name:tr.querySelector('.ac2-material-name')?.value.trim()||'',qty:Math.max(0,Number(tr.querySelector('.ac2-material-qty')?.value)||0),unit:tr.querySelector('.ac2-material-unit')?.value||'dona',price:Math.max(0,Number(tr.querySelector('.ac2-material-price')?.value)||0),sourceKey:tr.dataset.sourceKey||''})).filter(r=>r.name||r.qty||r.price);const subtotal=rows.reduce((a,r)=>a+r.qty*r.price,0);const reserve=Math.min(100,Math.max(0,Number(document.getElementById('ac2-reserve')?.value)||0));projects[i]={...projects[i],name:document.getElementById('ac2-project-name')?.value.trim()||projects[i].name,rows,subtotal,reserve,total:subtotal*(1+reserve/100),updatedAt:Date.now()};localStorage.setItem('archcalc-projects-v2',JSON.stringify(projects));window.archCalcRefreshProjects?.();renderGate();}
+  function persistActiveEstimate(){const id=window.archCalcActiveProjectId;if(!id)return;const projects=projectStore();const i=projects.findIndex(p=>p.id===id);if(i<0)return;const rows=[...document.querySelectorAll('#ac2-estimate-rows tr')].map(tr=>({name:tr.querySelector('.ac2-material-name')?.value.trim()||'',qty:Math.max(0,Number(tr.querySelector('.ac2-material-qty')?.value)||0),unit:tr.querySelector('.ac2-material-unit')?.value||'dona',price:Math.max(0,Number(tr.querySelector('.ac2-material-price')?.value)||0),sourceKey:tr.dataset.sourceKey||''})).filter(r=>r.name||r.qty||r.price);const subtotal=rows.reduce((a,r)=>a+r.qty*r.price,0);const reserve=Math.min(100,Math.max(0,Number(document.getElementById('ac2-reserve')?.value)||0));projects[i]={...projects[i],name:document.getElementById('ac2-project-name')?.value.trim()||projects[i].name,rows,subtotal,reserve,total:subtotal*(1+reserve/100),updatedAt:Date.now()};localStorage.setItem('archcalc-projects-v2',JSON.stringify(projects));window.archCalcCloudSaveProject?.(projects[i]);window.archCalcRefreshProjects?.();renderGate();}
   window.archCalcOnCalculation=function(resultId){const meta=window.archCalcCalcMeta?.[resultId];if(!meta)return;const activeId=window.archCalcActiveProjectId;const projects=projectStore();const project=projects.find(p=>p.id===activeId);if(!project){const status=document.getElementById('ac2-status-'+resultId);if(status)status.textContent='Avval loyiha yarating yoki ro‘yxatdan loyihani oching.';return}
     const price=Math.max(0,Number(document.getElementById('ac2-price-'+resultId)?.value)||0);const body=document.getElementById('ac2-estimate-rows');let tr=body?.querySelector(`tr[data-source-key="${resultId}"]`);
     if(tr){tr.querySelector('.ac2-material-name').value=meta.name;tr.querySelector('.ac2-material-qty').value=Number(meta.qty)||0;tr.querySelector('.ac2-material-unit').value=meta.unit;tr.querySelector('.ac2-material-price').value=price;tr.querySelector('.ac2-material-price').dispatchEvent(new Event('input',{bubbles:true}));}
