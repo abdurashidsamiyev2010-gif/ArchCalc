@@ -821,7 +821,9 @@ body.light .section-title{
 .auth-google{width:100%;margin-top:10px;background:var(--panel-2);color:var(--text);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:10px}
 .auth-google:disabled{opacity:.6;cursor:wait}
 #accountName{font-size:12px;color:var(--muted);padding:0 8px}
-@media(max-width:760px){#accountName{display:none}.auth-card{padding:22px}}
+.history-panel{display:none;margin:0 0 34px;padding:22px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}.history-panel.is-open{display:block}
+.history-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.history-heading h2{margin:5px 0;font-size:21px}.history-heading p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}.history-list{display:grid;gap:9px;margin-top:18px}.history-item{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:13px;border:1px solid var(--line);border-radius:10px;background:var(--bg-soft)}.history-item strong{display:block;font-size:13px;margin-bottom:4px}.history-item p{margin:0;color:var(--muted);font-size:12px;line-height:1.5;overflow-wrap:anywhere}.history-time{color:var(--muted);font-size:11px;white-space:nowrap}.history-empty{padding:16px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:12px}
+@media(max-width:760px){#accountName{display:none}.auth-card{padding:22px}.history-panel{padding:16px}.history-heading{align-items:flex-start}.history-item{display:block}.history-time{display:block;margin-top:8px}}
 </style>
 
 </head>
@@ -869,6 +871,7 @@ body.light .section-title{
         <div class="crumb"><strong>ArchCalc</strong> / <span id="crumbWorkspace" data-i18n="workspace">Workspace</span></div>
         <div class="top-actions">
             <button class="top-btn" id="languageBtn" type="button" onclick="toggleLanguage()">UZ</button>
+            <button class="top-btn" id="archcalc-history-toggle" type="button" aria-expanded="false" aria-controls="archcalc-history-panel">Tarix</button>
             <span id="accountName" aria-live="polite"></span>
             <button class="top-btn" id="logoutBtn" type="button" onclick="archCalcLogout()">Chiqish</button>
             <button class="top-btn" id="themeBtn" type="button" onclick="toggleTheme()" aria-label="Toggle theme">☾</button>
@@ -899,6 +902,14 @@ body.light .section-title{
                 <div class="meta-value" data-i18n="toolCount">7 calculation tools</div>
             </div>
         </div>
+
+        <section class="history-panel" id="archcalc-history-panel" aria-live="polite">
+            <div class="history-heading">
+                <div><div class="eyebrow">MY WORKSPACE</div><h2>Hisob-kitoblar tarixi</h2><p id="archcalc-history-status">Google hisobingizga kiring — hisob-kitoblaringiz bulutda saqlanadi.</p></div>
+                <button type="button" class="top-btn" id="archcalc-refresh-history">Yangilash</button>
+            </div>
+            <div id="archcalc-history-list" class="history-list"><div class="history-empty">Hali saqlangan hisob-kitoblar yo‘q.</div></div>
+        </section>
 
         <div class="section-head">
             <div class="section-title" data-i18n="calcTools">Calculation tools</div>
@@ -1175,6 +1186,10 @@ function getNumber(id){
 function setResult(id, htmlText){
     const el = document.getElementById(id);
     if (el) el.innerHTML = htmlText;
+    // Successful calculations are added to the user's history by the Firebase module.
+    if (el && typeof window.archCalcRecordCalculation === "function" && !/invalid|noto‘g‘ri|xato/i.test(String(htmlText))) {
+        window.archCalcRecordCalculation(id, htmlText);
+    }
 }
 
 function isPositive(...values){
@@ -2162,6 +2177,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <script type="module" id="archcalc-firebase-auth">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCYrssDBqrp4qiul3S6IXiZeYoHSqfC42k",
@@ -2175,10 +2191,96 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getFirestore(app);
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account" });
   const googleButton = document.getElementById("authGoogleBtn");
   const errorBox = document.getElementById("authError");
+  const historyList = document.getElementById("archcalc-history-list");
+  const historyStatus = document.getElementById("archcalc-history-status");
+  const calcNames = { roomResult:"Xona hisobi", brickResult:"G‘isht hisobi", blockResult:"Blok hisobi", conResult:"Beton hisobi", paintResult:"Bo‘yoq hisobi", floorResult:"Pol hisobi", stairResult:"Zina hisobi" };
+  const calcSections = { roomResult:"room", brickResult:"brick", blockResult:"block", conResult:"concrete", paintResult:"paint", floorResult:"floor", stairResult:"stair" };
+  let historyUserId = null;
+  let lastSaveAt = 0;
+
+  function plainText(html) {
+    const node = document.createElement("div");
+    node.innerHTML = String(html || "");
+    return (node.textContent || node.innerText || "").replace(/\s+/g, " ").trim().slice(0, 1800);
+  }
+  function showHistoryMessage(message) {
+    if (historyList) historyList.innerHTML = '<div class="history-empty"></div>';
+    const empty = historyList && historyList.querySelector(".history-empty");
+    if (empty) empty.textContent = message;
+  }
+  async function loadHistory() {
+    const user = auth.currentUser;
+    if (!user) {
+      historyUserId = null;
+      if (historyStatus) historyStatus.textContent = "Google hisobingizga kiring — hisob-kitoblaringiz bulutda saqlanadi.";
+      showHistoryMessage("Bulutli tarixni ko‘rish uchun Google orqali kiring.");
+      return;
+    }
+    historyUserId = user.uid;
+    if (historyStatus) historyStatus.textContent = "Hisob-kitoblaringiz shu Google hisobiga bog‘langan holda saqlanadi.";
+    showHistoryMessage("Tarix yuklanmoqda…");
+    try {
+      const q = query(collection(db, "users", user.uid, "calculationHistory"), orderBy("createdAt", "desc"), limit(20));
+      const snapshot = await getDocs(q);
+      if (auth.currentUser?.uid !== user.uid) return;
+      if (snapshot.empty) { showHistoryMessage("Hali saqlangan hisob-kitoblar yo‘q. Birinchi hisob-kitobingizni bajaring."); return; }
+      historyList.innerHTML = "";
+      snapshot.forEach((docSnap) => {
+        const item = docSnap.data();
+        const row = document.createElement("article"); row.className = "history-item";
+        const body = document.createElement("div");
+        const title = document.createElement("strong"); title.textContent = item.title || "Hisob-kitob";
+        const result = document.createElement("p"); result.textContent = item.resultText || "";
+        body.append(title, result);
+        const time = document.createElement("span"); time.className = "history-time";
+        const date = item.createdAt?.toDate ? item.createdAt.toDate() : (item.createdAt?.seconds ? new Date(item.createdAt.seconds * 1000) : null);
+        time.textContent = date ? date.toLocaleString("uz-UZ") : "Yangi";
+        row.append(body, time); historyList.appendChild(row);
+      });
+    } catch (error) {
+      console.error("ArchCalc history load error:", error);
+      showHistoryMessage("Tarixni yuklab bo‘lmadi. Firebase Console’da Firestore Database yoqilganini va xavfsizlik qoidalarini tekshiring.");
+      if (historyStatus) historyStatus.textContent = "Bulutli saqlash sozlamasi tekshirilishi kerak.";
+    }
+  }
+  window.archCalcRecordCalculation = async function (resultId, html) {
+    const user = auth.currentUser;
+    if (!user || user.uid !== historyUserId) return;
+    const now = Date.now();
+    if (now - lastSaveAt < 1200) return;
+    lastSaveAt = now;
+    try {
+      const section = document.getElementById(calcSections[resultId] || "");
+      const inputs = {};
+      section?.querySelectorAll("input, select, textarea").forEach((field) => {
+        if (field.id) inputs[field.id] = field.value;
+      });
+      await addDoc(collection(db, "users", user.uid, "calculationHistory"), {
+        title: calcNames[resultId] || "Hisob-kitob", resultId, resultText: plainText(html), inputs,
+        createdAt: serverTimestamp(), app: "ArchCalc"
+      });
+      await loadHistory();
+    } catch (error) {
+      console.error("ArchCalc history save error:", error);
+      if (historyStatus) historyStatus.textContent = "Saqlash amalga oshmadi. Firestore Database va xavfsizlik qoidalarini tekshiring.";
+    }
+  };
+  document.getElementById("archcalc-refresh-history")?.addEventListener("click", loadHistory);
+  const historyToggle = document.getElementById("archcalc-history-toggle");
+  const historyPanel = document.getElementById("archcalc-history-panel");
+  historyToggle?.addEventListener("click", async () => {
+    const isOpen = historyPanel?.classList.toggle("is-open") || false;
+    historyToggle.setAttribute("aria-expanded", String(isOpen));
+    if (isOpen) {
+      await loadHistory();
+      historyPanel?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
 
   window.archCalcGoogleSignIn = async function () {
     if (googleButton) { googleButton.disabled = true; googleButton.textContent = "Google hisobiga ulanmoqda…"; }
@@ -2206,6 +2308,7 @@ document.addEventListener("DOMContentLoaded", () => {
   onAuthStateChanged(auth, (user) => {
     window.archCalcFirebaseUser = user || null;
     if (window.archCalcRefreshAuthUI) window.archCalcRefreshAuthUI();
+    loadHistory();
   }, (error) => {
     if (errorBox) errorBox.textContent = "Firebase autentifikatsiya xatosi: " + error.message;
   });
