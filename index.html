@@ -2393,22 +2393,52 @@ document.addEventListener("DOMContentLoaded", () => {
       const snap = await getDocs(collection(db, "users", user.uid, "projects"));
       if (auth.currentUser?.uid !== user.uid) return;
       let cloudProjects = snap.docs.map(d => normalizeProject({ ...d.data(), id: d.id }, user.uid));
-      const localProjects = typeof window.archCalcGetLocalProjects === "function" ? window.archCalcGetLocalProjects() : [];
-      if (localProjects.length) {
-        try { localStorage.setItem("archcalc-projects-migration-backup", JSON.stringify({ savedAt: Date.now(), projects: localProjects })); } catch (_) {}
-        const message = cloudProjects.length
-          ? `Ushbu brauzerda ${localProjects.length} ta mahalliy loyiha bor, bulutda esa ${cloudProjects.length} ta. Mahalliy loyihalarni ham ${user.email || "ushbu Google hisobiga"} import qilasizmi? Faqat o‘zingizga tegishli ma’lumotlarni import qiling.`
-          : `Ushbu brauzerda ${localProjects.length} ta mahalliy loyiha topildi. Ularni Google hisobingizga bulutga ko‘chirasizmi?`;
-        if (window.confirm(message)) {
-          const cloudIds = new Set(cloudProjects.map(p => p.id));
-          for (const local of localProjects) {
-            if (cloudIds.has(String(local.id))) continue;
-            const safe = normalizeProject(local, user.uid);
-            await writeCloudProject(user, safe);
-            cloudProjects.push(safe);
-          }
-        }
-      }
+
+const localProjects =
+  typeof window.archCalcGetLocalProjects === "function"
+    ? window.archCalcGetLocalProjects()
+    : [];
+
+const migrationKey =
+  `archcalc-projects-migration-v1-${user.uid}`;
+
+if (
+  localProjects.length > 0 &&
+  localStorage.getItem(migrationKey) !== "done"
+) {
+  // Importdan oldin zaxira nusxasini saqlash
+  localStorage.setItem(
+    "archcalc-projects-migration-backup",
+    JSON.stringify({
+      savedAt: Date.now(),
+      userId: user.uid,
+      projects: localProjects
+    })
+  );
+
+  const message = cloudProjects.length
+    ? `Brauzerda ${localProjects.length} ta eski loyiha bor, ` +
+      `bulutda esa ${cloudProjects.length} ta. ` +
+      `Eski loyihalarni ushbu hisobga import qilasizmi?`
+    : `Brauzerda ${localProjects.length} ta eski loyiha topildi. ` +
+      `Ularni bulutga import qilasizmi?`;
+
+  if (window.confirm(message)) {
+    const cloudIds = new Set(cloudProjects.map(p => String(p.id)));
+
+    for (const local of localProjects) {
+      if (cloudIds.has(String(local.id))) continue;
+
+      const safe = normalizeProject(local, user.uid);
+      await writeCloudProject(user, safe);
+      cloudProjects.push(safe);
+      cloudIds.add(String(safe.id));
+    }
+
+    // Faqat barcha import amallari muvaffaqiyatli tugagach
+    localStorage.setItem(migrationKey, "done");
+  }
+}
       if (auth.currentUser?.uid !== user.uid) return;
       cloudProjects.sort((a,b) => (Number(b.updatedAt)||0) - (Number(a.updatedAt)||0));
       if (typeof window.archCalcReplaceLocalProjects === "function") window.archCalcReplaceLocalProjects(cloudProjects);
