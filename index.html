@@ -911,6 +911,15 @@ body.light .section-title{
 })();
 </script>
 
+<style id="archcalc-navigation-language-fixes">
+.mobile-nav{display:none !important;}
+.language-picker{display:inline-flex;align-items:center;margin:0;}
+#languageBtn{min-width:42px;cursor:pointer;appearance:auto;color:var(--text);background:var(--panel);border:1px solid var(--line);padding:7px 9px;border-radius:9px;font:inherit;}
+body.ac2-flow-locked .side-nav button[onclick^="go("]{opacity:.86;}
+body.ac2-flow-locked .side-nav button[onclick^="go("]:hover{border-color:var(--ac2-teal,#31c6b1);}
+@media(max-width:760px){.mobile-nav{display:flex !important;}}
+</style>
+
 </head>
 <body class="ac2-flow-locked">
 
@@ -945,11 +954,11 @@ body.light .section-title{
         <button onclick="go('adhesive')"><span class="side-num">09</span> <span data-i18n="nav_adhesive">Plitka yelimi</span></button>
         <button onclick="go('roof')"><span class="side-num">10</span> <span data-i18n="nav_roof">Tom</span></button>
         <button onclick="go('rebar')"><span class="side-num">11</span> <span data-i18n="nav_rebar">Armatura</span></button>
-        <button onclick="go('excavation')"><span class="side-num">12</span> Qazish</button>
-        <button onclick="go('insulation')"><span class="side-num">13</span> Izolyatsiya</button>
-        <button onclick="go('wallpaper')"><span class="side-num">14</span> Oboy</button>
-        <button onclick="go('tile')"><span class="side-num">15</span> Pol plitkasi</button>
-        <button onclick="go('gravel')"><span class="side-num">16</span> Shag‘al / qum</button>
+        <button onclick="go('excavation')"><span class="side-num">12</span> <span data-i18n="nav_excavation">Qazish</span></button>
+        <button onclick="go('insulation')"><span class="side-num">13</span> <span data-i18n="nav_insulation">Izolyatsiya</span></button>
+        <button onclick="go('wallpaper')"><span class="side-num">14</span> <span data-i18n="nav_wallpaper">Oboy</span></button>
+        <button onclick="go('tile')"><span class="side-num">15</span> <span data-i18n="nav_tile">Pol plitkasi</span></button>
+        <button onclick="go('gravel')"><span class="side-num">16</span> <span data-i18n="nav_gravel">Shag‘al / qum</span></button>
     </div>
 
     <div class="side-bottom">
@@ -964,11 +973,11 @@ body.light .section-title{
     <header class="topbar">
         <div class="crumb"><strong>ArchCalc</strong> / <span id="crumbWorkspace" data-i18n="workspace">Workspace</span></div>
         <div class="top-actions">
-            <button class="top-btn" id="languageBtn" type="button" onclick="toggleLanguage()">UZ</button>
-            <button class="top-btn" type="button" onclick="archCalcOpenWorkspace()">Loyihalar</button>
-            <button class="top-btn" id="archcalc-history-toggle" type="button" aria-expanded="false" aria-controls="archcalc-history-panel">Tarix</button>
+            <label class="language-picker" aria-label="Language"><select class="top-btn" id="languageBtn" aria-label="Language"><option value="uz">UZ</option><option value="ru">RU</option><option value="en">EN</option></select></label>
+            <button class="top-btn" type="button" onclick="archCalcOpenWorkspace()" data-i18n="projects_button">Loyihalar</button>
+            <button class="top-btn" id="archcalc-history-toggle" type="button" aria-expanded="false" aria-controls="archcalc-history-panel" data-i18n="history_button">Tarix</button>
             <span id="accountName" aria-live="polite"></span>
-            <button class="top-btn" id="logoutBtn" type="button" onclick="archCalcLogout()">Chiqish</button>
+            <button class="top-btn" id="logoutBtn" type="button" onclick="archCalcLogout()" data-i18n="logout_button">Chiqish</button>
             <button class="top-btn" id="themeBtn" type="button" onclick="toggleTheme()" aria-label="Toggle theme" title="Graphite / Light / Blueprint">☾</button>
         </div>
     </header>
@@ -985,17 +994,17 @@ body.light .section-title{
         <button onclick="go('adhesive')"><span data-i18n="nav_adhesive">Plitka yelimi</span></button>
         <button onclick="go('roof')"><span data-i18n="nav_roof">Tom</span></button>
         <button onclick="go('rebar')"><span data-i18n="nav_rebar">Armatura</span></button>
-        <button onclick="go('excavation')">Qazish</button><button onclick="go('insulation')">Izolyatsiya</button><button onclick="go('wallpaper')">Oboy</button><button onclick="go('tile')">Pol plitkasi</button><button onclick="go('gravel')">Shag‘al / qum</button>
+        <button onclick="go('excavation')" data-i18n="nav_excavation">Qazish</button><button onclick="go('insulation')" data-i18n="nav_insulation">Izolyatsiya</button><button onclick="go('wallpaper')" data-i18n="nav_wallpaper">Oboy</button><button onclick="go('tile')" data-i18n="nav_tile">Pol plitkasi</button><button onclick="go('gravel')" data-i18n="nav_gravel">Shag‘al / qum</button>
     </div>
 
     <section class="workspace">
 
         <section class="ac2-flow-gate" id="ac2-flow-gate" aria-labelledby="ac2-flow-title">
             <div class="ac2-gate-kicker">ARCHCALC · PROJECT WORKFLOW</div>
-            <h1 id="ac2-flow-title">Avval loyihangizni tanlang</h1>
-            <p class="ac2-gate-intro">Hisob-kitoblar loyiha ichida olib boriladi. Har bir hisoblangan material miqdori smetaga avtomatik qo‘shiladi.</p>
-            <div class="ac2-gate-actions"><button class="ac2-primary" type="button" onclick="archCalcCreateFlowProject()">＋ Yangi loyiha yaratish</button></div>
-            <div class="ac2-gate-list-head"><h2>Loyihalar ro‘yxati</h2><span class="ac2-pill" id="ac2-gate-project-count">0 ta</span></div>
+            <h1 id="ac2-flow-title" data-i18n="gate_title">Avval loyihangizni tanlang</h1>
+            <p class="ac2-gate-intro" data-i18n="gate_intro">Hisob-kitoblar loyiha ichida olib boriladi. Har bir hisoblangan material miqdori smetaga avtomatik qo‘shiladi.</p>
+            <div class="ac2-gate-actions"><button class="ac2-primary" type="button" onclick="archCalcCreateFlowProject()" data-i18n="create_project">＋ Yangi loyiha yaratish</button></div>
+            <div class="ac2-gate-list-head"><h2 data-i18n="project_list">Loyihalar ro‘yxati</h2><span class="ac2-pill" id="ac2-gate-project-count">0 ta</span></div>
             <div class="ac2-flow-project-list" id="ac2-flow-project-list"><div class="ac2-empty"><span>▧</span><strong>Hali loyihalar yo‘q</strong><p>Birinchi loyihangizni yaratish uchun yuqoridagi tugmani bosing.</p></div></div>
             <p class="ac2-gate-footnote ac2-cloud-status">Google hisobiga kirsangiz, loyihalar Firebase bulutida saqlanadi.</p>
         </section>
@@ -1364,9 +1373,16 @@ Natija shu yerda chiqadi.
 /* NAVIGATION */
 
 function go(id){
-    document.getElementById(id).scrollIntoView({
-        behavior:"smooth"
-    });
+    if (!window.archCalcActiveProjectId) {
+        window.archCalcOpenWorkspace?.();
+        const title = document.getElementById("ac2-flow-title");
+        title?.focus?.();
+        return false;
+    }
+    const target = document.getElementById(id);
+    if (!target) return false;
+    target.scrollIntoView({behavior:"smooth", block:"start"});
+    return true;
 }
 
 
@@ -2046,7 +2062,7 @@ function outText(key){
 
 const archCalcFullTranslations = {
   uz: {
-    dashboard:"Bosh sahifa", calculators:"KALKULYATORLAR", workspace:"Ish maydoni", eyebrow:"Arxitektura / Qurilish", heroTitle:"Aniqlik bilan hisoblang.", heroDesc:"Arxitektura va qurilish hisoblari uchun toza, aniq va amaliy ish maydoni.", system:"TIZIM", toolCount:"11 ta hisoblash vositasi", calcTools:"Hisoblash vositalari",
+    dashboard:"Bosh sahifa", calculators:"KALKULYATORLAR", workspace:"Ish maydoni", eyebrow:"Arxitektura / Qurilish", heroTitle:"Aniqlik bilan hisoblang.", heroDesc:"Arxitektura va qurilish hisoblari uchun toza, aniq va amaliy ish maydoni.", system:"TIZIM", toolCount:"16 ta kalkulyator + smeta", calcTools:"Hisoblash vositalari",
     room_title:"Xona kalkulyatori", room_desc:"Maydon, hajm va perimetr", brick_title:"G‘isht kalkulyatori", brick_desc:"G‘isht urish qalinligi va miqdori", block_title:"Blok kalkulyatori", block_desc:"Blok turi va miqdorini hisoblash", concrete_title:"Beton kalkulyatori", concrete_desc:"Aniq hajm va sement qoplarini hisoblash", paint_title:"Bo‘yoq kalkulyatori", paint_desc:"Litr yoki banka bo‘yicha bo‘yoq hisoblash", floor_title:"Pol kalkulyatori", floor_desc:"Pol turiga qarab material miqdorini hisoblash", stair_title:"Zina kalkulyatori", stair_desc:"Zina geometriyasi va qulaylik tekshiruvi",
     room_l:"Uzunlik (m)", room_w:"Kenglik (m)", room_h:"Balandlik (m)", wall_l:"Devor uzunligi (m)", wall_h:"Devor balandligi (m)", brick_type:"G‘isht o‘lchami", brick_thickness:"G‘isht urish qalinligi", brick_l:"G‘isht uzunligi (cm)", brick_w:"G‘isht eni (cm)", brick_h:"G‘isht balandligi (cm)", brick_openings:"Eshik/deraza maydoni (m²)", brick_reserve:"Zaxira (%)",
     block_type:"Blok turi", block_l:"Blok uzunligi (cm)", block_w:"Blok eni/qalinligi (cm)", block_h:"Blok balandligi (cm)", block_openings:"Eshik/deraza maydoni (m²)", reserve:"Zaxira (%)",
@@ -2058,7 +2074,7 @@ const archCalcFullTranslations = {
     plaster_title:"Suvoq kalkulyatori", plaster_desc:"Devor suvoqi hajmi va taxminiy qorishma", adhesive_title:"Plitka yelimi kalkulyatori", adhesive_desc:"Sarf me’yori va qoplar soni", roof_title:"Tom materiali kalkulyatori", roof_desc:"Tom maydoni va qoplama zaxirasi", rebar_title:"Armatura kalkulyatori", rebar_desc:"Armatura og‘irligi va uzunligi", plaster_area:"Suvaladigan maydon (m²)", plaster_thickness:"Suvoq qalinligi (mm)", adhesive_area:"Plitka maydoni (m²)", adhesive_consumption:"1 m² uchun sarf (kg)", adhesive_bag:"1 qop og‘irligi (kg)", roof_length:"Tom uzunligi (m)", roof_width:"Tomning gorizontal eni (m)", roof_slope:"Qiyalik koeffitsiyenti", rebar_length:"Bitta sterjen uzunligi (m)", rebar_count:"Sterjenlar soni (dona)", rebar_weight:"1 metr og‘irligi (kg/m)", calc_plaster:"Suvoqni hisoblash", calc_adhesive:"Yelimni hisoblash", calc_roof:"Tom maydonini hisoblash", calc_rebar:"Armaturani hisoblash", nav_plaster:"Suvoq", nav_adhesive:"Plitka yelimi", nav_roof:"Tom", nav_rebar:"Armatura", calc_room:"Hisoblash", calc_brick:"G‘ishtni hisoblash", calc_block:"Blokni hisoblash", calc_concrete:"Betonni hisoblash", calc_paint:"Bo‘yoqni hisoblash", calc_floor:"Polni hisoblash", calc_stair:"Zinani hisoblash", result_empty:"Natija shu yerda chiqadi.", nav_room:"Xona", nav_brick:"G‘isht", nav_block:"Blok", nav_concrete:"Beton", nav_paint:"Bo‘yoq", nav_floor:"Pol", nav_stairs:"Zina", footer:"ARCHCALC · ARXITEKTURA VA QURILISH · 2026"
   },
   ru: {
-    dashboard:"Главная", calculators:"КАЛЬКУЛЯТОРЫ", workspace:"Рабочая область", eyebrow:"Архитектура / Строительство", heroTitle:"Расчёты с точностью.", heroDesc:"Чистое и практичное рабочее пространство для архитектурных и строительных расчётов.", system:"СИСТЕМА", toolCount:"11 инструментов", calcTools:"Инструменты расчёта",
+    dashboard:"Главная", calculators:"КАЛЬКУЛЯТОРЫ", workspace:"Рабочая область", eyebrow:"Архитектура / Строительство", heroTitle:"Расчёты с точностью.", heroDesc:"Чистое и практичное рабочее пространство для архитектурных и строительных расчётов.", system:"СИСТЕМА", toolCount:"16 калькуляторов + смета", calcTools:"Инструменты расчёта",
     room_title:"Калькулятор помещения", room_desc:"Площадь, объём и периметр", brick_title:"Калькулятор кирпича", brick_desc:"Толщина кладки и количество кирпича", block_title:"Калькулятор блоков", block_desc:"Тип блока и количество", concrete_title:"Калькулятор бетона", concrete_desc:"Точный объём и мешки цемента", paint_title:"Калькулятор краски", paint_desc:"Расчёт краски по литрам или банкам", floor_title:"Калькулятор пола", floor_desc:"Количество материала по типу пола", stair_title:"Калькулятор лестницы", stair_desc:"Геометрия и проверка удобства",
     room_l:"Длина (м)", room_w:"Ширина (м)", room_h:"Высота (м)", wall_l:"Длина стены (м)", wall_h:"Высота стены (м)", brick_type:"Размер кирпича", brick_thickness:"Толщина кладки", brick_l:"Длина кирпича (см)", brick_w:"Ширина кирпича (см)", brick_h:"Высота кирпича (см)", brick_openings:"Площадь дверей/окон (м²)", brick_reserve:"Запас (%)",
     block_type:"Тип блока", block_l:"Длина блока (см)", block_w:"Ширина/толщина блока (см)", block_h:"Высота блока (см)", block_openings:"Площадь дверей/окон (м²)", reserve:"Запас (%)",
@@ -2070,7 +2086,7 @@ const archCalcFullTranslations = {
     plaster_title:"Калькулятор штукатурки", plaster_desc:"Объём штукатурки стен", adhesive_title:"Калькулятор плиточного клея", adhesive_desc:"Расход и количество мешков", roof_title:"Калькулятор кровли", roof_desc:"Площадь крыши с запасом", rebar_title:"Калькулятор арматуры", rebar_desc:"Длина и вес арматуры", plaster_area:"Площадь оштукатуривания (м²)", plaster_thickness:"Толщина штукатурки (мм)", adhesive_area:"Площадь плитки (м²)", adhesive_consumption:"Расход на 1 м² (кг)", adhesive_bag:"Вес одного мешка (кг)", roof_length:"Длина крыши (м)", roof_width:"Горизонтальная ширина крыши (м)", roof_slope:"Коэффициент уклона", rebar_length:"Длина одного стержня (м)", rebar_count:"Количество стержней", rebar_weight:"Вес 1 метра (кг/м)", calc_plaster:"Рассчитать штукатурку", calc_adhesive:"Рассчитать клей", calc_roof:"Рассчитать площадь крыши", calc_rebar:"Рассчитать арматуру", nav_plaster:"Штукатурка", nav_adhesive:"Плиточный клей", nav_roof:"Кровля", nav_rebar:"Арматура", calc_room:"Рассчитать", calc_brick:"Рассчитать кирпич", calc_block:"Рассчитать блоки", calc_concrete:"Рассчитать бетон", calc_paint:"Рассчитать краску", calc_floor:"Рассчитать пол", calc_stair:"Рассчитать лестницу", result_empty:"Результат появится здесь.", nav_room:"Помещение", nav_brick:"Кирпич", nav_block:"Блок", nav_concrete:"Бетон", nav_paint:"Краска", nav_floor:"Пол", nav_stairs:"Лестница", footer:"ARCHCALC · АРХИТЕКТУРА И СТРОИТЕЛЬСТВО · 2026"
   },
   en: {
-    dashboard:"Dashboard", calculators:"CALCULATORS", workspace:"Workspace", eyebrow:"Architecture / Construction", heroTitle:"Calculate with precision.", heroDesc:"A focused workspace for practical architectural and construction calculations.", system:"SYSTEM", toolCount:"11 calculation tools", calcTools:"Calculation tools",
+    dashboard:"Dashboard", calculators:"CALCULATORS", workspace:"Workspace", eyebrow:"Architecture / Construction", heroTitle:"Calculate with precision.", heroDesc:"A focused workspace for practical architectural and construction calculations.", system:"SYSTEM", toolCount:"16 calculators + estimate", calcTools:"Calculation tools",
     room_title:"Room calculator", room_desc:"Area, volume and perimeter", brick_title:"Brick calculator", brick_desc:"Masonry thickness and brick quantity", block_title:"Block calculator", block_desc:"Block type and quantity", concrete_title:"Concrete calculator", concrete_desc:"Accurate volume and cement bag estimate", paint_title:"Paint calculator", paint_desc:"Paint quantity by liters or cans", floor_title:"Floor calculator", floor_desc:"Material quantity by floor type", stair_title:"Stairs calculator", stair_desc:"Stair geometry and comfort check",
     room_l:"Length (m)", room_w:"Width (m)", room_h:"Height (m)", wall_l:"Wall length (m)", wall_h:"Wall height (m)", brick_type:"Brick size", brick_thickness:"Masonry thickness", brick_l:"Brick length (cm)", brick_w:"Brick width (cm)", brick_h:"Brick height (cm)", brick_openings:"Door/window area (m²)", brick_reserve:"Reserve (%)",
     block_type:"Block type", block_l:"Block length (cm)", block_w:"Block width/thickness (cm)", block_h:"Block height (cm)", block_openings:"Door/window area (m²)", reserve:"Reserve (%)",
@@ -2084,10 +2100,15 @@ const archCalcFullTranslations = {
 };
 const archCalcTranslations = Object.fromEntries(Object.keys(archCalcFullTranslations).map(lang => [lang, {...archCalcFullTranslations[lang]}]));
 const archCalcLanguageOrder = ["uz", "ru", "en"];
+const archCalcUiTranslations = {
+  uz:{projects_button:"Loyihalar",history_button:"Tarix",logout_button:"Chiqish",nav_excavation:"Qazish",nav_insulation:"Izolyatsiya",nav_wallpaper:"Oboy",nav_tile:"Pol plitkasi",nav_gravel:"Shag‘al / qum",gate_title:"Avval loyihangizni tanlang",gate_intro:"Hisob-kitoblar loyiha ichida olib boriladi. Har bir hisoblangan material miqdori smetaga avtomatik qo‘shiladi.",create_project:"＋ Yangi loyiha yaratish",project_list:"Loyihalar ro‘yxati"},
+  ru:{projects_button:"Проекты",history_button:"История",logout_button:"Выйти",nav_excavation:"Земляные работы",nav_insulation:"Изоляция",nav_wallpaper:"Обои",nav_tile:"Напольная плитка",nav_gravel:"Щебень / песок",gate_title:"Сначала выберите проект",gate_intro:"Расчёты выполняются внутри проекта. Рассчитанное количество материалов автоматически добавляется в смету.",create_project:"＋ Создать проект",project_list:"Список проектов"},
+  en:{projects_button:"Projects",history_button:"History",logout_button:"Sign out",nav_excavation:"Excavation",nav_insulation:"Insulation",nav_wallpaper:"Wallpaper",nav_tile:"Floor tiles",nav_gravel:"Gravel / sand",gate_title:"Choose a project first",gate_intro:"Calculations are kept inside a project. Calculated material quantities are added to the estimate automatically.",create_project:"＋ Create new project",project_list:"Project list"}
+};
 
 function applyLanguage(lang) {
     const base = archCalcTranslations[lang] || archCalcTranslations.uz;
-    const t = {...base, ...archCalcFullTranslations[lang]};
+    const t = {...base, ...archCalcFullTranslations[lang], ...archCalcUiTranslations[lang]};
     document.documentElement.lang = lang;
 
     document.querySelectorAll("[data-i18n]").forEach(el => {
@@ -2096,7 +2117,7 @@ function applyLanguage(lang) {
     });
 
     const languageBtn = document.getElementById("languageBtn");
-    if (languageBtn) languageBtn.textContent = lang.toUpperCase();
+    if (languageBtn) languageBtn.value = lang;
 
     localStorage.setItem("archcalc-language", lang);
 }
@@ -2104,9 +2125,9 @@ function applyLanguage(lang) {
 function toggleLanguage() {
     const current = localStorage.getItem("archcalc-language") || "uz";
     const index = archCalcLanguageOrder.indexOf(current);
-    const next = archCalcLanguageOrder[(index + 1) % archCalcLanguageOrder.length];
-    applyLanguage(next);
+    applyLanguage(archCalcLanguageOrder[(index + 1) % archCalcLanguageOrder.length]);
 }
+document.getElementById("languageBtn")?.addEventListener("change", event => applyLanguage(event.target.value));
 
 function applyTheme(theme) {
     const light = theme === "light";
