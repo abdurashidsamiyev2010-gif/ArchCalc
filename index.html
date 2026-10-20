@@ -920,6 +920,13 @@ body.ac2-flow-locked .side-nav button[onclick^="go("]:hover{border-color:var(--a
 @media(max-width:760px){.mobile-nav{display:flex !important;}}
 </style>
 
+
+<style id="archcalc-integrated-30-polish">
+#calculator-list>.card{width:100%;min-width:0;margin:0 0 14px;}
+#calculator-list .card-form{min-width:0;}
+#calculator-list .field input,#calculator-list .field select{max-width:100%;}
+</style>
+
 </head>
 <body class="ac2-flow-locked">
 
@@ -959,6 +966,22 @@ body.ac2-flow-locked .side-nav button[onclick^="go("]:hover{border-color:var(--a
         <button onclick="go('wallpaper')"><span class="side-num">14</span> <span data-i18n="nav_wallpaper">Oboy</span></button>
         <button onclick="go('tile')"><span class="side-num">15</span> <span data-i18n="nav_tile">Pol plitkasi</span></button>
         <button onclick="go('gravel')"><span class="side-num">16</span> <span data-i18n="nav_gravel">Shag‘al / qum</span></button>
+<!-- ArchCalc additional calculator navigation -->
+<button type="button" onclick="go('circle')"><span class="side-num">17</span> Doira</button>
+<button type="button" onclick="go('triangle')"><span class="side-num">18</span> Uchburchak</button>
+<button type="button" onclick="go('cylinder')"><span class="side-num">19</span> Silindr</button>
+<button type="button" onclick="go('cone')"><span class="side-num">20</span> Konus</button>
+<button type="button" onclick="go('pyramid')"><span class="side-num">21</span> Piramida</button>
+<button type="button" onclick="go('ellipse')"><span class="side-num">22</span> Ellips</button>
+<button type="button" onclick="go('wood')"><span class="side-num">23</span> Yog‘och</button>
+<button type="button" onclick="go('lighting')"><span class="side-num">24</span> Yoritish</button>
+<button type="button" onclick="go('ventilation')"><span class="side-num">25</span> Ventilyatsiya</button>
+<button type="button" onclick="go('heatloss')"><span class="side-num">26</span> Issiqlik</button>
+<button type="button" onclick="go('electric')"><span class="side-num">27</span> Elektr quvvati</button>
+<button type="button" onclick="go('cost')"><span class="side-num">28</span> Narx smetasi</button>
+<button type="button" onclick="go('paintwall')"><span class="side-num">29</span> Devor bo‘yog‘i</button>
+<button type="button" onclick="go('rectvolume')"><span class="side-num">30</span> Prizma</button>
+
     </div>
 
     <div class="side-bottom">
@@ -1356,7 +1379,107 @@ Natija shu yerda chiqadi.
 <div class="card" id="insulation"><div class="card-top"><span class="card-index">13</span><span class="card-type">INSULATION</span></div><h2 class="card-title">Issiqlik izolyatsiyasi</h2><p class="card-desc">Devor yuzasi, eshik-deraza va zaxira</p><div class="card-form"><div class="field"><label>Devor uzunligi (m)</label><input id="insulationL" type="number" min="0" step="any" placeholder="12"></div><div class="field"><label>Devor balandligi (m)</label><input id="insulationH" type="number" min="0" step="any" placeholder="3"></div><div class="field"><label>Eshik/derazalar jami (m²)</label><input id="insulationOpenings" type="number" min="0" step="any" value="2"></div><div class="field"><label>Zaxira (%)</label><input id="insulationReserve" type="number" min="0" max="100" value="10"></div><button class="calc" onclick="insulationCalc()">Izolyatsiyani hisoblash</button><div class="result" id="insulationResult">Natija shu yerda chiqadi.</div></div></div>
 <div class="card" id="wallpaper"><div class="card-top"><span class="card-index">14</span><span class="card-type">WALLPAPER</span></div><h2 class="card-title">Oboy kalkulyatori</h2><p class="card-desc">Devor maydonidan rulon sonini hisoblash</p><div class="card-form"><div class="field"><label>Devorlar jami uzunligi (m)</label><input id="wallpaperPerimeter" type="number" min="0" step="any" placeholder="18"></div><div class="field"><label>Balandlik (m)</label><input id="wallpaperH" type="number" min="0" step="any" placeholder="2.8"></div><div class="field"><label>Ochilishlar maydoni (m²)</label><input id="wallpaperOpenings" type="number" min="0" step="any" value="3"></div><div class="field"><label>1 rulon qoplaydigan maydon (m²)</label><input id="wallpaperCoverage" type="number" min="0" step="any" value="5.3"></div><div class="field"><label>Zaxira (%)</label><input id="wallpaperReserve" type="number" min="0" max="100" value="10"></div><button class="calc" onclick="wallpaperCalc()">Oboyni hisoblash</button><div class="result" id="wallpaperResult">Natija shu yerda chiqadi.</div></div></div>
 <div class="card" id="tile"><div class="card-top"><span class="card-index">15</span><span class="card-type">TILE</span></div><h2 class="card-title">Pol plitkasi kalkulyatori</h2><p class="card-desc">Maydon va qadoq qamroviga ko‘ra qadoqlar soni</p><div class="card-form"><div class="field"><label>Uzunlik (m)</label><input id="tileL" type="number" min="0" step="any" placeholder="5"></div><div class="field"><label>Kenglik (m)</label><input id="tileW" type="number" min="0" step="any" placeholder="4"></div><div class="field"><label>1 qadoq qoplaydigan maydon (m²)</label><input id="tileCoverage" type="number" min="0" step="any" value="1.44"></div><div class="field"><label>Zaxira (%)</label><input id="tileReserve" type="number" min="0" max="100" value="10"></div><button class="calc" onclick="tileCalc()">Plitkani hisoblash</button><div class="result" id="tileResult">Natija shu yerda chiqadi.</div></div></div>
-<div class="card" id="gravel"><div class="card-top"><span class="card-index">16</span><span class="card-type">SAND / GRAVEL</span></div><h2 class="card-title">Shag‘al / qum kalkulyatori</h2><p class="card-desc">Hajm, zichlik va zaxiradan og‘irlikni hisoblash</p><div class="card-form"><div class="field"><label>Uzunlik (m)</label><input id="gravelL" type="number" min="0" step="any" placeholder="10"></div><div class="field"><label>Kenglik (m)</label><input id="gravelW" type="number" min="0" step="any" placeholder="3"></div><div class="field"><label>Qatlam qalinligi (cm)</label><input id="gravelT" type="number" min="0" step="any" placeholder="15"></div><div class="field"><label>Zichlik (kg/m³)</label><input id="gravelDensity" type="number" min="0" step="any" value="1600"></div><div class="field"><label>Zaxira (%)</label><input id="gravelReserve" type="number" min="0" max="100" value="10"></div><button class="calc" onclick="gravelCalc()">Shag‘al / qumni hisoblash</button><div class="result" id="gravelResult">Natija shu yerda chiqadi.</div></div></div>
+<div class="card" id="gravel"><div class="card-top"><span class="card-index">16</span><span class="card-type">SAND / GRAVEL</span></div>
+
+<!-- archcalc-extra-14-calculators: integrated into the same single HTML app -->
+<div class="card archcalc-extra-card" id="circle" data-extra-kind="circle">
+<div class="card-top"><span class="card-index">17</span><span class="card-type">DOIRA</span></div>
+<h2 class="card-title">Doira maydoni va uzunligi</h2><p class="card-desc">Doira radiusini kiriting</p><div class="card-form">
+<div class="field"><label>Radius (m)</label><input type="number" min="0" step="any" id="x_circle_a" value="1"></div>
+<div class="field"><label>Radius (m)</label><input type="number" min="0" step="any" id="x_circle_b" value="1"></div>
+<div class="field"><label>Pi qiymati</label><input type="number" min="0" step="any" id="x_circle_c" value="3.141592653589793"></div>
+<button class="calc" type="button" data-extra-calc="circle">Hisoblash</button><div class="result" id="x_circle_result">Natija shu yerda chiqadi.</div></div></div>
+<div class="card archcalc-extra-card" id="triangle" data-extra-kind="triangle">
+<div class="card-top"><span class="card-index">18</span><span class="card-type">UCHBURCHAK</span></div>
+<h2 class="card-title">Uchburchak maydoni</h2><p class="card-desc">Asos va balandlik</p><div class="card-form">
+<div class="field"><label>Asos (m)</label><input type="number" min="0" step="any" id="x_triangle_a" value="3"></div>
+<div class="field"><label>Balandlik (m)</label><input type="number" min="0" step="any" id="x_triangle_b" value="2"></div>
+<div class="field"><label>Zaxira (%)</label><input type="number" min="0" step="any" id="x_triangle_c" value="0"></div>
+<button class="calc" type="button" data-extra-calc="triangle">Hisoblash</button><div class="result" id="x_triangle_result">Natija shu yerda chiqadi.</div></div></div>
+<div class="card archcalc-extra-card" id="cylinder" data-extra-kind="cylinder">
+<div class="card-top"><span class="card-index">19</span><span class="card-type">SILINDR</span></div>
+<h2 class="card-title">Silindr hajmi</h2><p class="card-desc">Radius va balandlik</p><div class="card-form">
+<div class="field"><label>Radius (m)</label><input type="number" min="0" step="any" id="x_cylinder_a" value="1"></div>
+<div class="field"><label>Balandlik (m)</label><input type="number" min="0" step="any" id="x_cylinder_b" value="2"></div>
+<button class="calc" type="button" data-extra-calc="cylinder">Hisoblash</button><div class="result" id="x_cylinder_result">Natija shu yerda chiqadi.</div></div></div>
+<div class="card archcalc-extra-card" id="cone" data-extra-kind="cone">
+<div class="card-top"><span class="card-index">20</span><span class="card-type">KONUS</span></div>
+<h2 class="card-title">Konus hajmi</h2><p class="card-desc">Radius va balandlik</p><div class="card-form">
+<div class="field"><label>Radius (m)</label><input type="number" min="0" step="any" id="x_cone_a" value="1"></div>
+<div class="field"><label>Balandlik (m)</label><input type="number" min="0" step="any" id="x_cone_b" value="2"></div>
+<button class="calc" type="button" data-extra-calc="cone">Hisoblash</button><div class="result" id="x_cone_result">Natija shu yerda chiqadi.</div></div></div>
+<div class="card archcalc-extra-card" id="pyramid" data-extra-kind="pyramid">
+<div class="card-top"><span class="card-index">21</span><span class="card-type">PIRAMIDA</span></div>
+<h2 class="card-title">To‘g‘ri to‘rtburchak asosli piramida hajmi</h2><p class="card-desc">Asos uzunligi, eni va balandligi</p><div class="card-form">
+<div class="field"><label>Asos uzunligi (m)</label><input type="number" min="0" step="any" id="x_pyramid_a" value="2"></div>
+<div class="field"><label>Asos eni (m)</label><input type="number" min="0" step="any" id="x_pyramid_b" value="2"></div>
+<div class="field"><label>Balandlik (m)</label><input type="number" min="0" step="any" id="x_pyramid_c" value="3"></div>
+<button class="calc" type="button" data-extra-calc="pyramid">Hisoblash</button><div class="result" id="x_pyramid_result">Natija shu yerda chiqadi.</div></div></div>
+<div class="card archcalc-extra-card" id="ellipse" data-extra-kind="ellipse">
+<div class="card-top"><span class="card-index">22</span><span class="card-type">ELLIPS</span></div>
+<h2 class="card-title">Ellips maydoni</h2><p class="card-desc">Ikki yarim o‘qni kiriting</p><div class="card-form">
+<div class="field"><label>Katta yarim o‘q (m)</label><input type="number" min="0" step="any" id="x_ellipse_a" value="3"></div>
+<div class="field"><label>Kichik yarim o‘q (m)</label><input type="number" min="0" step="any" id="x_ellipse_b" value="2"></div>
+<button class="calc" type="button" data-extra-calc="ellipse">Hisoblash</button><div class="result" id="x_ellipse_result">Natija shu yerda chiqadi.</div></div></div>
+<div class="card archcalc-extra-card" id="wood" data-extra-kind="wood">
+<div class="card-top"><span class="card-index">23</span><span class="card-type">YOG‘OCH</span></div>
+<h2 class="card-title">Yog‘och hajmi</h2><p class="card-desc">Uzunlik, eni va qalinligi</p><div class="card-form">
+<div class="field"><label>Uzunlik (m)</label><input type="number" min="0" step="any" id="x_wood_a" value="2"></div>
+<div class="field"><label>Eni (cm)</label><input type="number" min="0" step="any" id="x_wood_b" value="10"></div>
+<div class="field"><label>Qalinligi (cm)</label><input type="number" min="0" step="any" id="x_wood_c" value="5"></div>
+<button class="calc" type="button" data-extra-calc="wood">Hisoblash</button><div class="result" id="x_wood_result">Natija shu yerda chiqadi.</div></div></div>
+<div class="card archcalc-extra-card" id="lighting" data-extra-kind="lighting">
+<div class="card-top"><span class="card-index">24</span><span class="card-type">YORITISH</span></div>
+<h2 class="card-title">Yoritish uchun chiroqlar soni</h2><p class="card-desc">Maydon va lux maqsadi</p><div class="card-form">
+<div class="field"><label>Maydon (m²)</label><input type="number" min="0" step="any" id="x_lighting_a" value="20"></div>
+<div class="field"><label>Yoritish maqsadi (lux)</label><input type="number" min="0" step="any" id="x_lighting_b" value="300"></div>
+<div class="field"><label>Bitta chiroq oqimi (lm)</label><input type="number" min="0" step="any" id="x_lighting_c" value="3000"></div>
+<div class="field"><label>Foydalanish koeffitsiyenti (0–1)</label><input type="number" min="0" step="any" id="x_lighting_d" value="0.7"></div>
+<button class="calc" type="button" data-extra-calc="lighting">Hisoblash</button><div class="result" id="x_lighting_result">Natija shu yerda chiqadi.</div></div></div>
+<div class="card archcalc-extra-card" id="ventilation" data-extra-kind="ventilation">
+<div class="card-top"><span class="card-index">25</span><span class="card-type">VENTILYATSIYA</span></div>
+<h2 class="card-title">Ventilyatsiya havo sarfi</h2><p class="card-desc">Xona hajmi va havo almashinuvi</p><div class="card-form">
+<div class="field"><label>Xona hajmi (m³)</label><input type="number" min="0" step="any" id="x_ventilation_a" value="60"></div>
+<div class="field"><label>Havo almashinuvi (marta/soat)</label><input type="number" min="0" step="any" id="x_ventilation_b" value="3"></div>
+<button class="calc" type="button" data-extra-calc="ventilation">Hisoblash</button><div class="result" id="x_ventilation_result">Natija shu yerda chiqadi.</div></div></div>
+<div class="card archcalc-extra-card" id="heatloss" data-extra-kind="heatloss">
+<div class="card-top"><span class="card-index">26</span><span class="card-type">ISSIQLIK</span></div>
+<h2 class="card-title">Devor orqali issiqlik yo‘qotilishi</h2><p class="card-desc">U qiymati va harorat farqi kerak</p><div class="card-form">
+<div class="field"><label>Maydon (m²)</label><input type="number" min="0" step="any" id="x_heatloss_a" value="12"></div>
+<div class="field"><label>U qiymati (W/m²K)</label><input type="number" min="0" step="any" id="x_heatloss_b" value="0.35"></div>
+<div class="field"><label>Ichki va tashqi harorat farqi (°C)</label><input type="number" min="0" step="any" id="x_heatloss_c" value="20"></div>
+<button class="calc" type="button" data-extra-calc="heatloss">Hisoblash</button><div class="result" id="x_heatloss_result">Natija shu yerda chiqadi.</div></div></div>
+<div class="card archcalc-extra-card" id="electric" data-extra-kind="electric">
+<div class="card-top"><span class="card-index">27</span><span class="card-type">ELEKTR</span></div>
+<h2 class="card-title">Elektr quvvati</h2><p class="card-desc">Kuchlanish va tokni kiriting</p><div class="card-form">
+<div class="field"><label>Kuchlanish (V)</label><input type="number" min="0" step="any" id="x_electric_a" value="220"></div>
+<div class="field"><label>Tok (A)</label><input type="number" min="0" step="any" id="x_electric_b" value="10"></div>
+<div class="field"><label>Quvvat koeffitsiyenti (0–1)</label><input type="number" min="0" step="any" id="x_electric_c" value="1"></div>
+<button class="calc" type="button" data-extra-calc="electric">Hisoblash</button><div class="result" id="x_electric_result">Natija shu yerda chiqadi.</div></div></div>
+<div class="card archcalc-extra-card" id="cost" data-extra-kind="cost">
+<div class="card-top"><span class="card-index">28</span><span class="card-type">SMETA</span></div>
+<h2 class="card-title">Material narxi va zaxira</h2><p class="card-desc">Miqdor, birlik narxi va zaxira</p><div class="card-form">
+<div class="field"><label>Miqdor</label><input type="number" min="0" step="any" id="x_cost_a" value="10"></div>
+<div class="field"><label>Birlik narxi (so‘m)</label><input type="number" min="0" step="any" id="x_cost_b" value="10000"></div>
+<div class="field"><label>Zaxira (%)</label><input type="number" min="0" step="any" id="x_cost_c" value="5"></div>
+<button class="calc" type="button" data-extra-calc="cost">Hisoblash</button><div class="result" id="x_cost_result">Natija shu yerda chiqadi.</div></div></div>
+<div class="card archcalc-extra-card" id="paintwall" data-extra-kind="paintwall">
+<div class="card-top"><span class="card-index">29</span><span class="card-type">DEVOR BO‘YOQ</span></div>
+<h2 class="card-title">Devor bo‘yog‘i miqdori</h2><p class="card-desc">Sarf (m²/litr), qatlamlar va zaxira</p><div class="card-form">
+<div class="field"><label>Maydon (m²)</label><input type="number" min="0" step="any" id="x_paintwall_a" value="40"></div>
+<div class="field"><label>Sarf (m²/litr)</label><input type="number" min="0" step="any" id="x_paintwall_b" value="10"></div>
+<div class="field"><label>Qatlamlar soni</label><input type="number" min="0" step="any" id="x_paintwall_c" value="2"></div>
+<div class="field"><label>Zaxira (%)</label><input type="number" min="0" step="any" id="x_paintwall_d" value="10"></div>
+<button class="calc" type="button" data-extra-calc="paintwall">Hisoblash</button><div class="result" id="x_paintwall_result">Natija shu yerda chiqadi.</div></div></div>
+<div class="card archcalc-extra-card" id="rectvolume" data-extra-kind="rectvolume">
+<div class="card-top"><span class="card-index">30</span><span class="card-type">PRIZMA</span></div>
+<h2 class="card-title">To‘g‘ri burchakli prizma hajmi</h2><p class="card-desc">Uzunlik, kenglik va balandlik</p><div class="card-form">
+<div class="field"><label>Uzunlik (m)</label><input type="number" min="0" step="any" id="x_rectvolume_a" value="2"></div>
+<div class="field"><label>Kenglik (m)</label><input type="number" min="0" step="any" id="x_rectvolume_b" value="2"></div>
+<div class="field"><label>Balandlik (m)</label><input type="number" min="0" step="any" id="x_rectvolume_c" value="3"></div>
+<button class="calc" type="button" data-extra-calc="rectvolume">Hisoblash</button><div class="result" id="x_rectvolume_result">Natija shu yerda chiqadi.</div></div></div>
+<!-- /archcalc-extra-14-calculators -->
+<h2 class="card-title">Shag‘al / qum kalkulyatori</h2><p class="card-desc">Hajm, zichlik va zaxiradan og‘irlikni hisoblash</p><div class="card-form"><div class="field"><label>Uzunlik (m)</label><input id="gravelL" type="number" min="0" step="any" placeholder="10"></div><div class="field"><label>Kenglik (m)</label><input id="gravelW" type="number" min="0" step="any" placeholder="3"></div><div class="field"><label>Qatlam qalinligi (cm)</label><input id="gravelT" type="number" min="0" step="any" placeholder="15"></div><div class="field"><label>Zichlik (kg/m³)</label><input id="gravelDensity" type="number" min="0" step="any" value="1600"></div><div class="field"><label>Zaxira (%)</label><input id="gravelReserve" type="number" min="0" max="100" value="10"></div><button class="calc" onclick="gravelCalc()">Shag‘al / qumni hisoblash</button><div class="result" id="gravelResult">Natija shu yerda chiqadi.</div></div></div>
 
 </div>
 
@@ -2062,7 +2185,7 @@ function outText(key){
 
 const archCalcFullTranslations = {
   uz: {
-    dashboard:"Bosh sahifa", calculators:"KALKULYATORLAR", workspace:"Ish maydoni", eyebrow:"Arxitektura / Qurilish", heroTitle:"Aniqlik bilan hisoblang.", heroDesc:"Arxitektura va qurilish hisoblari uchun toza, aniq va amaliy ish maydoni.", system:"TIZIM", toolCount:"16 ta kalkulyator + smeta", calcTools:"Hisoblash vositalari",
+    dashboard:"Bosh sahifa", calculators:"KALKULYATORLAR", workspace:"Ish maydoni", eyebrow:"Arxitektura / Qurilish", heroTitle:"Aniqlik bilan hisoblang.", heroDesc:"Arxitektura va qurilish hisoblari uchun toza, aniq va amaliy ish maydoni.", system:"TIZIM", toolCount:"30 ta kalkulyator + smeta", calcTools:"Hisoblash vositalari",
     room_title:"Xona kalkulyatori", room_desc:"Maydon, hajm va perimetr", brick_title:"G‘isht kalkulyatori", brick_desc:"G‘isht urish qalinligi va miqdori", block_title:"Blok kalkulyatori", block_desc:"Blok turi va miqdorini hisoblash", concrete_title:"Beton kalkulyatori", concrete_desc:"Aniq hajm va sement qoplarini hisoblash", paint_title:"Bo‘yoq kalkulyatori", paint_desc:"Litr yoki banka bo‘yicha bo‘yoq hisoblash", floor_title:"Pol kalkulyatori", floor_desc:"Pol turiga qarab material miqdorini hisoblash", stair_title:"Zina kalkulyatori", stair_desc:"Zina geometriyasi va qulaylik tekshiruvi",
     room_l:"Uzunlik (m)", room_w:"Kenglik (m)", room_h:"Balandlik (m)", wall_l:"Devor uzunligi (m)", wall_h:"Devor balandligi (m)", brick_type:"G‘isht o‘lchami", brick_thickness:"G‘isht urish qalinligi", brick_l:"G‘isht uzunligi (cm)", brick_w:"G‘isht eni (cm)", brick_h:"G‘isht balandligi (cm)", brick_openings:"Eshik/deraza maydoni (m²)", brick_reserve:"Zaxira (%)",
     block_type:"Blok turi", block_l:"Blok uzunligi (cm)", block_w:"Blok eni/qalinligi (cm)", block_h:"Blok balandligi (cm)", block_openings:"Eshik/deraza maydoni (m²)", reserve:"Zaxira (%)",
@@ -2086,7 +2209,7 @@ const archCalcFullTranslations = {
     plaster_title:"Калькулятор штукатурки", plaster_desc:"Объём штукатурки стен", adhesive_title:"Калькулятор плиточного клея", adhesive_desc:"Расход и количество мешков", roof_title:"Калькулятор кровли", roof_desc:"Площадь крыши с запасом", rebar_title:"Калькулятор арматуры", rebar_desc:"Длина и вес арматуры", plaster_area:"Площадь оштукатуривания (м²)", plaster_thickness:"Толщина штукатурки (мм)", adhesive_area:"Площадь плитки (м²)", adhesive_consumption:"Расход на 1 м² (кг)", adhesive_bag:"Вес одного мешка (кг)", roof_length:"Длина крыши (м)", roof_width:"Горизонтальная ширина крыши (м)", roof_slope:"Коэффициент уклона", rebar_length:"Длина одного стержня (м)", rebar_count:"Количество стержней", rebar_weight:"Вес 1 метра (кг/м)", calc_plaster:"Рассчитать штукатурку", calc_adhesive:"Рассчитать клей", calc_roof:"Рассчитать площадь крыши", calc_rebar:"Рассчитать арматуру", nav_plaster:"Штукатурка", nav_adhesive:"Плиточный клей", nav_roof:"Кровля", nav_rebar:"Арматура", calc_room:"Рассчитать", calc_brick:"Рассчитать кирпич", calc_block:"Рассчитать блоки", calc_concrete:"Рассчитать бетон", calc_paint:"Рассчитать краску", calc_floor:"Рассчитать пол", calc_stair:"Рассчитать лестницу", result_empty:"Результат появится здесь.", nav_room:"Помещение", nav_brick:"Кирпич", nav_block:"Блок", nav_concrete:"Бетон", nav_paint:"Краска", nav_floor:"Пол", nav_stairs:"Лестница", footer:"ARCHCALC · АРХИТЕКТУРА И СТРОИТЕЛЬСТВО · 2026"
   },
   en: {
-    dashboard:"Dashboard", calculators:"CALCULATORS", workspace:"Workspace", eyebrow:"Architecture / Construction", heroTitle:"Calculate with precision.", heroDesc:"A focused workspace for practical architectural and construction calculations.", system:"SYSTEM", toolCount:"16 calculators + estimate", calcTools:"Calculation tools",
+    dashboard:"Dashboard", calculators:"CALCULATORS", workspace:"Workspace", eyebrow:"Architecture / Construction", heroTitle:"Calculate with precision.", heroDesc:"A focused workspace for practical architectural and construction calculations.", system:"SYSTEM", toolCount:"30 calculators + estimate", calcTools:"Calculation tools",
     room_title:"Room calculator", room_desc:"Area, volume and perimeter", brick_title:"Brick calculator", brick_desc:"Masonry thickness and brick quantity", block_title:"Block calculator", block_desc:"Block type and quantity", concrete_title:"Concrete calculator", concrete_desc:"Accurate volume and cement bag estimate", paint_title:"Paint calculator", paint_desc:"Paint quantity by liters or cans", floor_title:"Floor calculator", floor_desc:"Material quantity by floor type", stair_title:"Stairs calculator", stair_desc:"Stair geometry and comfort check",
     room_l:"Length (m)", room_w:"Width (m)", room_h:"Height (m)", wall_l:"Wall length (m)", wall_h:"Wall height (m)", brick_type:"Brick size", brick_thickness:"Masonry thickness", brick_l:"Brick length (cm)", brick_w:"Brick width (cm)", brick_h:"Brick height (cm)", brick_openings:"Door/window area (m²)", brick_reserve:"Reserve (%)",
     block_type:"Block type", block_l:"Block length (cm)", block_w:"Block width/thickness (cm)", block_h:"Block height (cm)", block_openings:"Door/window area (m²)", reserve:"Reserve (%)",
@@ -2941,5 +3064,44 @@ body:not(.ac2-flow-locked) .ac2-flow-gate{display:none !important;}
   };
 })();
 </script>
+
+<script id="archcalc-extra-calculator-engine">
+(() => {
+ const num = id => { const e=document.getElementById(id); return e ? Number(e.value) : NaN; };
+ const fmt = n => Number(n).toLocaleString('uz-UZ',{maximumFractionDigits:3});
+ const ceil = n => Math.ceil(n);
+ const handlers = {
+  circle: a => ({main:Math.PI*a*a, label:'Doira maydoni (m²)', extra:2*Math.PI*a, extraLabel:'Aylana uzunligi (m)'}),
+  triangle: (a,b) => ({main:a*b/2,label:'Uchburchak maydoni (m²)'}),
+  cylinder: (a,b) => ({main:Math.PI*a*a*b,label:'Silindr hajmi (m³)',extra:2*Math.PI*a*(a+b),extraLabel:'To‘liq sirt maydoni (m²)'}),
+  cone: (a,b) => ({main:Math.PI*a*a*b/3,label:'Konus hajmi (m³)'}),
+  pyramid: (a,b,c) => ({main:a*b*c/3,label:'Piramida hajmi (m³)'}),
+  ellipse: (a,b) => ({main:Math.PI*a*b,label:'Ellips maydoni (m²)'}),
+  wood: (a,b,c) => ({main:a*(b/100)*(c/100),label:'Yog‘och hajmi (m³)'}),
+  lighting: (a,b,c,d) => ({main:ceil(a*b/(c*d)),label:'Kerakli chiroqlar (dona)',extra:a*b,extraLabel:'Kerakli yorug‘lik oqimi (lm)'}),
+  ventilation: (a,b) => ({main:a*b,label:'Havo sarfi (m³/soat)'}),
+  heatloss: (a,b,c) => ({main:a*b*c,label:'Taxminiy issiqlik yo‘qotilishi (W)'}),
+  electric: (a,b,c) => ({main:a*b*c,label:'Faol quvvat (W)',extra:a*b,label:'Ko‘rinma quvvat (VA)'}),
+  cost: (a,b,c) => ({main:a*b*(1+c/100),label:'Zaxira bilan jami narx (so‘m)',extra:a*b*c/100,extraLabel:'Zaxira summasi (so‘m)'}),
+  paintwall: (a,b,c,d) => ({main:a/b*c*(1+d/100),label:'Kerakli bo‘yoq (litr)'}),
+  rectvolume: (a,b,c) => ({main:a*b*c,label:'Prizma hajmi (m³)',extra:2*(a*b+a*c+b*c),extraLabel:'To‘liq sirt maydoni (m²)'})
+ };
+ document.querySelectorAll('[data-extra-calc]').forEach(btn => btn.addEventListener('click', () => {
+  const id=btn.dataset.extraCalc, card=document.getElementById(id), kind=card?.dataset.extraKind;
+  const fields=[...card.querySelectorAll('input')].map(e=>Number(e.value));
+  const out=document.getElementById('x_'+id+'_result');
+  if(!fields.length || fields.some(v=>!Number.isFinite(v)||v<0) || fields[0]===0){out.textContent='⚠️ Iltimos, noldan katta va to‘g‘ri qiymatlarni kiriting.';return;}
+  let r;
+  try { r=handlers[kind]?.(...fields); } catch(e) { console.error(e); }
+  if(!r || !Number.isFinite(r.main)){out.textContent='⚠️ Hisoblab bo‘lmadi. Kiritilgan qiymatlarni tekshiring.';return;}
+  let text=`${r.label||'Natija'}: ${fmt(r.main)}`;
+  if(r.extra!==undefined && Number.isFinite(r.extra)) text+=`\n${r.extraLabel||'Qo‘shimcha natija'}: ${fmt(r.extra)}`;
+  if(kind==='heatloss') text+='\nEslatma: bu soddalashtirilgan hisob; issiqlik ko‘priklari va ventilyatsiya yo‘qotishlari kiritilmagan.';
+  if(kind==='lighting') text+='\nEslatma: bu dastlabki taxmin; chiroq taqsimoti va xonaning qaytaruvchanligi hisobga olinmagan.';
+  out.textContent=text;
+ }));
+})();
+</script>
+
 </body>
 </html>
