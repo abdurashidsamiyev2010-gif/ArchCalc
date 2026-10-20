@@ -14,13 +14,13 @@
     --panel:#101218;
     --panel-2:#14171e;
     --panel-hover:#171a22;
-    --line:rgba(214,168,79,.34);
-    --line-strong:rgba(214,168,79,.68);
+    --line:rgba(49,198,177,.34);
+    --line-strong:rgba(49,198,177,.68);
     --text:#f4f5f7;
     --muted:#8d939f;
     --dim:#5e6470;
-    --accent:#d6a84f;
-    --accent-soft:rgba(214,168,79,.12);
+    --accent:#31c6b1;
+    --accent-soft:rgba(49,198,177,.12);
     --success:#8fd6a4;
     --danger:#ef9a9a;
     --radius:18px;
@@ -39,7 +39,7 @@ body{
     font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     color:var(--text);
     background:
-        radial-gradient(circle at 75% 0%,rgba(214,168,79,.055),transparent 28rem),
+        radial-gradient(circle at 75% 0%,rgba(49,198,177,.055),transparent 28rem),
         radial-gradient(circle at 10% 80%,rgba(255,255,255,.025),transparent 25rem),
         var(--bg);
     letter-spacing:-.01em;
@@ -78,7 +78,7 @@ button{
     height:100vh;
     min-height:0;
     padding:20px 16px;
-    border-right:1px solid rgba(214,168,79,.42);
+    border-right:1px solid rgba(49,198,177,.42);
     background:rgba(9,10,13,.78);
     backdrop-filter:blur(24px);
     z-index:20;
@@ -98,7 +98,7 @@ button{
     height:30px;
     display:grid;
     place-items:center;
-    border:1px solid rgba(214,168,79,.45);
+    border:1px solid rgba(49,198,177,.45);
     border-radius:9px;
     color:var(--accent);
     background:var(--accent-soft);
@@ -175,7 +175,7 @@ button{
     overflow-y:auto;
     padding-bottom:8px;
     scrollbar-width:thin;
-    scrollbar-color:rgba(214,168,79,.28) transparent;
+    scrollbar-color:rgba(49,198,177,.28) transparent;
 }
 
 
@@ -199,7 +199,7 @@ button{
     align-items:center;
     justify-content:space-between;
     padding:0 42px;
-    border-bottom:1px solid rgba(214,168,79,.34);
+    border-bottom:1px solid rgba(49,198,177,.34);
     background:rgba(8,9,12,.72);
     backdrop-filter:blur(24px);
 }
@@ -331,15 +331,15 @@ button{
     position:relative;
     overflow:hidden;
     padding:30px 32px;
-    border:1px solid rgba(214,168,79,.48);
+    border:1px solid rgba(49,198,177,.48);
     border-radius:var(--radius);
     background:
         linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012) 55%),
         var(--panel);
     box-shadow:
         0 16px 50px rgba(0,0,0,.22),
-        inset 0 0 0 1px rgba(214,168,79,.045),
-        0 0 18px rgba(214,168,79,.025);
+        inset 0 0 0 1px rgba(49,198,177,.045),
+        0 0 18px rgba(49,198,177,.025);
     transition:transform .25s ease,border-color .25s ease,background .25s ease;
 }
 
@@ -351,7 +351,7 @@ button{
     right:-100px;
     top:-100px;
     border-radius:50%;
-    background:rgba(214,168,79,.08);
+    background:rgba(49,198,177,.08);
     filter:blur(22px);
     opacity:0;
     transition:.3s ease;
@@ -359,7 +359,7 @@ button{
 
 .card:hover{
     transform:translateY(-3px);
-    border-color:rgba(214,168,79,.82);
+    border-color:rgba(49,198,177,.82);
     background:var(--panel-hover);
 }
 
@@ -439,7 +439,7 @@ button{
     min-height:46px;
     color:#f4f0e8;
     background:rgba(255,255,255,.025);
-    border:1px solid rgba(214,168,79,.24);
+    border:1px solid rgba(49,198,177,.24);
     border-radius:10px;
     outline:none;
     transition:
@@ -455,17 +455,17 @@ button{
 
 .card-form .field input:hover,
 .card-form .field select:hover{
-    border-color:rgba(214,168,79,.42);
-    background:rgba(214,168,79,.035);
+    border-color:rgba(49,198,177,.42);
+    background:rgba(49,198,177,.035);
 }
 
 .card-form .field input:focus,
 .card-form .field select:focus{
-    border-color:#d6a84f;
-    background:rgba(214,168,79,.055);
+    border-color:#31c6b1;
+    background:rgba(49,198,177,.055);
     box-shadow:
-        0 0 0 2px rgba(214,168,79,.09),
-        0 0 22px rgba(214,168,79,.07);
+        0 0 0 2px rgba(49,198,177,.09),
+        0 0 22px rgba(49,198,177,.07);
 }
 
 .card-form .field input:focus-visible,
@@ -482,7 +482,7 @@ button{
 
 .card-form .result{
     grid-column:1 / -1;
-    border-color:rgba(214,168,79,.20);
+    border-color:rgba(49,198,177,.20);
 }
 
 /* Gold accent for important numeric values */
@@ -611,7 +611,7 @@ button{
         overflow-x:auto;
         gap:6px;
         padding:9px 16px;
-        border-bottom:1px solid rgba(214,168,79,.34);
+        border-bottom:1px solid rgba(49,198,177,.34);
         background:rgba(8,9,12,.86);
         backdrop-filter:blur(20px);
     }
@@ -652,15 +652,15 @@ body.light{
     --panel:#fffdf8;
     --panel-2:#f8f5ed;
     --panel-hover:#fffaf0;
-    --line:rgba(154,112,35,.28);
-    --line-strong:rgba(154,112,35,.58);
+    --line:rgba(22,142,170,.28);
+    --line-strong:rgba(22,142,170,.58);
     --text:#171717;
     --muted:#66615a;
     --dim:#888076;
-    --accent:#a97818;
-    --accent-soft:rgba(169,120,24,.10);
+    --accent:#168eaa;
+    --accent-soft:rgba(22,142,170,.10);
     background:
-        radial-gradient(circle at 75% 0%,rgba(169,120,24,.08),transparent 28rem),
+        radial-gradient(circle at 75% 0%,rgba(22,142,170,.08),transparent 28rem),
         var(--bg);
 }
 
@@ -673,13 +673,13 @@ body.light::before{
 
 body.light .sidebar{
     background:rgba(250,248,242,.86);
-    border-right-color:rgba(154,112,35,.34);
+    border-right-color:rgba(22,142,170,.34);
 }
 
 body.light .topbar,
 body.light .mobile-nav{
     background:rgba(250,248,242,.82);
-    border-bottom-color:rgba(154,112,35,.30);
+    border-bottom-color:rgba(22,142,170,.30);
 }
 
 body.light .card{
@@ -688,7 +688,7 @@ body.light .card{
         var(--panel);
     box-shadow:
         0 14px 40px rgba(74,59,30,.10),
-        inset 0 0 0 1px rgba(169,120,24,.045);
+        inset 0 0 0 1px rgba(22,142,170,.045);
 }
 
 body.light input,
@@ -708,17 +708,17 @@ body.light .side-nav button{
 
 body.light .side-nav button:hover{
     color:#24211d;
-    background:rgba(169,120,24,.07);
+    background:rgba(22,142,170,.07);
 }
 
 body.light .side-nav button.active{
     color:#24211d;
-    background:rgba(169,120,24,.10);
+    background:rgba(22,142,170,.10);
 }
 
 body.light .top-btn{
     color:#6d665d;
-    background:rgba(169,120,24,.035);
+    background:rgba(22,142,170,.035);
 }
 
 body.light .hero p,
@@ -774,7 +774,7 @@ body.light .section-title{
         overflow-x:auto;
         gap:6px;
         padding:9px 16px;
-        border-bottom:1px solid rgba(214,168,79,.34);
+        border-bottom:1px solid rgba(49,198,177,.34);
         background:rgba(8,9,12,.86);
         backdrop-filter:blur(20px);
     }
@@ -821,9 +821,34 @@ body.light .section-title{
 .auth-google{width:100%;margin-top:10px;background:var(--panel-2);color:var(--text);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:10px}
 .auth-google:disabled{opacity:.6;cursor:wait}
 #accountName{font-size:12px;color:var(--muted);padding:0 8px}
-.history-panel{display:none;margin:0 0 34px;padding:22px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}.history-panel.is-open{display:block}
+.history-panel{scroll-margin-top:90px;display:none;margin:0 0 34px;padding:22px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}.history-panel.is-open{display:block}
 .history-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.history-heading h2{margin:5px 0;font-size:21px}.history-heading p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}.history-list{display:grid;gap:9px;margin-top:18px}.history-item{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:13px;border:1px solid var(--line);border-radius:10px;background:var(--bg-soft)}.history-item strong{display:block;font-size:13px;margin-bottom:4px}.history-item p{margin:0;color:var(--muted);font-size:12px;line-height:1.5;overflow-wrap:anywhere}.history-time{color:var(--muted);font-size:11px;white-space:nowrap}.history-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.history-actions button{font:inherit;font-size:11px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);cursor:pointer}.history-actions button:hover{filter:brightness(.96)}.history-actions .history-delete{color:#b42318}.history-empty{padding:16px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:12px}
 @media(max-width:760px){#accountName{display:none}.auth-card{padding:22px}.history-panel{padding:16px}.history-heading{align-items:flex-start}.history-item{display:block}.history-time{display:block;margin-top:8px}}
+</style>
+
+
+<style id="archcalc-history-polish">
+#archcalc-history-toggle[aria-expanded="true"]{
+  color:var(--text);
+  border-color:var(--accent);
+  background:var(--accent-soft);
+}
+#archcalc-history-toggle:focus-visible,
+#archcalc-refresh-history:focus-visible,
+.history-actions button:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+}
+.history-panel.is-open{
+  animation:archcalcHistoryIn .22s ease-out;
+}
+@keyframes archcalcHistoryIn{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@media(prefers-reduced-motion:reduce){
+  .history-panel.is-open{animation:none}
+}
 </style>
 
 </head>
@@ -2085,8 +2110,8 @@ document.addEventListener("DOMContentLoaded", () => {
         margin-bottom:12px;
         padding:6px 10px;
         border-radius:999px;
-        background:rgba(245,158,11,.12);
-        color:#f59e0b;
+        background:rgba(49,198,177,.12);
+        color:#31c6b1;
         font-size:12px;
         font-weight:700;
     }
@@ -2116,12 +2141,12 @@ document.addEventListener("DOMContentLoaded", () => {
         font-weight:700;
         cursor:pointer;
         color:#fff;
-        background:#2563eb;
+        background:#3978f6;
         transition:transform .15s ease,opacity .15s ease;
     }
     .archcalc-disclaimer-btn:hover{opacity:.92;transform:translateY(-1px)}
     .archcalc-disclaimer-btn:active{transform:translateY(0)}
-    .archcalc-disclaimer-btn:focus-visible{outline:2px solid #60a5fa;outline-offset:3px}
+    .archcalc-disclaimer-btn:focus-visible{outline:2px solid #67e8f9;outline-offset:3px}
 </style>
 
 <div id="archcalc-disclaimer" class="archcalc-disclaimer-backdrop" hidden aria-hidden="true">
@@ -2471,77 +2496,147 @@ if (
     return (node.textContent || node.innerText || "").replace(/\s+/g, " ").trim().slice(0, 1800);
   }
   function showHistoryMessage(message) {
-    if (historyList) historyList.innerHTML = '<div class="history-empty"></div>';
-    const empty = historyList && historyList.querySelector(".history-empty");
-    if (empty) empty.textContent = message;
+    if (!historyList) return;
+    historyList.innerHTML = "";
+    const empty = document.createElement("div");
+    empty.className = "history-empty";
+    empty.textContent = message;
+    historyList.appendChild(empty);
   }
+
   async function loadHistory() {
     const user = auth.currentUser;
+    if (!historyList) return;
+
     if (!user) {
       historyUserId = null;
-      if (historyStatus) historyStatus.textContent = "Google hisobingizga kiring — hisob-kitoblaringiz bulutda saqlanadi.";
-      showHistoryMessage("Bulutli tarixni ko‘rish uchun Google orqali kiring.");
+      if (historyStatus) {
+        historyStatus.textContent =
+          "Tarixni ko‘rish uchun Google orqali kiring. Mahalliy hisob Firebase bulutiga ulanmagan.";
+      }
+      showHistoryMessage("Google hisobingizga kiring — shundan keyin bulutli tarix ko‘rinadi.");
       return;
     }
+
     historyUserId = user.uid;
-    if (historyStatus) historyStatus.textContent = "Hisob-kitoblaringiz shu Google hisobiga bog‘langan holda saqlanadi.";
+    if (historyStatus) historyStatus.textContent = "Hisob-kitoblar tarixingiz yuklanmoqda…";
     showHistoryMessage("Tarix yuklanmoqda…");
+
     try {
-      const q = query(collection(db, "users", user.uid, "calculationHistory"), orderBy("createdAt", "desc"), limit(20));
+      const historyRef = collection(db, "users", user.uid, "calculationHistory");
+      const q = query(historyRef, orderBy("createdAt", "desc"), limit(50));
       const snapshot = await getDocs(q);
+
+      // Hisob almashgan bo‘lsa, oldingi hisobning natijasini ekranga chiqarmaymiz.
       if (auth.currentUser?.uid !== user.uid) return;
-      if (snapshot.empty) { showHistoryMessage("Hali saqlangan hisob-kitoblar yo‘q. Birinchi hisob-kitobingizni bajaring."); return; }
+
+      if (snapshot.empty) {
+        if (historyStatus) historyStatus.textContent = "Hozircha tarix bo‘sh.";
+        showHistoryMessage("Hali saqlangan hisob-kitoblar yo‘q. Kalkulyatorda hisoblashni bajaring.");
+        return;
+      }
+
       historyList.innerHTML = "";
       snapshot.forEach((docSnap) => {
-        const item = docSnap.data();
-        const row = document.createElement("article"); row.className = "history-item";
+        const item = docSnap.data() || {};
+        const row = document.createElement("article");
+        row.className = "history-item";
+
         const body = document.createElement("div");
-        const title = document.createElement("strong"); title.textContent = item.title || "Hisob-kitob";
-        const result = document.createElement("p"); result.textContent = item.resultText || "";
+        const title = document.createElement("strong");
+        title.textContent = item.title || "Hisob-kitob";
+
+        const result = document.createElement("p");
+        result.textContent = item.resultText || "Natija saqlanmagan.";
         body.append(title, result);
-        const time = document.createElement("span"); time.className = "history-time";
-        const date = item.createdAt?.toDate ? item.createdAt.toDate() : (item.createdAt?.seconds ? new Date(item.createdAt.seconds * 1000) : null);
-        time.textContent = date ? date.toLocaleString("uz-UZ") : "Yangi";
-        const actions = document.createElement("div"); actions.className = "history-actions";
-        const reopen = document.createElement("button"); reopen.type = "button"; reopen.textContent = "Qayta ochish";
+
+        const time = document.createElement("span");
+        time.className = "history-time";
+        const date = item.createdAt?.toDate
+          ? item.createdAt.toDate()
+          : (item.createdAt?.seconds ? new Date(item.createdAt.seconds * 1000) : null);
+        time.textContent = date && !Number.isNaN(date.getTime())
+          ? date.toLocaleString("uz-UZ")
+          : "Vaqt noma’lum";
+
+        const actions = document.createElement("div");
+        actions.className = "history-actions";
+
+        const reopen = document.createElement("button");
+        reopen.type = "button";
+        reopen.textContent = "Qayta ochish";
         reopen.addEventListener("click", () => {
           const sectionId = calcSections[item.resultId];
           const section = sectionId ? document.getElementById(sectionId) : null;
-          if (!section) { if (historyStatus) historyStatus.textContent = "Bu hisob-kitob bo‘limini qayta ochib bo‘lmadi."; return; }
+
+          if (!section) {
+            if (historyStatus) historyStatus.textContent = "Bu kalkulyator bo‘limi topilmadi.";
+            return;
+          }
+
           if (item.inputs && typeof item.inputs === "object") {
             Object.entries(item.inputs).forEach(([fieldId, value]) => {
               const field = document.getElementById(fieldId);
-              if (field && section.contains(field)) field.value = value;
+              if (field && section.contains(field)) field.value = value ?? "";
             });
           }
-          const result = document.getElementById(item.resultId);
-          if (result) { result.textContent = item.resultText || "Saqlangan natija mavjud emas."; result.style.whiteSpace = "pre-wrap"; }
+
+          const resultElement = document.getElementById(item.resultId);
+          if (resultElement) {
+            resultElement.textContent = item.resultText || "Saqlangan natija mavjud emas.";
+            resultElement.style.whiteSpace = "pre-wrap";
+          }
+
           section.scrollIntoView({ behavior: "smooth", block: "start" });
-          if (historyStatus) historyStatus.textContent = "Saqlangan qiymatlar qayta ochildi. Natija — tarixda saqlangan nusxa.";
+          if (historyStatus) {
+            historyStatus.textContent =
+              "Saqlangan qiymatlar qayta ochildi. Ko‘rsatilgan natija tarixdagi saqlangan nusxa.";
+          }
         });
-        const remove = document.createElement("button"); remove.type = "button"; remove.className = "history-delete"; remove.textContent = "O‘chirish";
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "history-delete";
+        remove.textContent = "O‘chirish";
         remove.addEventListener("click", async () => {
           const currentUser = auth.currentUser;
-          if (!currentUser || currentUser.uid !== user.uid) return;
+          if (!currentUser || currentUser.uid !== user.uid) {
+            if (historyStatus) historyStatus.textContent = "Hisob o‘zgardi. Tarixni qayta yuklang.";
+            return;
+          }
           if (!window.confirm("Ushbu hisob-kitobni tarixdan o‘chirmoqchimisiz?")) return;
+
           remove.disabled = true;
           try {
             await deleteDoc(doc(db, "users", user.uid, "calculationHistory", docSnap.id));
             await loadHistory();
           } catch (error) {
             console.error("ArchCalc history delete error:", error);
-            if (historyStatus) historyStatus.textContent = "O‘chirib bo‘lmadi. Firestore xavfsizlik qoidalarini tekshiring.";
+            if (historyStatus) {
+              historyStatus.textContent =
+                "O‘chirib bo‘lmadi. Internet va Firestore xavfsizlik qoidalarini tekshiring.";
+            }
             remove.disabled = false;
           }
         });
+
         actions.append(reopen, remove);
         body.appendChild(actions);
-        row.append(body, time); historyList.appendChild(row);
+        row.append(body, time);
+        historyList.appendChild(row);
       });
+
+      if (historyStatus) {
+        historyStatus.textContent = `${snapshot.size} ta oxirgi hisob-kitob ko‘rsatildi.`;
+      }
     } catch (error) {
       console.error("ArchCalc history load error:", error);
-      showHistoryMessage("Tarixni yuklab bo‘lmadi. Firebase Console’da Firestore Database yoqilganini va xavfsizlik qoidalarini tekshiring.");
-      if (historyStatus) historyStatus.textContent = "Bulutli saqlash sozlamasi tekshirilishi kerak.";
+      showHistoryMessage(
+        "Tarixni yuklab bo‘lmadi. Internet, Firestore Database va Rules sozlamalarini tekshiring."
+      );
+      if (historyStatus) {
+        historyStatus.textContent = `Tarix xatosi: ${error.code || error.message || "noma’lum xato"}`;
+      }
     }
   }
   window.archCalcRecordCalculation = async function (resultId, html) {
@@ -2570,11 +2665,16 @@ if (
   const historyToggle = document.getElementById("archcalc-history-toggle");
   const historyPanel = document.getElementById("archcalc-history-panel");
   historyToggle?.addEventListener("click", async () => {
-    const isOpen = historyPanel?.classList.toggle("is-open") || false;
+    if (!historyPanel) {
+      console.error("ArchCalc: history panel element not found.");
+      return;
+    }
+    const isOpen = !historyPanel.classList.contains("is-open");
+    historyPanel.classList.toggle("is-open", isOpen);
     historyToggle.setAttribute("aria-expanded", String(isOpen));
     if (isOpen) {
       await loadHistory();
-      historyPanel?.scrollIntoView({ behavior: "smooth", block: "start" });
+      historyPanel.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   });
 
