@@ -321,10 +321,26 @@ button{
 .container{
     max-width:980px;
     margin:0 auto;
-    padding:0;
+    padding:0 8px 12px 0;
     display:grid;
-    grid-template-columns:1fr;
+    grid-template-columns:minmax(0,1fr);
     gap:22px;
+    /* Kalkulyatorlar bitta vertikal ro‘yxatda, mustaqil yuqori-pastga aylantiriladi. */
+    max-height:calc(100vh - 250px);
+    overflow-y:auto;
+    overflow-x:hidden;
+    overscroll-behavior:contain;
+    scroll-behavior:smooth;
+    scrollbar-gutter:stable;
+    scrollbar-width:thin;
+    scrollbar-color:var(--accent) var(--panel-2);
+}
+.container::-webkit-scrollbar{width:9px}
+.container::-webkit-scrollbar-track{background:var(--panel-2);border-radius:9px}
+.container::-webkit-scrollbar-thumb{background:var(--accent);border-radius:9px;border:2px solid var(--panel-2)}
+.container:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media(max-width:760px){
+  .container{max-height:70vh;padding-right:5px;gap:16px}
 }
 
 .card{
@@ -1008,7 +1024,7 @@ body.light .section-title{
             <div class="section-count">01 — 16</div>
         </div>
 
-        <div class="container">
+        <div class="container" id="calculator-list" tabindex="0" role="region" aria-label="Kalkulyatorlar ro‘yxati">
 
 <!-- XONA -->
 <div class="card" id="room"><div class="card-top"><span class="card-index">01</span><span class="card-type">ROOM</span></div><h2 class="card-title" data-i18n="room_title">Room calculator</h2><p class="card-desc" data-i18n="room_desc">Space, area and volume</p><div class="card-form">
